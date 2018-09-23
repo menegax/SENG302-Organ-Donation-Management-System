@@ -146,3 +146,6 @@ Button {
     -fx-background-color: linear-gradient(#3D8DC2, #1478BB);
 }
 
+.notSet {
+    -fx-text-fill: red;
+}

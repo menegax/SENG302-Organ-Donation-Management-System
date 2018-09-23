@@ -114,6 +114,16 @@ class ScreenControlTouch extends ScreenControl {
                 }
             });
             resizeFonts(touchPane);
+            if (fxml.equals(MAPFXML)) {
+                // Cast should always be safe
+                mapController = (GUIMap) controller;
+                mapController.loadMap();
+                pane.visibleProperty().addListener(((observable, oldValue, newValue) -> {
+                    if (!newValue) {
+                        setMapOpen(false);
+                    }
+                }));
+            }
             systemLogger.log(INFO, "Showing new touch stage scene");
             return controller;
         } catch (IOException e) {
@@ -136,7 +146,7 @@ class ScreenControlTouch extends ScreenControl {
             addCanvas(newScene);
             touchStage.setScene(newScene);
             setLoginShowing(true);
-            setFonts();
+            setCSS();
         } catch (IOException e) {
             systemLogger.log(SEVERE, "Failed to recreate login scene in touch application");
 
@@ -224,6 +234,14 @@ class ScreenControlTouch extends ScreenControl {
                     for (Tab tab : ((TabPane) child).getTabs()) {
                         resizeFonts((Pane) tab.getContent());
                     }
+                } else if (child.getId() != null && child.getId().equals("EXIT")) {
+                    child.setStyle("-fx-font-size: 15px; "
+                            + "-fx-test-fill: white; "
+                            + "-fx-font-weight: bold; "
+                            + "-fx-background-color: "
+                            + "#e62e00 "
+                            + "linear-gradient(#ffe6e6, #ffcccc),"
+                            + "linear-gradient(#ff9999 0%, #ff8080 49%, #ff6666 50%, #ff4d4d 100%);");
                 } else if (child.getId() == null || (!fontMap.containsKey(child.getId()))) {
                     child.setStyle("-fx-font-size: 10px;");
                 } else {
@@ -237,7 +255,7 @@ class ScreenControlTouch extends ScreenControl {
      * Called when switching tabs with GuiHome
      * Resizes the fonts shown
      */
-    public void setFonts() {
+    public void setCSS() {
         resizeFonts(touchPane);
     }
 

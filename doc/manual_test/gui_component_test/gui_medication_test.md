@@ -77,9 +77,27 @@
 6. Click the `Delete` button to remove them both
 7. Verify that neither `Codeine` nor `Morphine` appear in the current or past medications list
 
-##Test History
+## Test History
 
-###19/07/2018 - Maree
+### 19/07/2018 - Maree
+
+Navigate to the medications page: Pass
+
+GUI medication adding with valid input: Pass
+
+GUI medication adding with invalid input test: Pass
+
+GUI medication delete test: Pass
+
+GUI medication moving task: Pass
+
+GUI medication adding duplicates test: Pass
+
+GUI medication adding medication that is in history test: Pass
+
+GUI medication deleting multiple medications: Pass
+
+### 14/08/2018 - Aidan
 
 Navigate to the medications page: Pass
 
@@ -97,20 +115,4 @@ GUI medication adding medication that is in history test: Pass
 
 GUI medication deleting multiple medications: Pass
 
-###14/08/2018 - Aidan
-
-Navigate to the medications page: Pass
-
-GUI medication adding with valid input: Pass
-
-GUI medication adding with invalid input test: Pass
-
-GUI medication delete test: Pass
-
-GUI medication moving task: Pass
-
-GUI medication adding duplicates test: Pass
-
-GUI medication adding medication that is in history test: Pass
-
-GUI medication deleting multiple medications: Pass
+**ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**

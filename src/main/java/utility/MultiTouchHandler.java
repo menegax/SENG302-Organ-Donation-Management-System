@@ -19,6 +19,8 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import utility.MathUtilityMethods;
+
 /**
  * Handler class to deal with multiple users interacting with the application via touch events.
  * If a single pane isn't at 3 yet, but there are 10 touches on screen, no more gestures will be registered due to
@@ -90,20 +92,23 @@ public class MultiTouchHandler {
     public void initialiseHandler(Pane rootPane) {
         this.rootPane = rootPane;
         Thread thread1 = new Thread(() -> {
-            synchronized (lock) {
-                rootPane.addEventFilter(TouchEvent.ANY, event -> {
+            rootPane.addEventFilter(TouchEvent.ANY, event -> {
+                synchronized (lock) {
                     if (moving) {
                         velocity = new Point2D(0,0);
-                        lock.notify();
+                        try {
+                            lock.notify();
+                        } catch (IllegalMonitorStateException e) {
+                            SystemLogger.systemLogger.log(Level.SEVERE, "Pane momentum thread not found.", "Attempted to stop pane momentum thread.");
+                        }
                     }
                     handleTouch(event);
-                });
-                rootPane.addEventFilter(ZoomEvent.ANY, Event::consume);
-                rootPane.addEventFilter(RotateEvent.ANY, Event::consume);
-            }
+                }
+            });
+            rootPane.addEventFilter(ZoomEvent.ANY, Event::consume);
+            rootPane.addEventFilter(RotateEvent.ANY, Event::consume);
         });
         thread1.start();
-//        rootPane.addEventFilter(ScrollEvent.ANY, Event::consume);
     }
 
     /**
@@ -124,7 +129,7 @@ public class MultiTouchHandler {
         }
 
         if (previousEvent == null && touchEvent.getId() <= 10 &&
-                notMaxTouches() && event.getEventType().equals(TouchEvent.TOUCH_PRESSED)) {
+                notMaxTouches()) {
             velocity = new Point2D(0, 0);
             setPaneFocused();
             addTouchEvent(touchEvent);
@@ -187,7 +192,6 @@ public class MultiTouchHandler {
                     }
                 }
                 moving = false;
-                System.out.println(rootPane.getTranslateX() + ", " + rootPane.getTranslateY());
             }
         });
         thread2.start();
@@ -320,10 +324,10 @@ public class MultiTouchHandler {
             }
         }
         if (stationaryPoint != null) {
-            double angle = calculateAngle(stationaryPoint.getCoordinates(), previousEvent.getCoordinates(), currentEvent.getCoordinates());
-            double displacement = calculateDisplacement(previousEvent.getCoordinates(), currentEvent.getCoordinates());
+            double angle = MathUtilityMethods.calculateAngle(stationaryPoint.getCoordinates(), previousEvent.getCoordinates(), currentEvent.getCoordinates());
+            double displacement = MathUtilityMethods.calculateDisplacement(previousEvent.getCoordinates(), currentEvent.getCoordinates());
             if (Math.abs(angle) > DEGREES45 && Math.abs(angle) <= DEGREES135) {
-                double rotatedAngle = calculateAngle(previousEvent.getCoordinates(), stationaryPoint.getCoordinates(), currentEvent.getCoordinates());
+                double rotatedAngle = MathUtilityMethods.calculateAngle(previousEvent.getCoordinates(), stationaryPoint.getCoordinates(), currentEvent.getCoordinates());
                 executeRotate(DEGREES180 - rotatedAngle);
             } else {
                 double distance = (Math.cos(angle))*displacement;
@@ -334,36 +338,6 @@ public class MultiTouchHandler {
             systemLogger.log(Level.SEVERE, "Two touch movement processed with less than two touches", "Attempted to process a two touch movement with less than two touches");
             throw new NullPointerException();
         }
-    }
-
-    /**
-     * Calculates the angle centering on the second parameter
-     * Gives angle in radians from -pi to pi (-ve anti-clockwise)
-     * @param stationaryPoint the point to draw the angle from
-     * @param previousPoint the point at the centre of the angle
-     * @param currentPoint the point to draw the angle to
-     * @return the angle between the point
-     */
-    private double calculateAngle(Point2D stationaryPoint, Point2D previousPoint, Point2D currentPoint) {
-        double p2s = calculateDisplacement(previousPoint, stationaryPoint);
-        double p2c = calculateDisplacement(previousPoint, currentPoint);
-        double s2c = calculateDisplacement(stationaryPoint, currentPoint);
-        double angle = Math.PI - Math.acos((Math.pow(p2s, 2) + Math.pow(p2c, 2) - Math.pow(s2c, 2)) / (2 * p2s * p2c));
-        if ((currentPoint.getX() - stationaryPoint.getX()) * (previousPoint.getY() - stationaryPoint.getY()) - (currentPoint.getY() - stationaryPoint.getY())*(previousPoint.getX() - stationaryPoint.getX()) >= 0) {
-            return angle;
-        } else {
-            return -angle;
-        }
-    }
-
-    /**
-     * Returns the scalar displacement between two points
-     * @param start the first point
-     * @param end the second point to calculate the displacement to
-     * @return the displacement between the two points
-     */
-    private double calculateDisplacement(Point2D start, Point2D end) {
-        return Math.sqrt(Math.pow(start.getX() - end.getX(), 2) + Math.pow(start.getY() - end.getY(), 2));
     }
 
     /**

@@ -47,6 +47,10 @@ public abstract class ScreenControl {
 
     private Boolean isCustomSetMap = false;
 
+    protected GUIMap mapController;
+
+    protected String MAPFXML = "/scene/map.fxml";
+
     abstract void setUpNewLogin();
     abstract void removeUnsavedAsterisks();
     abstract void addUnsavedAsterisks();
@@ -223,5 +227,7 @@ public abstract class ScreenControl {
     public void setIsCustomSetMap(Boolean customSet) { isCustomSetMap = customSet; }
 
     public abstract void centerPanes();
+
+    public GUIMap getMapController() { return mapController; }
 }
 

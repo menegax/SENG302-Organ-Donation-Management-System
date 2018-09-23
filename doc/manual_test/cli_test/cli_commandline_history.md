@@ -12,3 +12,5 @@ Pressing DOWN will cycle through to the most recent command, then result in blan
 3. Edit the command to “patient add -h” using the left/right arrows and/or backspace
 4. Press enter to submit the command
 5. The program should react accordingly by showing the help response for the patient add command rather than trying to execute the “patient add” command itself
+
+**ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**
