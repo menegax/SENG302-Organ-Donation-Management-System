@@ -350,7 +350,7 @@ public class MultiTouchHandler {
      */
     private void executeZoom(double distance) {
         if (rootPane.getScaleX() > 0.25 && rootPane.getScaleY() > 0.25) {
-            if (rootPane.getScaleX() < 1.4 && rootPane.getScaleY() < 1.4) {
+            if (rootPane.getScaleX() < 0.9 && rootPane.getScaleY() < 0.9) {
                 rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
                 rootPane.setScaleY(rootPane.getScaleY() + (distance * ZOOMFACTOR));
             }  else if (distance < 0) {
