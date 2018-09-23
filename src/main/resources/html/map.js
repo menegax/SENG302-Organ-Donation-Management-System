@@ -22,7 +22,7 @@ function init() {
             markers = [];
 
             patients = mapBridge.getAvailableOrgans();
-
+            successCount = 0;
             addMarkers(patients.size());
         });
     });
@@ -69,7 +69,6 @@ function setMapDragEnd() {
  */
 function addMarker(patient) {
     console.log("Adding marker to map for patient " + patient.getNhiNumber());
-    console.log(patient.getFormattedAddress());
     var latLong = patient.getCurrentLocation();
     if (latLong !== null) {
         successCount++;
@@ -79,7 +78,6 @@ function addMarker(patient) {
     }
     else {
         failedPatientArray.push(patient);
-
         console.log('Geocoding failed because: ' + status);
     }
 }
@@ -267,7 +265,8 @@ function hideNotification() {
  */
 function showNotification(numSuccess, numTotal) {
     var modalContent = "";
-    $('#marker-notification-msg').html('Successfully loaded ' + numSuccess + ' out of ' + numTotal + ' patient locations');
+    var modalMessage = 'Successfully loaded ' + numSuccess + ' out of ' + numTotal + ' patient locations';
+    $('#marker-notification-msg').html();
     $('#marker-notification').show();
     failedPatientArray.forEach(function(patient) {
         var nhi = patient.getNhiNumber();
@@ -277,7 +276,14 @@ function showNotification(numSuccess, numTotal) {
            '<td style=\"font-size: 15px; padding-top: 18px\">' + patient.getDeathLocationConcat() + '</td>\n' +
            '</tr>';
     });
-    $('#failed-patient-table').html(modalContent);
+    if (failedPatientArray.length ===  0){
+        $('#marker-notification').html('<span>' + modalMessage + '</span>');
+    } else {
+        $('#marker-notification').html('<span>' + modalMessage + '</span>' +
+            '    <a href="#" data-toggle="modal" data-target="#failedPatients">View failed patients</a>\n' +
+            '    <span class="marker-notification-close" onclick="hideNotification()"> &times;</span>');
+        $('#failed-patient-table').html(modalContent);
+    }
 }
 
 /**
@@ -323,7 +329,6 @@ function getDonations(patient, callback) {
 function reloadInfoWindow(patient) {
     infoWindows.forEach(function (iw){
         if (iw["patient"] === patient.getNhiNumber()) {
-            console.log("found");
             iw["iwindow"].setContent(getDeadPatientInfoContent(patient))
         }
     });
