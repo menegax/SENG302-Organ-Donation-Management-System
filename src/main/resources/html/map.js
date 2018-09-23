@@ -185,6 +185,9 @@ function getAlivePatientInfoContent(patient) {
  * Opens patient profile when the button from the infoWindow is clicked on
  */
 function openPatientProfile(patientNhi) {
+    for (var i = 0; i<infoWindows.length; i++) {
+        console.log(infoWindows[i]["patient"].getNhiNumber() + "TESETTSETST")
+    }
     mapBridge.openPatientProfile(patientNhi);
 }
 
@@ -301,10 +304,10 @@ function buildOrganDropdown(patient, infowindow) {
     google.maps.event.addListener(infowindow, "domready", function() {
         infoWindows.forEach(function(iw) {
             if (iw["iwindow"] === infowindow) {
-                patient = iw["patient"];
+                var patient2 = iw["patient"];
                 $('#dropdown').html('');
                 $('#dropdown').html('<option value="organs">None</option>');
-                var dono = patient.getDonations().toString().slice(1,-1).split(",");
+                var dono = patient2.getDonations().toString().slice(1,-1).split(",");
                 for (var i = 0; i< dono.length; i++) {
                     $('#dropdown').append($('<option>', {
                         value: i + 1,
@@ -324,10 +327,12 @@ function buildOrganDropdown(patient, infowindow) {
  * @param patient - patient whos info window is to be updated
  */
 function reloadInfoWindow(patient) {
+    console.log(infoWindows.length);
     for (var i =0; i<infoWindows.length; i++) {
-        //console.log(infoWindows[i]["patient"] + patient.getNhiNumber()); //TODO:
-        if (infoWindows[i]["patient"].getNhiNumber() === patient.getNhiNumber()) {
-            infoWindows[i]["iwindow"].setContent(getDeadPatientInfoContent(patient))
+        console.log(infoWindows[i]["nhi"]+ patient.getNhiNumber());
+        if (infoWindows[i]["nhi"] === patient.getNhiNumber()) {
+            infoWindows[i]["patient"] = patient;
+            infoWindows[i]["iwindow"].setContent(getDeadPatientInfoContent(patient));
         }
     }
 }
@@ -346,6 +351,11 @@ function mapInfoWindowToPatient(infoWindow, patient) {
             hasExistingInfoWindow = true;
             break;
         }
+    };
+    if (hasExistingInfoWindow) {
+        infoWindows.splice(i, 1, { "iwindow" : infoWindow, "patient" : patient, "nhi" : patient.getNhiNumber()}); //hacks -> cannot use patient obj so need nhi
+                                                                                                                  //java -> js references out of whack when updating
+    } else {
+        infoWindows.push({ "iwindow" : infoWindow, "patient" : patient, "nhi" : patient.getNhiNumber()}); //
     }
-    infoWindows.splice(i, 1, { "iwindow" : infoWindow, "patient" : patient });
 }
