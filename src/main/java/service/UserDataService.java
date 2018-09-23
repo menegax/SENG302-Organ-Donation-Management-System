@@ -46,11 +46,6 @@ public class UserDataService implements IUserDataService, Serializable {
         IAdministratorDataAccess administratorDataAccess = mysqlFactory.getAdministratorDataAccess();
         ITransplantWaitListDataAccess access = mysqlFactory.getTransplantWaitingListDataAccess();
 
-        MapBridge mp = new MapBridge();
-        for (Patient patient : patients) {
-            mp.updateInfoWindow(patient);
-        }
-
         //Thread management
         CachedThreadPool threadPool = CachedThreadPool.getCachedThreadPool();
         threadPool.getThreadService().submit(() -> {

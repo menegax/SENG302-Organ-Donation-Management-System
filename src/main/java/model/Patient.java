@@ -20,6 +20,7 @@ import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.PreferredGender;
 import utility.GlobalEnums.Region;
 import utility.GlobalEnums.Status;
+import utility.MapBridge;
 import utility.PatientActionRecord;
 import utility.Searcher;
 import utility.parsing.DateConverterCSV;
@@ -422,6 +423,8 @@ public class Patient extends User {
         setRequiredOrgans(newPatientAttributes.getRequiredOrgans());
         setWorkPhone(newPatientAttributes.getWorkPhone());
         setZip(newPatientAttributes.getZip());
+        MapBridge mp = new MapBridge(); //coupling to map bridge
+        mp.updateInfoWindow(newPatientAttributes);
     }
 
     /**

@@ -11,6 +11,7 @@ import service.PatientDataService;
 import tornadofx.control.DateTimePicker;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
+import utility.MapBridge;
 import utility.SystemLogger;
 import utility.UserActionHistory;
 import utility.undoRedo.Action;
@@ -325,6 +326,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
         if (valid) {
             warnIfNoLocation();
             setPatientAttributes();
+            MapBridge mp = new MapBridge();
+            mp.updateInfoWindow((Patient) target);
             userActions.log(INFO, "Successfully updated patient profile", new String[]{"Attempted to update patient profile", after.getNhiNumber()});
         } else {
             userActions.log(Level.WARNING, invalidContent.toString(), new String[]{"Attempted to update patient profile", after.getNhiNumber()});
