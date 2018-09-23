@@ -97,13 +97,17 @@ class ScreenControlTouch extends ScreenControl {
             pane.getProperties().put("focusArea", "true");
             pane.setStyle("-fx-background-color: #2c2f34; -fx-border-color: #f5f5f5;");
             if (parent != null) {
-                pane.setScaleX(parent.getScaleX());
-                pane.setScaleY(parent.getScaleY());
-                pane.setTranslateX(parent.getTranslateX());
-                pane.setTranslateY(parent.getTranslateY());
+                double centerParentX = ((Pane)parent).getPrefWidth()/2;
+                double centerParentY = ((Pane)parent).getPrefHeight()/2;
+                double centerChildX = pane.getPrefWidth() / 2;
+                double centerChildY = pane.getPrefHeight() / 2;
+                pane.setTranslateX(parent.getTranslateX() + centerParentX - centerChildX);
+                pane.setTranslateY(parent.getTranslateY() + centerParentY - centerChildY);
                 pane.setLayoutX(parent.getLayoutX());
                 pane.setLayoutY(parent.getLayoutY());
                 pane.setRotate(parent.getRotate());
+                pane.setScaleX(parent.getScaleX());
+                pane.setScaleY(parent.getScaleY());
             }
             addCanvas(pane.getScene());
             List<Node> panes;
