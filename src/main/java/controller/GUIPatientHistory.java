@@ -41,7 +41,7 @@ public class GUIPatientHistory extends TargetedController {
     /**
      * Initializes the patient history screen by loading all logs for the logged in patient
      */
-    public void load() {
+    public void loadController() {
         masterData.addAll(((Patient) target).getUserActionsList());
         populateTable();
     }

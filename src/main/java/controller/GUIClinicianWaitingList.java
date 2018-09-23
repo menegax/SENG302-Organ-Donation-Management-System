@@ -55,7 +55,7 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
      * Initializes waiting list screen by populating table and initializing a double click action
      * to view a patient's profile.
      */
-    public void load() {
+    public void loadController() {
         ClinicianDataService clinicianDataService = new ClinicianDataService();
         OrganWaitlist organRequests = clinicianDataService.getOrganWaitList();
         for (OrganWaitlist.OrganRequest request: organRequests) {

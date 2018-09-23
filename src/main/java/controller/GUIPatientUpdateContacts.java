@@ -1,6 +1,5 @@
 package controller;
 
-import data_access.factories.DAOFactory;
 import javafx.fxml.FXML;
 import javafx.scene.control.Control;
 import javafx.scene.control.TextField;
@@ -9,7 +8,8 @@ import javafx.scene.layout.GridPane;
 import model.Patient;
 import service.PatientDataService;
 import utility.GlobalEnums;
-import utility.undoRedo.Action;
+import utility.undoRedo.IAction;
+import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.util.ArrayList;
@@ -72,7 +72,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
     public void saveContactDetails() {
         boolean valid = setPatientContactDetails();
         if (valid) {
-            Action action = new Action(target, after);
+            IAction action = new SingleAction(target, after);
             statesHistoryScreen.addAction(action);
             userActions.log(INFO, "Successfully saved contact details", new String[]{"Attempted to set contact details", ((Patient) target).getNhiNumber()});
         } else {
@@ -85,7 +85,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
      * Initializes the contact details screen. Loads in the current patient and sets the text fields to
      * display current contact attributes.
      */
-    public void load() {
+    public void loadController() {
         loadProfile(((Patient) target).getNhiNumber());
         setContactFields();
         setupUndoRedo();
@@ -159,7 +159,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
      * Sets the target patient to the currently logged in patient.
      * Throws an InvalidObjectException if the logged in patient can not be retrieved
      *
-     * @param nhi The nhi of the patient to load
+     * @param nhi The nhi of the patient to loadController
      */
     private void loadProfile(String nhi) {
         PatientDataService patientDataService = new PatientDataService();
@@ -167,7 +167,7 @@ public class GUIPatientUpdateContacts extends UndoableController {
             target = patientDataService.getPatientByNhi(nhi);
         }
         catch (NullPointerException e) {
-            userActions.log(Level.SEVERE, "Error loading user", new String[]{"Attempted to load the contacts user", ((Patient) target).getNhiNumber()});
+            userActions.log(Level.SEVERE, "Error loading user", new String[]{"Attempted to loadController the contacts user", ((Patient) target).getNhiNumber()});
         }
     }
 

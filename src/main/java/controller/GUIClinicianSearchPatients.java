@@ -114,7 +114,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
     /**
      * Initialises the data within the table to all patients
      */
-    public void load() {
+    public void loadController() {
         displayY.setText("Display all " + count + " profiles");
         setupAgeSliderListeners();
         populateDropdowns();
@@ -201,13 +201,13 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
                 .getAge())));
         columnStatus.setCellValueFactory(d -> {
             Patient patient = d.getValue();
-            if (patient.getDonations()
+            if (patient.getDonations().keySet()
                     .size() > 0) {
                 return new SimpleStringProperty(patient.getRequiredOrgans()
                         .size() > 0 ? "Donating & Receiving" : "Donating");
             }
-            else if (patient.getRequiredOrgans()
-                    .size() > 0) {
+            else if (patient.getRequiredOrgans().keySet()
+                    .size() > 0 && patient.getDeathDate() == null) {
                 return new SimpleStringProperty("Receiving");
             }
             return new SimpleStringProperty("--");
@@ -235,7 +235,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
         patientDataTable.setItems(sortedData);
     }
 
-
+    @SuppressWarnings("WeakerAccess")
     public void search() {
         List<Patient> results = clinicianDataService.searchPatients(searchEntry.getText(), filter, numResults);
         masterData.clear();
@@ -336,7 +336,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
                 }
                 else {
                     StringBuilder tooltipText = new StringBuilder(patient.getNameConcatenated() + ". Donations: ");
-                    for (Organ organ : patient.getDonations()) {
+                    for (Organ organ : patient.getDonations().keySet()) {
                         tooltipText.append(organ)
                                 .append(", ");
                     }

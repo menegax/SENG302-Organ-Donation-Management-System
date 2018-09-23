@@ -9,11 +9,9 @@ import service.PatientDataService;
 import service.interfaces.IClinicianDataService;
 import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
-import utility.undoRedo.Action;
+import utility.undoRedo.SingleAction;
+import utility.undoRedo.IAction;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -27,7 +25,7 @@ public class ActionTest {
 
     private User after;
 
-    private Action action;
+    private IAction action;
 
     private String beforeName = "beforeChange";
 
@@ -384,7 +382,7 @@ public class ActionTest {
      * creates an action using the current and after users
      */
     private void whenActionCreated() {
-        action = new Action(current, after);
+        action = new SingleAction(current, after);
     }
 
     /**

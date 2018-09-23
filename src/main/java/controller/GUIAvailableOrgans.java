@@ -15,11 +15,9 @@ import model.Patient;
 import model.PatientOrgan;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
-import utility.CachedThreadPool;
-import utility.ExpiryObservable;
+import utility.*;
 import utility.GlobalEnums.Organ;
-import utility.ProgressBarCustomTableCell;
-import utility.ProgressTask;
+import utility.undoRedo.StatesHistoryScreen;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -84,7 +82,8 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
         });
     }
 
-    public void load() {
+    @Override
+    public void loadController() {
         for (PatientOrgan po : masterData) {
             if (po.getProgressTask() != null) {
                 po.getProgressTask().setInterrupted();
@@ -92,20 +91,24 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
         }
         masterData.clear();
         CachedThreadPool.getCachedThreadPool().getThreadService().shutdownNow();
-        List<Patient> deadPatients = patientDataService.getDeadPatients();
+        List<Patient> deadPatients = patientDataService.getDeadDonors();
         for (Patient patient : deadPatients) {
             if (patient.getDeathDate() != null) {
-                for (Organ organ : patient.getDonations()) {
-                    PatientOrgan patientOrgan = new PatientOrgan(patient, organ);
-                    if (!masterData.contains(patientOrgan)) {
-                        if (patientOrgan.timeRemaining() < 0) {
-                            masterData.add(patientOrgan);
+                for (Organ organ : patient.getDonations().keySet()) {
+                    if (patient.getDonations().get(organ) == null) {
+                        PatientOrgan patientOrgan = new PatientOrgan(patient, organ);
+                        if (!masterData.contains(patientOrgan)) {
+                            if (patientOrgan.timeRemaining() < 0) {
+                                masterData.add(patientOrgan);
+                            }
                         }
                     }
                 }
             }
         }
         populateTable();
+        controls = new ArrayList<>();
+        statesHistoryScreen = new StatesHistoryScreen(potentialMatchesBtn, GlobalEnums.UndoableScreen.CLINICIANAVAILABLEORGANS, target);
     }
 
     /**
@@ -270,7 +273,7 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
         } else if (selected.getPatient().getBloodGroup() == null) {
             userActions.log(Level.WARNING, "Selected donor does not have a blood group set. Please set a blood group.", "Attempted to view available matches for a donor without a blood group");
         } else {
-            GUIClinicianPotentialMatches controller = (GUIClinicianPotentialMatches) screenControl.show("/scene/clinicianPotentialMatches.fxml", false, null, selected.getPatient());
+            GUIClinicianPotentialMatches controller = (GUIClinicianPotentialMatches) screenControl.show("/scene/clinicianPotentialMatches.fxml", false, this, selected.getPatient());
             controller.setTarget(selected);
         }
     }
@@ -280,7 +283,7 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
      * Refreshes the table when a profile opened by this controller
      */
     public void windowClosed() {
-        load();
+        loadController();
         availableOrgansTableView.refresh();
     }
 

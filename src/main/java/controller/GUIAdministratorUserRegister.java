@@ -5,7 +5,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
@@ -19,10 +18,9 @@ import service.ClinicianDataService;
 import service.PatientDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
-import utility.undoRedo.Action;
+import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -31,7 +29,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
-import static java.util.logging.Level.SEVERE;
 import static utility.UserActionHistory.userActions;
 
 public class GUIAdministratorUserRegister extends UndoableController {
@@ -79,7 +76,7 @@ public class GUIAdministratorUserRegister extends UndoableController {
     /**
      * Sets up register page GUI elements
      */
-    public void load() {
+    public void loadController() {
         firstnameRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         lastnameRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
         middlenameRegister.addEventFilter(ContextMenuEvent.CONTEXT_MENU_REQUESTED, Event::consume);
@@ -430,20 +427,20 @@ public class GUIAdministratorUserRegister extends UndoableController {
         if (patientButton.isSelected()) {
             LocalDate birth = birthRegister.getValue();
             Patient after = new Patient(id, firstName, middles, lastName, birth);
-            statesHistoryScreen.addAction(new Action(null, after));
+            statesHistoryScreen.addAction(new SingleAction(null, after));
             new PatientDataService().save(after);
             userActions.log(Level.INFO, "Successfully registered patient profile", new String[]{"Attempted to register patient profile", id});
         } else if (clinicianButton.isSelected()) {
             String region = regionRegister.getValue().toString();
             int staffID = new ClinicianDataService().nextStaffId();
             Clinician after = new Clinician(staffID, firstName, middles, lastName, Region.getEnumFromString(region));
-            statesHistoryScreen.addAction(new Action(null, after));
+            statesHistoryScreen.addAction(new SingleAction(null, after));
             new ClinicianDataService().save(after);
             userActions.log(Level.INFO, "Successfully registered clinician profile", new String[]{"Attempted to register clinician profile", id});
         } else {
             try {
                 Administrator after = new Administrator(id, firstName, middles, lastName, password);
-                statesHistoryScreen.addAction(new Action(null, after));
+                statesHistoryScreen.addAction(new SingleAction(null, after));
                 new AdministratorDataService().save(after);
                 userActions.log(Level.INFO, "Successfully registered administrator profile", new String[]{"Attempted to register administrator profile", id});
             } catch (IllegalArgumentException e) {

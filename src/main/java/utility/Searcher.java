@@ -17,7 +17,6 @@ import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.RAMDirectory;
-import utility.GlobalEnums.*;
 
 import java.io.IOException;
 import java.util.*;
@@ -250,7 +249,7 @@ public class Searcher {
      * @param types  The user types to select
      * @return The default list of patient search results.
      */
-    public Map<Integer, List<User>> getDefaultResults(UserTypes[] types, Map<FilterOption, String> filter) {
+    private Map<Integer, List<User>> getDefaultResults(UserTypes[] types, Map<FilterOption, String> filter) {
         Map<Integer, List<User>> results = new HashMap<>();
         List<UserTypes> typesList = Arrays.asList(types);
         List<User> defaultResults = new ArrayList<>();
@@ -350,7 +349,7 @@ public class Searcher {
      * @return List of FuzzyQuery based off the parameters.
      */
     private List<FuzzyQuery> createQueries(String field, String[] criteria, int distance) {
-        List<FuzzyQuery> queries = new ArrayList<FuzzyQuery>();
+        List<FuzzyQuery> queries = new ArrayList<>();
         for (String param : criteria) {
             queries.add(new FuzzyQuery(new Term(field, param.toUpperCase()), distance));
         }
@@ -366,7 +365,7 @@ public class Searcher {
      */
     private List<ScoreDoc> getScoreDocs(List<FuzzyQuery> queries, UserTypes[] types) {
         TopDocs docs;
-        List<ScoreDoc> allDocs = new ArrayList<ScoreDoc>();
+        List<ScoreDoc> allDocs = new ArrayList<>();
         String typeString;
         UserTypes type;
         try {
@@ -437,7 +436,7 @@ public class Searcher {
      */
     @Deprecated
     private List<User> oldCreateUsers(List<ScoreDoc> allDocs, int numResults) {
-        List<User> results = new ArrayList<User>();
+        List<User> results = new ArrayList<>();
         User user;
         int docCount = 0;
         int userCount = 0;
@@ -588,7 +587,7 @@ public class Searcher {
                     }
                     case DONATIONS: {
                         Organ donations = Organ.getEnumFromString(filter.get(option));
-                        if (patient.getDonations() == null || !patient.getDonations().contains(donations)) {
+                        if (patient.getDonations() == null || !patient.getDonations().keySet().contains(donations)) {
                             return false;
                         }
                         break;

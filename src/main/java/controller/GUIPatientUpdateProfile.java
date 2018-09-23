@@ -14,7 +14,9 @@ import utility.GlobalEnums.*;
 import utility.MapBridge;
 import utility.SystemLogger;
 import utility.UserActionHistory;
-import utility.undoRedo.Action;
+import utility.undoRedo.IAction;
+import utility.undoRedo.MultiAction;
+import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.time.LocalDate;
@@ -119,7 +121,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
      * Initializes the profile update screen. Gets the logged in or viewed user and loads the user's profile.
      * Dropdown menus are populated. The enter key press event for saving changes is set up
      */
-    public void load() {
+    public void loadController() {
         populateDropdowns();
         if (userControl.getLoggedInUser() instanceof Patient) {
             disablePatientElements();
@@ -171,7 +173,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
     /**
      * Loads the patient's profile into the gui
      *
-     * @param nhi the NHI of the patient to load
+     * @param nhi the NHI of the patient to loadController
      */
     private void loadProfile(String nhi) {
         Patient patient = patientDataService.getPatientByNhi(nhi);
@@ -208,7 +210,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
             }};
             statesHistoryScreen = new StatesHistoryScreen(controls, UndoableScreen.PATIENTUPDATEPROFILE, target);
         } else {
-            userActions.log(Level.SEVERE, "Error loading patient", new String[]{"Attempted to load patient for updating", ((Patient) target).getNhiNumber()});
+            userActions.log(Level.SEVERE, "Error loading patient", new String[]{"Attempted to loadController patient for updating", ((Patient) target).getNhiNumber()});
         }
     }
 
@@ -216,7 +218,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
     /**
      * Populates the scene controls with values from the patient object
      *
-     * @param patient the patient object whose attributes are used to load into the form
+     * @param patient the patient object whose attributes are used to loadController into the form
      */
     private void populateForm(Patient patient) {
         lastModifiedLbl.setText("Last Modified: " + patient.getModified());
@@ -434,6 +436,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
         after.setNhiNumber(nhiTxt.getText());
         after.setFirstName(firstnameTxt.getText());
         after.setLastName(lastnameTxt.getText());
+        Patient donorBefore = null;
+        Patient donorAfter = null;
 
         if (middlenameTxt.getText()
                 .equals("")) {
@@ -468,6 +472,16 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
         if (deathLocationTxt.getText() != null) { // otherwise date of death will default to current date
             after.setDeathDate(dateOfDeath.getDateTimeValue());
+            for (Organ organ : ((Patient) target).getRequiredOrgans().keySet()) {
+                String donorNhi = ((Patient) target).getRequiredOrgans().get(organ).getDonorNhi();
+                if (donorNhi != null) {
+                    donorBefore = patientDataService.getPatientByNhi(donorNhi);
+                    donorAfter = (Patient) donorBefore.deepClone();
+                    donorAfter.getDonations().put(organ, null);
+
+                    after.getRequiredOrgans().get(organ).setDonorNhi(null);
+                }
+            }
         } else {
             after.setDeathDate(null);
         }
@@ -505,7 +519,12 @@ public class GUIPatientUpdateProfile extends UndoableController {
                     .getSelectedItem()));
         }
 
-        Action action = new Action(target, after);
+        IAction action;
+        if (donorBefore != null) {
+            action = new MultiAction((Patient) target, after, donorBefore, donorAfter);
+        } else {
+            action = new SingleAction(target, after);
+        }
         statesHistoryScreen.addAction(action);
         patientDataService.save(after);
         SystemLogger.systemLogger.log(Level.FINE, "Successfuly update patient to:\n" + after);

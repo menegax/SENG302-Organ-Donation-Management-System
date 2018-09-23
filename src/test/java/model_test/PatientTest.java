@@ -23,13 +23,17 @@ import utility.SystemLogger;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.zip.DataFormatException;
+
+import static java.util.logging.Level.OFF;
+import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static utility.SystemLogger.systemLogger;
+import static utility.UserActionHistory.userActions;
 
 public class PatientTest implements Serializable {
 
@@ -37,7 +41,7 @@ public class PatientTest implements Serializable {
 
     private static Patient testPatient1; //Patient obj not within the database
 
-    private static IPatientDataService patientDataService = new PatientDataService();
+    private static final IPatientDataService patientDataService = new PatientDataService();
 
     @BeforeClass
     public static void setUpBeforeClass() {
@@ -59,10 +63,10 @@ public class PatientTest implements Serializable {
         }},
                 "Bloggs", LocalDate.of(1994, 12, 12)));
 
-        patientDataService.save(new Patient("DEF4567", "Bob", new ArrayList<String>(), "Bobby",
+        patientDataService.save(new Patient("DEF4567", "Bob", new ArrayList<>(), "Bobby",
                 LocalDate.of(1994, 12, 12)));
 
-        testPatient1 = new Patient("JJJ1234", "Rex", new ArrayList<String>(), "Petsberg",
+        testPatient1 = new Patient("JJJ1234", "Rex", new ArrayList<>(), "Petsberg",
                 LocalDate.of(1977, 6, 16));
     }
 
@@ -81,7 +85,7 @@ public class PatientTest implements Serializable {
      */
     @Test
     public void testAddingOfOrgansToRequirements() {
-        Set<Organ> expected = new TreeSet<Organ>();
+        Set<Organ> expected = new TreeSet<>();
         expected.add(Organ.LIVER);
         expected.add(Organ.CORNEA);
         testPatient1.addRequired(Organ.LIVER);
@@ -94,7 +98,7 @@ public class PatientTest implements Serializable {
      */
     @Test
     public void testRemovingOfOrgansFromRequirements() {
-        Set<Organ> expected = new TreeSet<Organ>();
+        Set<Organ> expected = new TreeSet<>();
         testPatient1.addRequired(Organ.LIVER);
         testPatient1.addRequired(Organ.CORNEA);
         testPatient1.removeRequired(Organ.LIVER);
@@ -108,31 +112,14 @@ public class PatientTest implements Serializable {
      */
     @Test
     public void testUpdateDonationsMultiCorrectAdd() {
-        ArrayList<String> addDonations = new ArrayList<String>() {{
-            add("liver");
-            add("lung");
+        Map<Organ, String> addDonations = new HashMap<Organ, String>() {{
+            put(Organ.LIVER, null);
+            put(Organ.LUNG, null);
         }};
         testPatient.updateDonations(addDonations, null);
-        ArrayList<Organ> expected = new ArrayList<Organ>() {{
-            add(Organ.LIVER);
-            add(Organ.LUNG);
-        }};
-        assertEquals(expected, testPatient.getDonations());
-    }
-
-    /**
-     * Add a list containing at least one invalid organ,
-     * expect only liver to be added to donations
-     */
-    @Test
-    public void testUpdateDonationsAddContainInvalid() {
-        ArrayList<String> addDonations = new ArrayList<String>() {{
-            add("liver");
-            add("test");
-        }};
-        testPatient.updateDonations(addDonations, null);
-        ArrayList<Organ> expected = new ArrayList<Organ>() {{
-            add(Organ.LIVER);
+        Map<Organ, String> expected = new HashMap<Organ, String>() {{
+            put(Organ.LIVER, null);
+            put(Organ.LUNG, null);
         }};
         assertEquals(expected, testPatient.getDonations());
     }
@@ -144,30 +131,13 @@ public class PatientTest implements Serializable {
     @Test
     public void testUpdateDonationsRmValid() {
         addDonationsToPatient();
-        ArrayList<String> rmDonations = new ArrayList<String>() {{
-            add("liver");
+        Map<Organ, String> rmDonations = new HashMap<Organ, String>() {{
+            put(Organ.LIVER, null);
         }};
         testPatient.updateDonations(null, rmDonations);
-        ArrayList<Organ> expected = new ArrayList<Organ>() {{
-            add(Organ.LUNG);
+        Map<Organ, String> expected = new HashMap<Organ, String>() {{
+            put(Organ.LUNG, null);
         }};
-        assertEquals(expected, testPatient.getDonations());
-        resetDonationsPatient();
-    }
-
-    /**
-     * Add a list containing at least one invalid organ
-     * expect only liver to be in donations
-     */
-    @Test
-    public void testUpdateDonationsRmInvalid() {
-        testPatient.addDonation(Organ.LIVER);
-        ArrayList<String> rmDonations = new ArrayList<String>() {{
-            add("liver");
-            add("test");
-        }};
-        testPatient.updateDonations(null, rmDonations);
-        ArrayList<Organ> expected = new ArrayList<>();
         assertEquals(expected, testPatient.getDonations());
         resetDonationsPatient();
     }
@@ -179,7 +149,7 @@ public class PatientTest implements Serializable {
     @Test
     public void testUpdateDonationsAddRmNull() {
         testPatient.updateDonations(null, null);
-        ArrayList<Organ> expected = new ArrayList<>();
+        Map<Organ, String> expected = new HashMap<>();
         assertEquals(expected, testPatient.getDonations());
     }
 
@@ -368,7 +338,7 @@ public class PatientTest implements Serializable {
     private void thenPatientHasAttributes(Patient patient) {
         assertNotNull(patient.getCREATED());
         assertEquals(patient.getFirstName(), "Bob");
-        assertEquals(patient.getMiddleNames(), null);
+        assertNull(patient.getMiddleNames());
         assertEquals(patient.getLastName(), "Wallace");
         assertEquals(patient.getBirth(), LocalDate.of(1995, 12, 31));
     }
@@ -385,7 +355,7 @@ public class PatientTest implements Serializable {
      * Helper method for testUpdateDonationsRmValid reset donations list
      */
     private void resetDonationsPatient() {
-        testPatient.setDonations(new ArrayList<>()); //set to empty
+        testPatient.setDonations(new HashMap<>()); //set to empty
     }
 
     /**
