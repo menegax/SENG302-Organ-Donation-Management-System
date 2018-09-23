@@ -555,6 +555,12 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
 
             menu2.getItems().addAll(menu2item4);
         }
+        MenuItem menu2item4 = new MenuItem("Refresh");
+        menu2item4.setOnAction(event -> refresh());
+        if(!screenControl.isTouch()) {
+        	menu2item4.setAccelerator(screenControl.getRefresh());
+        }
+        menu2.getItems().addAll(menu2item4);
         MenuItem logOut = new MenuItem("Log out");
         if(!screenControl.isTouch()) {
             logOut.setAccelerator(screenControl.getLogOut());
@@ -609,12 +615,6 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
                 menu4.getItems().addAll(menu4itemCentre);
             }
         }
-        MenuItem menu4item3 = new MenuItem("Refresh");
-        menu4item3.setOnAction(event -> refresh());
-        if(!screenControl.isTouch()) {
-            menu4item3.setAccelerator(screenControl.getRefresh());
-        }
-        menu4.getItems().addAll(menu4item3);
         bar.getMenus().addAll(menu4);
 
         Button closeButton = new Button("X");
