@@ -1,6 +1,7 @@
 var map, geocoder, patients, mapBridge, successCount;
 var markers = [];
 var infoWindows = [];
+var failedPatientArray = [];
 
 function init() {
     geocoder = new google.maps.Geocoder();
@@ -14,7 +15,7 @@ function init() {
 
         document.getElementById('availableOrgansView').addEventListener('click', function () {
             validCount = 0;
-
+            failedPatientArray = [];
             markers.forEach(function (marker) {
                 marker.setMap(null);
             });
@@ -77,6 +78,8 @@ function addMarker(patient) {
         markers.push(marker);
     }
     else {
+        failedPatientArray.push(patient);
+
         console.log('Geocoding failed because: ' + status);
     }
 }
@@ -194,7 +197,6 @@ function openPatientProfile(patientNhi) {
  */
 function getOrganOptions(patient) {
     var donations = patient.getDonations().toString();
-    getDonations(patient, function(donations) {})
     var donationStr;
     if (donations !== '[]') {
         donationStr = '<b>Donations:</b><br>' + donations.substring(1, donations.length - 1);
@@ -244,6 +246,7 @@ function addMarkers(i) {
  * Clear the markers from the map
  */
 function clearMarkers() {
+    failedPatientArray = [];
     markers.forEach(function (marker) {
         marker.setMap(null);
     });
@@ -263,8 +266,18 @@ function hideNotification() {
  * @param numTotal total patients to load
  */
 function showNotification(numSuccess, numTotal) {
+    var modalContent = "";
     $('#marker-notification-msg').html('Successfully loaded ' + numSuccess + ' out of ' + numTotal + ' patient locations');
     $('#marker-notification').show();
+    failedPatientArray.forEach(function(patient) {
+        var nhi = patient.getNhiNumber();
+        modalContent += '<tr>\n' +
+           '<th scope=\"row\"><button  onclick="openPatientProfile(\'' + nhi + '\')" type=\"button\" class=\"btn btn-link\" style=\"font-size: 15px; margin-left: -20px\">'+  patient.getNhiNumber() + '</button></th>\n' +
+           '<td style=\"font-size: 15px; padding-top: 18px\">' + patient.getNameConcatenated() + '</td>\n' +
+           '<td style=\"font-size: 15px; padding-top: 18px\">' + patient.getDeathLocationConcat() + '</td>\n' +
+           '</tr>';
+    });
+    $('#failed-patient-table').html(modalContent);
 }
 
 /**
