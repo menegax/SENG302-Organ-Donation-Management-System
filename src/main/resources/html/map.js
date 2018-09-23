@@ -11,8 +11,6 @@ function init() {
 
     google.maps.event.addListenerOnce(map, 'idle', function () {
         setMapDragEnd();
-        addMarkers(patients.size());
-
         document.getElementById('availableOrgansView').addEventListener('click', function () {
             validCount = 0;
             failedPatientArray = [];
@@ -76,7 +74,12 @@ function addMarker(patient) {
         markers.push(marker);
     }
     else {
-        failedPatientArray.push(patient);
+        var index = failedPatientArray.indexOf(patient);
+        if (index !== -1) {
+            failedPatientArray[index] = patient;
+        }else {
+            failedPatientArray.push(patient);
+        }
         console.log('Geocoding failed because: ' + status);
     }
 }
@@ -265,6 +268,7 @@ function showNotification(numSuccess, numTotal) {
     var modalMessage = 'Successfully loaded ' + numSuccess + ' out of ' + numTotal + ' patient locations';
     $('#marker-notification-msg').html();
     $('#marker-notification').show();
+    console.log("TEST")
     failedPatientArray.forEach(function(patient) {
         var nhi = patient.getNhiNumber();
         modalContent += '<tr>\n' +
