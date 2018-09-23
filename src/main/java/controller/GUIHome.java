@@ -652,6 +652,21 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
                     topMenu.setRight(closeButton);
                 }
                 systemLogger.log(FINER, "Set non-MacOS menu bar");
+                setMenuStyles();
+
+            }
+        }
+    }
+
+    /**
+     * Increases the size of the MenuBar to match the exit button
+     */
+    private void setMenuStyles() {
+        menuBar.setPrefHeight(35);
+        for (Menu menu : menuBar.getMenus()) {
+            menu.setStyle("-fx-font-size: 15px;");
+            for (MenuItem menuItem : menu.getItems()) {
+                menuItem.setStyle("-fx-font-size: 15px;");
             }
         }
     }
