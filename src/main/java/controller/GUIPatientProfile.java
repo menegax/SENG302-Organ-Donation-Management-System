@@ -295,7 +295,11 @@ public class GUIPatientProfile extends TargetedController {
 		if (patient.getRegion() == null) {
 			regionLbl.getStyleClass().add("notSet");
 		} else {
-			regionLbl.getStyleClass().clear();
+			if (screenControl.isTouch()) {
+				cityLbl.setStyle("-fx-fill: white; ");
+			} else {
+				cityLbl.setStyle("-fx-fill: black; ");
+			}
 		}
 		if (patient.getZip() != 0) {
 			zipLbl.setText(String.valueOf(patient.getZip()));
