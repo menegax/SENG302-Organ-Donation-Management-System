@@ -185,9 +185,6 @@ function getAlivePatientInfoContent(patient) {
  * Opens patient profile when the button from the infoWindow is clicked on
  */
 function openPatientProfile(patientNhi) {
-    for (var i = 0; i<infoWindows.length; i++) {
-        console.log(infoWindows[i]["patient"].getNhiNumber() + "TESETTSETST")
-    }
     mapBridge.openPatientProfile(patientNhi);
 }
 
@@ -327,9 +324,7 @@ function buildOrganDropdown(patient, infowindow) {
  * @param patient - patient whos info window is to be updated
  */
 function reloadInfoWindow(patient) {
-    console.log(infoWindows.length);
     for (var i =0; i<infoWindows.length; i++) {
-        console.log(infoWindows[i]["nhi"]+ patient.getNhiNumber());
         if (infoWindows[i]["nhi"] === patient.getNhiNumber()) {
             infoWindows[i]["patient"] = patient;
             infoWindows[i]["iwindow"].setContent(getDeadPatientInfoContent(patient));
