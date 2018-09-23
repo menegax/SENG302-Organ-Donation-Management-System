@@ -96,7 +96,7 @@ function makeMarker(patient, results) {
             title: name,
             animation: google.maps.Animation.DROP,
             label: 'D',
-            icon: 'https://maps.google.com/mapfiles/kml/shapes/info-i_maps.png'
+            icon: '../image/markers/blue.png'
         });
     }
     else if (!patient.isDead()) {
@@ -106,7 +106,7 @@ function makeMarker(patient, results) {
             title: name,
             animation: google.maps.Animation.DROP,
             label: 'A',
-            icon: 'https://maps.google.com/mapfiles/kml/shapes/parking_lot_maps.png'
+            icon: '../image/markers/green.png'
         });
     }
 
@@ -140,14 +140,14 @@ function attachInfoWindow(patient, marker) {
         })
     });
 
-    marker.addListener('click', function toggleBounce() {
-        if (marker.getAnimation() !== null) {
-            marker.setAnimation(null); //todo make closing the info window stop the animation
-        }
-        else {
-            marker.setAnimation(google.maps.Animation.BOUNCE);
-        }
-    });
+    // marker.addListener('click', function toggleBounce() {
+    //     if (marker.getAnimation() !== null) {
+    //         marker.setAnimation(null); //todo make closing the info window stop the animation
+    //     }
+    //     else {
+    //         marker.setAnimation(google.maps.Animation.BOUNCE);
+    //     }
+    // });
 }
 
 /**
