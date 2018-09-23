@@ -10,6 +10,7 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -690,7 +691,7 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
     void openMap() {
 
         if (!screenControl.getMapOpen()) {
-            GUIMap controller = (GUIMap) screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
+            GUIMap controller = (GUIMap) screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser(), null);
             screenControl.setMapOpen(true);
             controller.setPatients(new ArrayList<>());
         }

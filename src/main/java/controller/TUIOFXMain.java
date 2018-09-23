@@ -11,6 +11,7 @@ import org.tuiofx.TuioFX;
 import service.UserDataService;
 import utility.SystemLogger;
 import utility.UserActionHistory;
+import javafx.geometry.Point2D;
 
 import static java.util.logging.Level.INFO;
 import static utility.SystemLogger.systemLogger;
@@ -42,7 +43,7 @@ public class TUIOFXMain extends Application {
         Stage stage = setUpStage();
         ScreenControlTouch screenControl = (ScreenControlTouch) ScreenControl.getScreenControl();
         screenControl.setTouchStage(stage);
-        screenControl.show("/scene/login.fxml", false,null, null);
+        screenControl.show("/scene/login.fxml", false,null, null, null);
         screenControl.setLoginShowing(true);
         Application.setUserAgentStylesheet("MODENA");
         StyleManager.getInstance().addUserAgentStylesheet("/css/guiStyle.css");

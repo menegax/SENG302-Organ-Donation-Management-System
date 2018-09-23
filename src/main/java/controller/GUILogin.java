@@ -4,6 +4,7 @@ import static utility.UserActionHistory.userActions;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -91,7 +92,8 @@ public class GUILogin implements IWindowObserver {
      */
     @FXML
     public void goToRegister() {
-        screenControl.show("/scene/userRegister.fxml", false, null, null);
+        Parent parent = screenControl.getTouchParent(loginPane);
+        screenControl.show("/scene/userRegister.fxml", false, null, null, parent);
     }
 
     /**
@@ -126,7 +128,7 @@ public class GUILogin implements IWindowObserver {
                 administratorDataService.save(administrator);
                 userControl.addLoggedInUserToCache(administratorDataService.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
             }
-            GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, userControl.getLoggedInUser());
+            GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, userControl.getLoggedInUser(), loginPane);
             controller.setTarget(userControl.getLoggedInUser());
             if(!screenControl.isTouch()) {
                 Stage stage = (Stage) loginPane.getScene().getWindow();
@@ -146,7 +148,7 @@ public class GUILogin implements IWindowObserver {
     }
 
     private void openMap() {
-        screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
+        screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser(), null);
         screenControl.setMapOpen(true);
     }
 

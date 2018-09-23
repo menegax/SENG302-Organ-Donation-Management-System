@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -8,6 +9,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.User;
 import utility.undoRedo.UndoableWrapper;
+import javafx.geometry.*;
 
 import java.util.*;
 
@@ -55,7 +57,7 @@ public abstract class ScreenControl {
     abstract void removeUnsavedAsterisks();
     abstract void addUnsavedAsterisks();
     abstract boolean closeWindow(Pane pane);
-    abstract public Object show(String fxml, Boolean undoable, IWindowObserver parentController, User targetUser);
+    abstract public Object show(String fxml, Boolean undoable, IWindowObserver parentController, User targetUser, Parent parent);
 
     ScreenControl() {
         setUpKeyCodeCombinations();
@@ -229,5 +231,14 @@ public abstract class ScreenControl {
     public abstract void centerPanes();
 
     public GUIMap getMapController() { return mapController; }
+
+    /**
+     * Gets the touch enabled pane of an outer pane of an fxml
+     * @param outerPane the most outer pane of an fxml tab
+     * @return the GUIHome pane of that tab
+     */
+    public Parent getTouchParent(Pane outerPane) {
+        return outerPane.getParent().getParent().getParent();
+    }
 }
 

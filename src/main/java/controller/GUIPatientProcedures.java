@@ -7,8 +7,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
@@ -35,7 +38,7 @@ import static utility.UserActionHistory.userActions;
 public class GUIPatientProcedures extends UndoableController implements IWindowObserver{
 
     @FXML
-    public AnchorPane patientProceduresPane;
+    private Pane patientProceduresPane;
 
     @FXML
     public TableView<Procedure> previousProceduresView;
@@ -186,7 +189,8 @@ public class GUIPatientProcedures extends UndoableController implements IWindowO
      */
     @FXML
     public void addProcedure() {
-        GUIPatientProcedureForm controller = (GUIPatientProcedureForm) screenControl.show("/scene/patientProcedureForm.fxml", false, this, target);
+        Parent parent = screenControl.getTouchParent(patientProceduresPane);
+        GUIPatientProcedureForm controller = (GUIPatientProcedureForm) screenControl.show("/scene/patientProcedureForm.fxml", false, this, target, parent);
         controller.setTarget(target);
     }
 
@@ -213,7 +217,8 @@ public class GUIPatientProcedures extends UndoableController implements IWindowO
             userActions.log(Level.WARNING, "No procedure selected", new String[]{"Attempted to edit a procedure", ((Patient) target).getNhiNumber()});
             return;
         }
-        GUIPatientProcedureForm controller = (GUIPatientProcedureForm) screenControl.show("/scene/patientProcedureForm.fxml", false, this, target);
+        Parent parent = screenControl.getTouchParent(patientProceduresPane);
+        GUIPatientProcedureForm controller = (GUIPatientProcedureForm) screenControl.show("/scene/patientProcedureForm.fxml", false, this, target, parent);
         controller.setTarget(target);
         controller.setupEditing(selectedProcedure);
     }

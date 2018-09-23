@@ -13,6 +13,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.zip.DataFormatException;
 
+import javafx.scene.Parent;
+import javafx.scene.layout.Pane;
+
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +28,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import model.Patient;
@@ -43,6 +47,9 @@ import utility.undoRedo.StatesHistoryScreen;
 
 public class GUIClinicianSearchPatients extends UndoableController implements IWindowObserver {
 
+	@FXML
+	private GridPane pane;
+	
     @FXML
     private TableView<Patient> patientDataTable;
 
@@ -172,7 +179,8 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
                 Patient selected = patientDataTable.getSelectionModel()
                         .getSelectedItem();
                 patientDataService.save(patientDataService.getPatientByNhi(selected.getNhiNumber())); //save to local
-                GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected);
+                Parent parent = screenControl.getTouchParent(pane);
+                GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected, parent);
                 controller.setTarget(selected);
             }
         });
