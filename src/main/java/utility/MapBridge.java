@@ -53,10 +53,6 @@ public class MapBridge {
         PatientOrgan targetPatientOrgan = new PatientOrgan(patient, organ);
         targetPatientOrgan.startTask();
         targetPatientOrgan.getProgressTask().setProgressBar(new ProgressBar()); //dummy progress task
-        if (radiiTask != null) {
-            System.out.println("INTERUPPTTED THE THREAD");
-            radiiTask.setInterrupted();
-        }
         radiiTask = targetPatientOrgan.getProgressTask();
         CachedThreadPool.getCachedThreadPool().getThreadService().submit(radiiTask);
         String remainingTime = radiiTask.getMessage();
@@ -112,6 +108,9 @@ public class MapBridge {
     }
 
     public void loadCircle(String patientNhi, String organStr) {
+        if (radiiTask != null) {
+            radiiTask.setInterrupted();
+        }
         Patient patient = patientDataService.getPatientByNhi(patientNhi);
         GlobalEnums.Organ organ = GlobalEnums.Organ.getEnumFromString(organStr);
         if (patient.getDonations().contains(organ)) {

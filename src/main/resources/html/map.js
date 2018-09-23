@@ -99,7 +99,9 @@ function addMarker(patient) {
                 }
             });
             clearCircles();
-
+            if (patient.getDonations().size() > 0) {
+                setCurrentOrgan(patient.getDonations().get(0).toString());
+            }
             if (patient.getDonations() != null && patient.getDeathDate() != null) {
                 attachRadius(patient);
             } else {
@@ -190,8 +192,6 @@ function setCurrentOrgan(organ) {
  */
 function updateMarkerRadii(radius, color, organ) {
     circles.forEach(function(circle){
-        console.log(circle.organ);
-        console.log(currentOrgan + "\n");
          if (circle.organ === currentOrgan) {
             if (circle.organ === organ) {
                 circle.setOptions({radius: radius, fillColor: color, map: map});
