@@ -55,42 +55,42 @@
             <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Blood Type:" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Blood Type:" styleClass="TEXT" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Organ:" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Organ:" styleClass="TEXT" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text fx:id="bloodTypeLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="A+" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+            <Text fx:id="bloodTypeLabel" strokeType="OUTSIDE" styleClass="TEXT" strokeWidth="0.0" text="A+" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text fx:id="organLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Liver" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+            <Text fx:id="organLabel" strokeType="OUTSIDE" styleClass="TEXT" strokeWidth="0.0" text="Liver" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Name:" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="Name:" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text fx:id="nameLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Joe Middle Bloggs" GridPane.columnIndex="3" GridPane.valignment="BOTTOM">
+            <Text fx:id="nameLabel" strokeType="OUTSIDE" styleClass="TEXT" strokeWidth="0.0" text="Joe Middle Bloggs" GridPane.columnIndex="3" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Age:" GridPane.columnIndex="1" GridPane.rowIndex="3">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="Age:" GridPane.columnIndex="1" GridPane.rowIndex="3">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text fx:id="ageLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="13" GridPane.columnIndex="3" GridPane.rowIndex="3">
+            <Text fx:id="ageLabel" strokeType="OUTSIDE" styleClass="TEXT" strokeWidth="0.0" text="13" GridPane.columnIndex="3" GridPane.rowIndex="3">
                <font>
                   <Font size="15.0" />
                </font>
@@ -113,42 +113,42 @@
             <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Death Location:" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="Death Location:" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Death Region:" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="Death Region:" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text fx:id="deathLocationLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Death Street" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+            <Text fx:id="deathLocationLabel" strokeType="OUTSIDE" styleClass="TEXT" strokeWidth="0.0" text="Death Street" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text fx:id="regionLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="Canterbury" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+            <Text fx:id="regionLabel" strokeType="OUTSIDE" styleClass="TEXT" strokeWidth="0.0" text="Canterbury" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="NHI:" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="NHI:" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text fx:id="nhiLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="ABC1234" GridPane.columnIndex="2" GridPane.valignment="BOTTOM">
+            <Text fx:id="nhiLabel" strokeType="OUTSIDE" styleClass="TEXT" strokeWidth="0.0" text="ABC1234" GridPane.columnIndex="2" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Expiry Time: " GridPane.rowIndex="3">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="Expiry Time: " GridPane.rowIndex="3">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text fx:id="expiryTimeLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="11:11:11" GridPane.columnIndex="2" GridPane.rowIndex="3">
+            <Text fx:id="expiryTimeLabel" strokeType="OUTSIDE" styleClass="TEXT" strokeWidth="0.0" text="11:11:11" GridPane.columnIndex="2" GridPane.rowIndex="3">
                <font>
                   <Font size="15.0" />
                </font>
@@ -178,15 +178,15 @@
                <GridPane.margin>
                   <Insets left="20.0" />
                </GridPane.margin></ComboBox>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Region" wrappingWidth="135.48205262422562" GridPane.columnIndex="2" GridPane.halignment="LEFT">
+            <Text strokeType="OUTSIDE" styleClass="TEXT" strokeWidth="0.0" text="Region" wrappingWidth="135.48205262422562" GridPane.columnIndex="2" GridPane.halignment="LEFT">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin></Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Birth Gender" wrappingWidth="127.48205262422562" GridPane.columnIndex="3" GridPane.halignment="RIGHT">
+            <Text strokeType="OUTSIDE" styleClass="TEXT" strokeWidth="0.0" text="Birth Gender" wrappingWidth="127.48205262422562" GridPane.columnIndex="3" GridPane.halignment="RIGHT">
                <GridPane.margin>
                   <Insets right="22.0" />
                </GridPane.margin></Text>
-            <Text fx:id="ageSliderLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="0-100" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+            <Text fx:id="ageSliderLabel" styleClass="TEXT" strokeType="OUTSIDE" strokeWidth="0.0" text="0-100" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
          </children>
       </GridPane>
       <Button fx:id="closeButton" alignment="CENTER" mnemonicParsing="false" onAction="#closeMatchWindow" prefHeight="30.0" prefWidth="109.0" text="Close" GridPane.halignment="LEFT" GridPane.rowIndex="6">

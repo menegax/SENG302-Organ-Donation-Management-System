@@ -262,20 +262,34 @@ public class GUIPatientProfile extends TargetedController {
 				: patient.getStreetNumber() + " " + patient.getStreetName());
 		if (patient.getStreetName() == null || patient.getStreetName().length() == 0) {
 			streetLbl.getStyleClass().add("notSet");
-		} else {
-			streetLbl.getStyleClass().clear();
+		}
+		else {
+			if (screenControl.isTouch()) {
+				streetLbl.setStyle("-fx-fill: white; ");
+			} else {
+				streetLbl.setStyle("-fx-fill: black; ");
+			}
 		}
 		suburbLbl.setText((patient.getSuburb() == null || patient.getSuburb().length() == 0) ? "Not set" : patient.getSuburb());
 		if (patient.getSuburb() == null || patient.getSuburb().length() == 0) {
 			suburbLbl.getStyleClass().add("notSet");
-		} else {
-			suburbLbl.getStyleClass().clear();
+		}
+		else {
+			if (screenControl.isTouch()) {
+				suburbLbl.setStyle("-fx-fill: white; ");
+			} else {
+				suburbLbl.setStyle("-fx-fill: black; ");
+			}
 		}
 		cityLbl.setText((patient.getCity() == null || patient.getCity().length() == 0) ? "Not set" : patient.getCity());
 		if (patient.getCity() == null || patient.getCity().length() == 0) {
 			cityLbl.getStyleClass().add("notSet");
 		} else {
-			cityLbl.getStyleClass().clear();
+			if (screenControl.isTouch()) {
+				cityLbl.setStyle("-fx-fill: white; ");
+			} else {
+				cityLbl.setStyle("-fx-fill: black; ");
+			}
 		}
 		regionLbl.setText(patient.getRegion() == null ? "Not set" : patient.getRegion().getValue());
 		if (patient.getRegion() == null) {
@@ -289,7 +303,11 @@ public class GUIPatientProfile extends TargetedController {
 				zipLbl.setText("0" + zipLbl.getText());
 			}
 		} else {
-			zipLbl.setText("Not set");
+			if (screenControl.isTouch()) {
+				zipLbl.setStyle("-fx-fill: white; ");
+			} else {
+				zipLbl.setStyle("-fx-fill: black; ");
+			}
 		}
 	}
 

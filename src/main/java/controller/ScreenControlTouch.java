@@ -60,6 +60,8 @@ class ScreenControlTouch extends ScreenControl {
         fontMap.put("paneTitle", 24);
         fontMap.put("userNameDisplay", 24);
         fontMap.put("nameTxt", 24);
+        fontMap.put("title", 28);
+        fontMap.put("TEXT", 14);
     }
 
     public static ScreenControlTouch getScreenControl() {
@@ -255,14 +257,19 @@ class ScreenControlTouch extends ScreenControl {
                             + "#e62e00 "
                             + "linear-gradient(#ffe6e6, #ffcccc),"
                             + "linear-gradient(#ff9999 0%, #ff8080 49%, #ff6666 50%, #ff4d4d 100%);");
+                } else if (child.getStyleClass().toString().equals("TEXT")) {
+                    child.setStyle("-fx-fill: white; -fx-font-size: 10px");
                 } else if (child.getId() == null || (!fontMap.containsKey(child.getId()))) {
                     child.setStyle("-fx-font-size: 10px;");
+                } else if (child.getStyleClass().toString().equals("label title")) {
+                    child.setStyle("-fx-text-fill: white; -fx-font-size: 28px; ");
                 } else {
                     child.setStyle("-fx-font-size: " + String.valueOf(fontMap.get(child.getId())) + "px;");
                 }
             }
         }
     }
+
 
     /**
      * Called when switching tabs with GuiHome
