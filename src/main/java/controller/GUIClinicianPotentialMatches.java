@@ -18,6 +18,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.scene.control.*;
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
@@ -573,7 +574,8 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
                 try {
                     Patient selectedUser = patientDataService.getPatientByNhi(request.getReceiverNhi());
                     patientDataService.save(selectedUser);
-                    GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser);
+                	Point2D paneLoc = new Point2D(potentialMatchesPane.getTranslateX(), potentialMatchesPane.getTranslateY());
+                    GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser, paneLoc);
                     controller.setTarget(selectedUser);
                 }
                 catch (Exception e) {
@@ -778,7 +780,8 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
             alert.show();
             alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> populateMap(patients));
         } else {
-            screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
+        	Point2D paneLoc = new Point2D(potentialMatchesPane.getTranslateX(), potentialMatchesPane.getTranslateY());
+            screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser(), paneLoc);
             populateMap(patients);
         }
     }

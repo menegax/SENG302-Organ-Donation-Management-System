@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import model.Administrator;
@@ -186,7 +187,8 @@ public class GUIPatientProcedures extends UndoableController implements IWindowO
      */
     @FXML
     public void addProcedure() {
-        GUIPatientProcedureForm controller = (GUIPatientProcedureForm) screenControl.show("/scene/patientProcedureForm.fxml", false, this, target);
+    	Point2D paneLoc = new Point2D(patientProceduresPane.getTranslateX(), patientProceduresPane.getTranslateY());
+        GUIPatientProcedureForm controller = (GUIPatientProcedureForm) screenControl.show("/scene/patientProcedureForm.fxml", false, this, target, paneLoc);
         controller.setTarget(target);
     }
 
@@ -213,7 +215,8 @@ public class GUIPatientProcedures extends UndoableController implements IWindowO
             userActions.log(Level.WARNING, "No procedure selected", new String[]{"Attempted to edit a procedure", ((Patient) target).getNhiNumber()});
             return;
         }
-        GUIPatientProcedureForm controller = (GUIPatientProcedureForm) screenControl.show("/scene/patientProcedureForm.fxml", false, this, target);
+    	Point2D paneLoc = new Point2D(patientProceduresPane.getTranslateX(), patientProceduresPane.getTranslateY());
+        GUIPatientProcedureForm controller = (GUIPatientProcedureForm) screenControl.show("/scene/patientProcedureForm.fxml", false, this, target, paneLoc);
         controller.setTarget(target);
         controller.setupEditing(selectedProcedure);
     }

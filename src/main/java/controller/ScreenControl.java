@@ -8,6 +8,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.User;
 import utility.undoRedo.UndoableWrapper;
+import javafx.geometry.*;
 
 import java.util.*;
 
@@ -55,7 +56,7 @@ public abstract class ScreenControl {
     abstract void removeUnsavedAsterisks();
     abstract void addUnsavedAsterisks();
     abstract boolean closeWindow(Pane pane);
-    abstract public Object show(String fxml, Boolean undoable, IWindowObserver parentController, User targetUser);
+    abstract public Object show(String fxml, Boolean undoable, IWindowObserver parentController, User targetUser, Point2D parentLoc);
 
     ScreenControl() {
         setUpKeyCodeCombinations();

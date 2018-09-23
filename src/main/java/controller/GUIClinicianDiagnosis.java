@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
@@ -152,7 +153,8 @@ public class GUIClinicianDiagnosis extends UndoableController implements IWindow
     private void setUpDoubleClickEdit(TableView<Disease> tableView) {
         tableView.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && tableView.getSelectionModel().getSelectedItem() != null) {
-                GUIPatientUpdateDiagnosis controller = (GUIPatientUpdateDiagnosis) screenControl.show("/scene/patientUpdateDiagnosis.fxml", false,this, target);
+            	Point2D paneLoc = new Point2D(clinicianDiagnosesPane.getTranslateX(), clinicianDiagnosesPane.getTranslateY());
+                GUIPatientUpdateDiagnosis controller = (GUIPatientUpdateDiagnosis) screenControl.show("/scene/patientUpdateDiagnosis.fxml", false,this, target, paneLoc);
                 controller.setIsAdd(false);
                 controller.setDisease(tableView.getSelectionModel().getSelectedItem());
                 controller.setTarget(target);
@@ -167,7 +169,8 @@ public class GUIClinicianDiagnosis extends UndoableController implements IWindow
      * an addition of a disease rather than an update
      */
     private void addDiagnosis() {
-        GUIPatientUpdateDiagnosis controller = (GUIPatientUpdateDiagnosis) screenControl.show("/scene/patientUpdateDiagnosis.fxml", false, this, target);
+    	Point2D paneLoc = new Point2D(clinicianDiagnosesPane.getTranslateX(), clinicianDiagnosesPane.getTranslateY());
+        GUIPatientUpdateDiagnosis controller = (GUIPatientUpdateDiagnosis) screenControl.show("/scene/patientUpdateDiagnosis.fxml", false, this, target, paneLoc);
         controller.setIsAdd(true);
         controller.setTarget(target);
     }

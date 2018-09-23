@@ -19,6 +19,7 @@ import model.User;
 import org.tuiofx.internal.base.TuioFXCanvas;
 import service.UserDataService;
 import utility.undoRedo.UndoableWrapper;
+import javafx.geometry.Point2D;
 
 import java.io.IOException;
 import java.util.*;
@@ -73,9 +74,10 @@ class ScreenControlTouch extends ScreenControl {
      * @param fxml the fxml to display
      * @param undoable if the pane to be displayed is undoable or not
      * @param parentController controller to notify when pane shown closes
+     * @param parentLoc Defines the x,y coorderance of the parent pane
      * @return the controller created for this fxml
      */
-    public Object show(String fxml, Boolean undoable, IWindowObserver parentController, User targetUser) {
+    public Object show(String fxml, Boolean undoable, IWindowObserver parentController, User targetUser, Point2D parentLoc) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxml));
             Region pane = fxmlLoader.load();
@@ -92,6 +94,8 @@ class ScreenControlTouch extends ScreenControl {
             }
             pane.getProperties().put("focusArea", "true");
             pane.setStyle("-fx-background-color: #2c2f34; -fx-border-color: #f5f5f5;");
+            pane.setTranslateX(parentLoc.getX());
+            pane.setTranslateY(parentLoc.getY());
             addCanvas(pane.getScene());
             List<Node> panes;
             if(isLoginShowing) {

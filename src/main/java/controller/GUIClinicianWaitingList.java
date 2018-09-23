@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -101,7 +102,8 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
                     try {
                         Patient selectedUser = patientDataService.getPatientByNhi(request.getReceiverNhi());
                         patientDataService.save(selectedUser);
-                        GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser);
+                    	Point2D paneLoc = new Point2D(clinicianWaitingList.getTranslateX(), clinicianWaitingList.getTranslateY());
+                        GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser, paneLoc);
                         controller.setTarget(selectedUser);
                     } catch (Exception e) {
                         userActions.log(Level.SEVERE, "Failed to retrieve selected patient from database", new String[]{"Attempted to retrieve selected patient from database", request.getReceiverNhi()});
@@ -232,7 +234,8 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
                 populateMap(patients);
             });
         } else {
-            screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
+        	Point2D paneLoc = new Point2D(clinicianWaitingList.getTranslateX(), clinicianWaitingList.getTranslateY());
+            screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser(), paneLoc);
             populateMap(patients);
         }
     }
