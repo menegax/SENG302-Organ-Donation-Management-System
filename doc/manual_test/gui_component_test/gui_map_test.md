@@ -149,6 +149,11 @@
 5. Expected : The success count of valid organs to be the same as noted in available organs
 6: Expected : Should not be any clickable button "view failed patients"
 
+### Test 18 - Marker Colors for Alive/Dead Patients
+1. Log in as a clinician
+2. (Given that there are patients in the database) View the map
+3. Expected: markers are colored differently depending on if the patient is alive or dead
+
 
 ## Test History
 
@@ -209,5 +214,9 @@ Test 14: Pass
 Test 15: Pass - may need to add different table for when there are no errors
 Test 16: Pass
 Test 17: Pass
+
+### 23/09/18 - Andrew
+
+Test 18: Pass
 
 **ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**
