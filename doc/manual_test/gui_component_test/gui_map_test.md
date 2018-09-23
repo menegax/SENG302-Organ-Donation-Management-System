@@ -125,14 +125,29 @@
 
 
 ### Test 15 - Displaying correct information in information modal
-1. Log in as CLinician
+1. Log in as Clinician
 2. Go to available organs
 3. Edit 2 patients so that their death addresses are garbage. (if no organs in available organs add some)
 4. Click view on map.
 5. Wait for info popup and click view patients
 6. Expected : at least 2 patients that had their addresses changed to garbage 
 
+### Test 16 - Displaying correct success count in popup message
+1. Log in as Clinician
+2. Go to available organs
+3. Count the number of organs in this table (with valid death addresses).
+4. Change one of these addresses to be invalid 
+5. Click view on map
+6. Expected : The success count of valid organs to be the same as noted in available organs + sum of all patients in available organs
+7: Expected : To be able to click "view failed patients"
 
+### Test 17 - Displaying correct popup message
+1. Log in as Clinician
+2. Go to available organs
+3. Ensure that all patients have valid death addresses.
+4. Click view on map
+5. Expected : The success count of valid organs to be the same as noted in available organs
+6: Expected : Should not be any clickable button "view failed patients"
 
 
 ## Test History
@@ -192,6 +207,7 @@ Test 12: Pass
 Test 13: Pass
 Test 14: Pass
 Test 15: Pass - may need to add different table for when there are no errors
-
+Test 16: Pass
+Test 17: Pass
 
 **ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**
