@@ -175,5 +175,23 @@ Test 13: Pass
 
 Test 14: Pass
 
+### 23/09/18 - Hayden
+
+Test 1: Pass
+Test 2: Pass
+Test 3: Pass
+Test 4: Pass - after closing and opening the map default patients arent added
+Test 5: Pass
+Test 6: Pass
+Test 7: Pass
+Test 8: Fail - no markers shown
+Test 9: Pass
+Test 10: Pass
+Test 11: Pass
+Test 12: Pass
+Test 13: Pass
+Test 14: Pass
+Test 15: Pass - may need to add different table for when there are no errors
+
 
 **ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**
