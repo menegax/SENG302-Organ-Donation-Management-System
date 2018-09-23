@@ -239,7 +239,6 @@ class ScreenControlTouch extends ScreenControl {
                         resizeFonts((Pane) tab.getContent());
                     }
                 } else if (child.getId() != null && child.getId().equals("EXIT")) {
-                    System.out.println("Set button style" );
                     child.setStyle("-fx-font-size: 15px; "
                             + "-fx-test-fill: white; "
                             + "-fx-font-weight: bold; "
