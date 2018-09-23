@@ -1,6 +1,7 @@
 package utility;
 
 import com.sun.javafx.scene.control.skin.LabeledText;
+import impl.org.controlsfx.skin.RangeSliderSkin;
 import javafx.event.Event;
 import javafx.event.EventTarget;
 import javafx.geometry.Rectangle2D;
@@ -19,6 +20,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.controlsfx.control.RangeSlider;
 import utility.MathUtilityMethods;
 
 /**
@@ -284,6 +286,8 @@ public class MultiTouchHandler {
      */
     private boolean scrollable(EventTarget target) {
         if (target instanceof ListView || target instanceof ListCell || target instanceof TableView || target instanceof TableColumn || target instanceof TableRow || target instanceof TableCell) {
+            return true;
+        } else if (target instanceof RangeSlider || target.getClass().toString().equals("class impl.org.controlsfx.skin.RangeSliderSkin$ThumbPane")) {
             return true;
         } else {
             return (target instanceof LabeledText) && ((((LabeledText) target).getParent() instanceof TableCell || ((LabeledText) target).getParent() instanceof ListCell));
