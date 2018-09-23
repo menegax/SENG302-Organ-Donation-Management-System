@@ -20,7 +20,6 @@ function init() {
                 marker.setMap(null);
             });
             markers = [];
-
             patients = mapBridge.getAvailableOrgans();
             successCount = 0;
             addMarkers(patients.size());
@@ -126,9 +125,7 @@ function attachInfoWindow(patient, marker) {
             maxWidth:350
         });
     }
-
-    var nhi = patient.getNhiNumber();
-    infoWindows.push({ "iwindow" : infoWindow, "patient" :nhi }); //unique info windows
+    infoWindows.push({ "iwindow" : infoWindow, "patient" : patient }); //unique info windows
     marker.addListener('click', function () { // when clicking on the marker, all other markers' info windows close
         infoWindows.forEach(function (iw) {
             if (iw["iwindow"] !== infoWindow) {
@@ -292,34 +289,25 @@ function showNotification(numSuccess, numTotal) {
  * @param infowindow - info window being displayed
  */
 function buildOrganDropdown(patient, infowindow) {
-    google.maps.event.addListener(infowindow, "domready", function()
-    {
-        getDonations(patient, function(donations) {
-            $('#dropdown').html('');
-            $('#dropdown').html('<option value="organs">None</option>');
-            var dono = donations.slice(1,-1).split(",");
-            for (var i = 0; i< dono.length; i++) {
-                $('#dropdown').append($('<option>', {
-                    value: i + 1,
-                    text: dono[i]
-                }));
+    google.maps.event.addListener(infowindow, "domready", function() {
+        infoWindows.forEach(function(iw) {
+            if (iw["iwindow"] === infowindow) {
+                patient = iw["patient"];
+                $('#dropdown').html('');
+                $('#dropdown').html('<option value="organs">None</option>');
+                var dono = patient.getDonations().toString().slice(1,-1).split(",");
+                for (var i = 0; i< dono.length; i++) {
+                    $('#dropdown').append($('<option>', {
+                        value: i + 1,
+                        text: dono[i]
+                    }));
+                }
+
             }
         });
-    });
-}
 
-/**
- * Gets donations as a csv string
- * @param patient - patient whos donations are needed from
- * @param callback - function to handle result
- */
-function getDonations(patient, callback) {
-    var donations = patient.getDonations();
-    setTimeout(function() {
-        callback(donations.toString());
-    }, 1000);
+    }, false);
 }
-
 
 /**
  * Intended to be able to reload patients info window,
@@ -328,12 +316,8 @@ function getDonations(patient, callback) {
  */
 function reloadInfoWindow(patient) {
     infoWindows.forEach(function (iw){
-        if (iw["patient"] === patient.getNhiNumber()) {
+        if (iw["patient"].getNhiNumber() === patient.getNhiNumber()) {
             iw["iwindow"].setContent(getDeadPatientInfoContent(patient))
         }
     });
-}
-
-function assignOrgan() {
-    $('#overlay').show();
 }
