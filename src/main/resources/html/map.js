@@ -167,7 +167,7 @@ function getDeadPatientInfoContent(patient) {
         + '<label>Birth Gender: ' + patient.getBirthGender() + '</label><br>'
         + '<label>Organ to Assign</label>'
         + '<select id="dropdown" style="margin-left: 5%"></select>' + '<br><br>'
-        + '<input type="button" onclick="assignOrgan()" class="btn btn-sm btn-primary mt-3 float-right" value="Assign Organ" style="margin-top: 20px"/>';
+        + '<input type="button" onclick="assignOrgan()" class="btn btn-sm btn-primary mt-3 float-left" value="Assign Organ" style="margin-top: 20px"/>';
 }
 
 /**

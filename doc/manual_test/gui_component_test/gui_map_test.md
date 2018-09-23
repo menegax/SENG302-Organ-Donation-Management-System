@@ -124,6 +124,13 @@
 6. Expected : Correct organs to be shown (validate against patient profile)
 
 
+### Test 15 - Displaying correct information in information modal
+1. Log in as CLinician
+2. Go to available organs
+3. Edit 2 patients so that their death addresses are garbage. (if no organs in available organs add some)
+4. Click view on map.
+5. Wait for info popup and click view patients
+6. Expected : at least 2 patients that had their addresses changed to garbage 
 
 
 
