@@ -341,8 +341,8 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
      * @param organ organ being validated for reason of deregistration
      */
     private void openReasonPopup(GlobalEnums.Organ organ) {
-    	Point2D paneLoc = new Point2D(patientRequirementsPane.getTranslateX(), patientRequirementsPane.getTranslateY());
-        GUIRequiredOrganDeregistrationReason controller = (GUIRequiredOrganDeregistrationReason) screenControl.show("/scene/deregistrationReason.fxml", false,this, target, paneLoc);
+        Parent parent = screenControl.getTouchParent(patientRequirementsPane);
+        GUIRequiredOrganDeregistrationReason controller = (GUIRequiredOrganDeregistrationReason) screenControl.show("/scene/deregistrationReason.fxml", false,this, target, parent);
         controller.setOrgan(organ);
         controller.setTarget(after);
     }

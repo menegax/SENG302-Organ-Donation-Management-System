@@ -50,14 +50,6 @@ class ScreenControlTouch extends ScreenControl {
     private ScreenControlTouch() {
         isLoginShowing = true;
         populateFontMap();
-        Region root;
-		try {
-			root = new FXMLLoader(getClass().getResource("/scene/touchScene.fxml")).load();
-			touchPane = new Pane(root);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-        
     }
 
     /**
@@ -82,10 +74,10 @@ class ScreenControlTouch extends ScreenControl {
      * @param fxml the fxml to display
      * @param undoable if the pane to be displayed is undoable or not
      * @param parentController controller to notify when pane shown closes
-     * @param parentLoc Defines the x,y coorderance of the parent pane
+     * @param parent The parent to orientate this fxml to
      * @return the controller created for this fxml
      */
-    public Object show(String fxml, Boolean undoable, IWindowObserver parentController, User targetUser, Point2D parentLoc) {
+    public Object show(String fxml, Boolean undoable, IWindowObserver parentController, User targetUser, Parent parent) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxml));
             Region pane = fxmlLoader.load();
@@ -102,8 +94,15 @@ class ScreenControlTouch extends ScreenControl {
             }
             pane.getProperties().put("focusArea", "true");
             pane.setStyle("-fx-background-color: #2c2f34; -fx-border-color: #f5f5f5;");
-            pane.setTranslateX(parentLoc.getX());
-            pane.setTranslateY(parentLoc.getY());
+            if (parent != null) {
+                pane.setScaleX(parent.getScaleX());
+                pane.setScaleY(parent.getScaleY());
+                pane.setTranslateX(parent.getTranslateX());
+                pane.setTranslateY(parent.getTranslateY());
+                pane.setLayoutX(parent.getLayoutX());
+                pane.setLayoutY(parent.getLayoutY());
+                pane.setRotate(parent.getRotate());
+            }
             addCanvas(pane.getScene());
             List<Node> panes;
             if(isLoginShowing) {
@@ -114,8 +113,8 @@ class ScreenControlTouch extends ScreenControl {
                 panes = new ArrayList<>(touchPane.getChildren());
             }
             panes.add(pane);
-//            Region root = new FXMLLoader(getClass().getResource("/scene/touchScene.fxml")).load();
-//            touchPane = new Pane(root);
+            Region root = new FXMLLoader(getClass().getResource("/scene/touchScene.fxml")).load();
+            touchPane = new Pane(root);
             touchPane.getChildren().addAll(panes);
             Scene newScene = new Scene(touchPane);
             touchStage.setScene(newScene);

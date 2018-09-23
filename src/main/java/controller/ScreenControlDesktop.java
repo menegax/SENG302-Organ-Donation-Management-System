@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -46,10 +47,10 @@ public class ScreenControlDesktop extends ScreenControl {
      * @param fxml the fxml to display
      * @param undoable if the displayed screen is to be undoable or not
      * @param parentController controller to notify when stage shown closes
-     * @param parentLoc Only used in touch mode, has no effect in desktop mode
+     * @param parent Only used in touch mode, has no effect in desktop mode
      * @return the controller of this fxml
      */
-    public Object show(String fxml, Boolean undoable, IWindowObserver parentController, User targetUser, Point2D parentLoc) {
+    public Object show(String fxml, Boolean undoable, IWindowObserver parentController, User targetUser, Parent parent) {
         try {
             Stage stage = new Stage();
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxml));

@@ -22,7 +22,7 @@ public class MapBridge {
     @SuppressWarnings("unused") // used in corresponding javascript
     public void openPatientProfile(String patientNhi) {
         Patient patient = new PatientDataService().getPatientByNhi(patientNhi);
-        GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, patient, new Point2D(0,0));
+        GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, patient, null);
         controller.setTarget(patient);
     }
 

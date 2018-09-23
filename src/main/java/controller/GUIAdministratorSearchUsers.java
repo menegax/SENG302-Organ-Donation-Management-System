@@ -10,6 +10,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 import javafx.scene.layout.GridPane;
@@ -128,8 +129,8 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
             User selected = userDataTable.getSelectionModel()
                     .getSelectedItem();
             if (click.getClickCount() == 2 && selected != null && selected != userControl.getLoggedInUser()) {
-            	Point2D paneLoc = new Point2D(pane.getTranslateX(), pane.getTranslateY());
-                GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected, paneLoc);
+                Parent parent = screenControl.getTouchParent(pane);
+                GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected, parent);
                 controller.setTarget(selected);
                 //Save user to local db
                 if (selected instanceof Patient) {

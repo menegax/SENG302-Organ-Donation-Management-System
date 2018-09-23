@@ -11,6 +11,7 @@ import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
 import javafx.scene.control.*;
 import model.Patient;
@@ -255,8 +256,8 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
                 Patient selected = availableOrgansTableView.getSelectionModel()
                         .getSelectedItem()
                         .getPatient();
-            	Point2D paneLoc = new Point2D(pane.getTranslateX(), pane.getTranslateY());
-                GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected , paneLoc);
+                Parent parent = screenControl.getTouchParent(pane);
+                GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected , parent);
                 controller.setTarget(selected);
                 patientDataService.save(patientDataService.getPatientByNhi(selected.getNhiNumber())); //save to local
             }
@@ -276,8 +277,8 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
         } else if (selected.getPatient().getBloodGroup() == null) {
             userActions.log(Level.WARNING, "Selected donor does not have a blood group set. Please set a blood group.", "Attempted to view available matches for a donor without a blood group");
         } else {
-        	Point2D paneLoc = new Point2D(pane.getTranslateX(), pane.getTranslateY());
-            GUIClinicianPotentialMatches controller = (GUIClinicianPotentialMatches) screenControl.show("/scene/clinicianPotentialMatches.fxml", false, null, selected.getPatient(), paneLoc);
+            Parent parent = screenControl.getTouchParent(pane);
+            GUIClinicianPotentialMatches controller = (GUIClinicianPotentialMatches) screenControl.show("/scene/clinicianPotentialMatches.fxml", false, null, selected.getPatient(), parent);
             controller.setTarget(selected);
         }
     }
@@ -314,8 +315,7 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
                 populateMap(new ArrayList<>(patients));
             });
         } else {
-        	Point2D paneLoc = new Point2D(pane.getTranslateX(), pane.getTranslateY());
-            screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser(), paneLoc);
+            screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser(), null);
             populateMap(new ArrayList<>(patients));
         }
     }

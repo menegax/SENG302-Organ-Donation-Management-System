@@ -23,7 +23,7 @@ public class Main extends Application {
         // setup GUI
         primaryStage.setTitle("Login");
         ScreenControl screenControl = ScreenControl.getScreenControl();
-        screenControl.show("/scene/login.fxml", false, null, null, new Point2D(0,0));
+        screenControl.show("/scene/login.fxml", false, null, null, null);
 
         Searcher.getSearcher().createFullIndex(); // index patients for search, needs to be after importing or adding any patients
         systemLogger.log(INFO, "Finished the start method for the app. Beginning app...");

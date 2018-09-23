@@ -102,8 +102,8 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
                     try {
                         Patient selectedUser = patientDataService.getPatientByNhi(request.getReceiverNhi());
                         patientDataService.save(selectedUser);
-                    	Point2D paneLoc = new Point2D(clinicianWaitingList.getTranslateX(), clinicianWaitingList.getTranslateY());
-                        GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser, paneLoc);
+                        Parent parent = screenControl.getTouchParent(clinicianWaitingList);
+                        GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser, parent);
                         controller.setTarget(selectedUser);
                     } catch (Exception e) {
                         userActions.log(Level.SEVERE, "Failed to retrieve selected patient from database", new String[]{"Attempted to retrieve selected patient from database", request.getReceiverNhi()});
@@ -234,8 +234,7 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
                 populateMap(patients);
             });
         } else {
-        	Point2D paneLoc = new Point2D(clinicianWaitingList.getTranslateX(), clinicianWaitingList.getTranslateY());
-            screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser(), paneLoc);
+            screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser(), null);
             populateMap(patients);
         }
     }

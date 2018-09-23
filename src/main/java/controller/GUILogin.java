@@ -92,8 +92,8 @@ public class GUILogin implements IWindowObserver {
      */
     @FXML
     public void goToRegister() {
-    	Point2D paneLoc = new Point2D(loginPane.getTranslateX(), loginPane.getTranslateY());
-        screenControl.show("/scene/userRegister.fxml", false, null, null, paneLoc);
+        Parent parent = screenControl.getTouchParent(loginPane);
+        screenControl.show("/scene/userRegister.fxml", false, null, null, parent);
     }
 
     /**
@@ -128,8 +128,7 @@ public class GUILogin implements IWindowObserver {
                 administratorDataService.save(administrator);
                 userControl.addLoggedInUserToCache(administratorDataService.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
             }
-        	Point2D paneLoc = new Point2D(loginPane.getTranslateX(), loginPane.getTranslateY());
-            GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, userControl.getLoggedInUser(), paneLoc);
+            GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, userControl.getLoggedInUser(), loginPane);
             controller.setTarget(userControl.getLoggedInUser());
             if(!screenControl.isTouch()) {
                 Stage stage = (Stage) loginPane.getScene().getWindow();
@@ -149,8 +148,7 @@ public class GUILogin implements IWindowObserver {
     }
 
     private void openMap() {
-    	Point2D paneLoc = new Point2D(loginPane.getTranslateX(), loginPane.getTranslateY());
-        screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser(), paneLoc);
+        screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser(), null);
         screenControl.setMapOpen(true);
     }
 

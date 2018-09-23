@@ -691,8 +691,7 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
     void openMap() {
 
         if (!screenControl.getMapOpen()) {
-        	Point2D paneLoc = new Point2D(homePane.getTranslateX(), homePane.getTranslateY());
-            GUIMap controller = (GUIMap) screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser(), paneLoc);
+            GUIMap controller = (GUIMap) screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser(), null);
             screenControl.setMapOpen(true);
             controller.setPatients(new ArrayList<>());
         }

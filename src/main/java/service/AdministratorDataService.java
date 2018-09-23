@@ -86,7 +86,7 @@ public class AdministratorDataService implements IAdministratorDataService {
     }
 
     private void showImportResults() {
-        screenControl.show("/scene/adminImportResults.fxml", false, null, null, new Point2D(0,0));
+        screenControl.show("/scene/adminImportResults.fxml", false, null, null, null);
     }
 
     @Override

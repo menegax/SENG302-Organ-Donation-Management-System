@@ -12,6 +12,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.zip.DataFormatException;
+
+import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
 
 import javafx.event.ActionEvent;
@@ -177,8 +179,8 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
                 Patient selected = patientDataTable.getSelectionModel()
                         .getSelectedItem();
                 patientDataService.save(patientDataService.getPatientByNhi(selected.getNhiNumber())); //save to local
-            	Point2D paneLoc = new Point2D(pane.getTranslateX(), pane.getTranslateY());
-                GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected, paneLoc);
+                Parent parent = screenControl.getTouchParent(pane);
+                GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected, parent);
                 controller.setTarget(selected);
             }
         });
