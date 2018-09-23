@@ -867,6 +867,11 @@ public class Patient extends User {
         userModified();
     }
 
+
+    /**
+     * Gets a formatted address that contains no nulls
+     * @return - return formatted address string
+     */
     public String getFormattedAddress() {
         return String.format("%s %s %s %s %s %s",
                 Objects.toString(streetNumber, ""),
