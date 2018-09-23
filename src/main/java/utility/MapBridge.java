@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 
 /**
  * Provides the map javascript access to the java codebase
@@ -66,6 +67,10 @@ public class MapBridge {
     }
 
     public void updateInfoWindow(Patient patient){
-        GUIMap.getJSBridge().call("reloadInfoWindow", patient);
+        if (GUIMap.getJSBridge() != null) {
+            GUIMap.getJSBridge().call("reloadInfoWindow", patient);
+        } else {
+            SystemLogger.systemLogger.log(Level.WARNING, "GUIMAP not instantiated - soz for hacky", this);
+        }
     }
 }
