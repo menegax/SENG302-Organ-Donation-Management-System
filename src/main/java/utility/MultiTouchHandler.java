@@ -92,8 +92,8 @@ public class MultiTouchHandler {
     public void initialiseHandler(Pane rootPane) {
         this.rootPane = rootPane;
         Thread thread1 = new Thread(() -> {
-            synchronized (lock) {
-                rootPane.addEventFilter(TouchEvent.ANY, event -> {
+            rootPane.addEventFilter(TouchEvent.ANY, event -> {
+                synchronized (lock) {
                     if (moving) {
                         velocity = new Point2D(0,0);
                         try {
@@ -103,13 +103,12 @@ public class MultiTouchHandler {
                         }
                     }
                     handleTouch(event);
-                });
-                rootPane.addEventFilter(ZoomEvent.ANY, Event::consume);
-                rootPane.addEventFilter(RotateEvent.ANY, Event::consume);
-            }
+                }
+            });
+            rootPane.addEventFilter(ZoomEvent.ANY, Event::consume);
+            rootPane.addEventFilter(RotateEvent.ANY, Event::consume);
         });
         thread1.start();
-//        rootPane.addEventFilter(ScrollEvent.ANY, Event::consume);
     }
 
     /**
