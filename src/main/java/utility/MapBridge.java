@@ -4,6 +4,7 @@ import controller.GUIHome;
 import controller.ScreenControl;
 import model.Patient;
 import service.PatientDataService;
+import javafx.geometry.Point2D;
 
 import java.util.ArrayList;
 
@@ -21,7 +22,7 @@ public class MapBridge {
     @SuppressWarnings("unused") // used in corresponding javascript
     public void openPatientProfile(String patientNhi) {
         Patient patient = new PatientDataService().getPatientByNhi(patientNhi);
-        GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, patient);
+        GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, patient, new Point2D(0,0));
         controller.setTarget(patient);
     }
 
