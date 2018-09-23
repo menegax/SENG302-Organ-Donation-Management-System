@@ -33,7 +33,11 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
@@ -576,6 +580,7 @@ public class Patient extends User {
 
     public void setDeathStreet(String deathStreet) {
         this.deathStreet = deathStreet;
+        clearCurrentLocation();
         userModified();
     }
 
@@ -586,6 +591,7 @@ public class Patient extends User {
 
     public void setDeathCity(String deathCity) {
         this.deathCity = deathCity;
+        clearCurrentLocation();
         userModified();
     }
 
@@ -595,6 +601,7 @@ public class Patient extends User {
 
     public void setDeathRegion(Region region) {
         this.deathRegion = region;
+        clearCurrentLocation();
         userModified();
     }
 
@@ -773,11 +780,21 @@ public class Patient extends User {
         userModified();
     }
 
+
+    /**
+     * Don't use! Unless this is for testing purposes
+     * @return the current LatLng
+     */
+    public LatLng getCurrentLocationForTestingOnly() {
+        return this.currentLocation;
+    }
+
     public LatLng getCurrentLocation() throws InterruptedException, ApiException, IOException {
         if (currentLocation == null) {
             if (this.isDead()) {
                 this.currentLocation = APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getDeathLocationConcat());
             } else {
+                System.out.println("not dead, geocoding" + this.getFormattedAddress());
                 this.currentLocation = APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getFormattedAddress());
             }
         }
@@ -872,7 +889,7 @@ public class Patient extends User {
      * Gets a formatted address that contains no nulls
      * @return - return formatted address string
      */
-    public String getFormattedAddress() {
+    private String getFormattedAddress() {
         return String.format("%s %s %s %s %s %s",
                 Objects.toString(streetNumber, ""),
                 Objects.toString(streetName, ""),
