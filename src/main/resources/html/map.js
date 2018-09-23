@@ -125,7 +125,7 @@ function attachInfoWindow(patient, marker) {
             maxWidth:350
         });
     }
-    infoWindows.push({ "iwindow" : infoWindow, "patient" : patient }); //unique info windows
+    mapInfoWindowToPatient(infoWindow, patient);
     marker.addListener('click', function () { // when clicking on the marker, all other markers' info windows close
         infoWindows.forEach(function (iw) {
             if (iw["iwindow"] !== infoWindow) {
@@ -315,9 +315,28 @@ function buildOrganDropdown(patient, infowindow) {
  * @param patient - patient whos info window is to be updated
  */
 function reloadInfoWindow(patient) {
-    infoWindows.forEach(function (iw){
-        if (iw["patient"].getNhiNumber() === patient.getNhiNumber()) {
-            iw["iwindow"].setContent(getDeadPatientInfoContent(patient))
+    for (var i =0; i<infoWindows.length; i++) {
+        //console.log(infoWindows[i]["patient"] + patient.getNhiNumber()); //TODO:
+        if (infoWindows[i]["patient"].getNhiNumber() === patient.getNhiNumber()) {
+            infoWindows[i]["iwindow"].setContent(getDeadPatientInfoContent(patient))
         }
-    });
+    }
+}
+
+
+/**
+ * Maps patient to its information window in global jsonarray
+ * @param infoWindow - info window to map patient to
+ * @param patient - patient to map
+ */
+function mapInfoWindowToPatient(infoWindow, patient) {
+    var hasExistingInfoWindow = false;
+    var i;
+    for (i = 0; i < infoWindows.length; i++) {
+        if (infoWindows[i]["patient"].getNhiNumber() === patient.getNhiNumber()) {
+            hasExistingInfoWindow = true;
+            break;
+        }
+    }
+    infoWindows.splice(i, 1, { "iwindow" : infoWindow, "patient" : patient });
 }
