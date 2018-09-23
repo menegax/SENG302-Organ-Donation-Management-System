@@ -93,6 +93,8 @@
 6. Select 'OK' on the popup that opens up
 6. Expected: The map should be populated with the patients in the table. These include patients with the following Nhi's: ANM8474, CTH2080, DMR2101, EQV5740, FUZ3183, KJD8772
 
+### Test 12 - 
+
 ## Test History
 
 ### 09/09/18 - Joshua

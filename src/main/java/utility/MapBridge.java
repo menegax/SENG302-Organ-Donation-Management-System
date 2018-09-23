@@ -96,16 +96,16 @@ public class MapBridge {
     /**
      * Sets donations in map.js
      */
-    @SuppressWarnings("unused") // used in corrresponding javascript
-    public void loadCircles(String patientNhi) {
-        Patient patient = patientDataService.getPatientByNhi(patientNhi);
-        GUIMap.getJSBridge().setMember("currentOrgan", patient.getDonations().get(0).toString().toLowerCase());
-        for (GlobalEnums.Organ organ: patient.getDonations()) {
-            GUIMap.getJSBridge().call("createOrganButtons", organ.toString(), patient.getDonations().size());
-            updateMarkerRadii(patient, organ);
-        }
-        GUIMap.getJSBridge().call("createOpenPatientButton", patient.getDonations().size());
-    }
+//    @SuppressWarnings("unused") // used in corrresponding javascript
+//    public void loadCircles(String patientNhi) {
+//        Patient patient = patientDataService.getPatientByNhi(patientNhi);
+//        GUIMap.getJSBridge().setMember("currentOrgan", patient.getDonations().get(0).toString().toLowerCase());
+//        for (GlobalEnums.Organ organ: patient.getDonations()) {
+//            GUIMap.getJSBridge().call("createOrganButtons", organ.toString(), patient.getDonations().size());
+//            updateMarkerRadii(patient, organ);
+//        }
+//        GUIMap.getJSBridge().call("createOpenPatientButton", patient.getDonations().size());
+//    }
 
     public void loadCircle(String patientNhi, String organStr) {
         if (radiiTask != null) {

@@ -85,10 +85,7 @@ function addMarker(patient) {
             currentInfoWindow = infoWindow;
             currentMarker = marker;
             currentPatient = patient;
-            for (let i = 0; i < patient.getDonations().size(); i++) {
-                createOrganButtons(patient.getDonations().get(i).toString(), patient.getDonations().size());
-            }
-            createOpenPatientButton();
+            // createOpenPatientButton();
             //infoWindow.open(map, marker);
             infoWindows.forEach(function (iw) {
                 if (iw !== infoWindow) {
@@ -99,14 +96,13 @@ function addMarker(patient) {
                 }
             });
             clearCircles();
-            if (patient.getDonations().size() > 0) {
+            if (patient.getDonations().size() > 0 && patient.getDeathDate() != null) {
+                for (let i = 0; i < patient.getDonations().size(); i++) {
+                    createOrganButtons(patient.getDonations().get(i).toString(), patient.getDonations().size());
+                }
                 setCurrentOrgan(patient.getDonations().get(0).toString());
             }
-            if (patient.getDonations() != null && patient.getDeathDate() != null) {
-                attachRadius(patient);
-            } else {
-                createOpenPatientButton(0);
-            }
+            createOpenPatientButton();
         });
         markers.push(marker);
     }
@@ -147,19 +143,19 @@ function createOpenPatientButton() {
 }
 
 
-/**
- * Creates radius around selected marker
- */
-function attachRadius(patient) {
-    var green = '#28a847';
-    var orange = '#e49505';
-    var red = '#e4330d';
+// /**
+//  * Creates radius around selected marker
+//  */
+// function attachRadius(patient) {
+//     var green = '#28a847';
+//     var orange = '#e49505';
+//     var red = '#e4330d';
 
     //mapBridge.loadCircles(patient.getNhiNumber());
     // patient.getDonations().forEach (function (organ){
     //     mapBridge.updateMarkerRadii(patient.getNhiNumber(), organ);
     // });
-}
+// }
 
 /**
  * Creates a circle radii for current marker selected
