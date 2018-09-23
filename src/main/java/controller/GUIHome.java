@@ -25,6 +25,7 @@ import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Administrator;
@@ -58,6 +59,9 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
 
     @FXML
     public BorderPane homePane;
+
+    @FXML
+    public BorderPane topMenu;
 
     @FXML
     private TabPane horizontalTabPane;
@@ -333,7 +337,6 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
             updatedUser = administratorDataService.getAdministratorByUsername(((Administrator) user).getUsername());
             administratorDataService.save((Administrator) updatedUser);
         }
-
         updatedUser.addPropertyChangeListener(e -> userNameDisplay.setText(updatedUser.getNameConcatenated()));
         userNameDisplay.setText(updatedUser.getNameConcatenated());
     }
@@ -646,12 +649,7 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
                 menuBar.getMenus().clear();
                 menuBar.getMenus().addAll(menu2, menu3, menu4);
                 if (screenControl.isTouch()) {
-                    HBox hbox = new HBox(menuBar, closeButton);
-                    HBox.setHgrow(menuBar, Priority.ALWAYS);
-                    HBox.setHgrow(closeButton, Priority.NEVER);
-                    homePane.setTop(hbox);
-                } else {
-                    homePane.setTop(menuBar);
+                    topMenu.setRight(closeButton);
                 }
                 systemLogger.log(FINER, "Set non-MacOS menu bar");
             }
@@ -689,7 +687,6 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
      * Opens new map instance if a map is not visible
      */
     void openMap() {
-
         if (!screenControl.getMapOpen()) {
             GUIMap controller = (GUIMap) screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser(), null);
             screenControl.setMapOpen(true);
