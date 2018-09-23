@@ -184,7 +184,7 @@
                   <Insets right="22.0" />
                </GridPane.margin></Text>
             <Text fx:id="ageSliderLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="0-100" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
-            <Button fx:id="infoWindowBtn" mnemonicParsing="false" onAction="#openInfoWindow" text="info" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+            <Button fx:id="infoWindowBtn" mnemonicParsing="false" onAction="#openInfoWindow" text="Info" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
          </children>
       </GridPane>
       <Button fx:id="closeButton" alignment="CENTER" mnemonicParsing="false" onAction="#closeMatchWindow" prefHeight="30.0" prefWidth="109.0" text="Close" GridPane.halignment="LEFT" GridPane.rowIndex="6">
