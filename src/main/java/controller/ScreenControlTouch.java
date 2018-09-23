@@ -33,7 +33,10 @@ import static utility.UserActionHistory.userActions;
 
 class ScreenControlTouch extends ScreenControl {
 
-    private Stage touchStage;
+	/* Defines the size of the initial pane */
+    private final double INITIAL_PANE_SIZE = 0.85;
+	
+	private Stage touchStage;
 
     private Region rootPane;
 
@@ -108,6 +111,8 @@ class ScreenControlTouch extends ScreenControl {
                 pane.setRotate(parent.getRotate());
                 pane.setScaleX(parent.getScaleX());
                 pane.setScaleY(parent.getScaleY());
+            } else {
+            	setInitialPaneSize(pane);
             }
             addCanvas(pane.getScene());
             List<Node> panes;
@@ -153,19 +158,32 @@ class ScreenControlTouch extends ScreenControl {
     }
 
     /**
+     * Sets the correct location and size for the initial log in pane
+     * @param pane The pane to set location and size for
+     */
+    private void setInitialPaneSize(Region pane) {
+    	pane.setTranslateX((touchStage.getWidth() - pane.getPrefWidth()) / 2);
+    	pane.setTranslateY((touchStage.getHeight() - pane.getPrefWidth()) / 2);
+    	pane.setScaleX(INITIAL_PANE_SIZE);
+    	pane.setScaleY(INITIAL_PANE_SIZE);
+    }
+    
+    /**
      * Creates a login pane
      */
-    void setUpNewLogin() {
+    public void setUpNewLogin() {
         try {
             new UserDataService().prepareApplication();
-            Parent root = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
+            Region root = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
             touchPane = new Pane();
-            touchPane.getChildren().addAll(new Pane(root));
-            Scene newScene = new Scene(touchPane);
+            touchPane.getChildren().addAll(new Pane(root));           
+            Scene newScene = new Scene(touchPane);        
             addCanvas(newScene);
             touchStage.setScene(newScene);
             setLoginShowing(true);
             setCSS();
+            setInitialPaneSize(root);
+            
         } catch (IOException e) {
             systemLogger.log(SEVERE, "Failed to recreate login scene in touch application");
 
