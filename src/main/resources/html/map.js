@@ -268,13 +268,18 @@ function showNotification(numSuccess, numTotal) {
     var modalMessage = 'Successfully loaded ' + numSuccess + ' out of ' + numTotal + ' patient locations';
     $('#marker-notification-msg').html();
     $('#marker-notification').show();
-    console.log("TEST")
     failedPatientArray.forEach(function(patient) {
         var nhi = patient.getNhiNumber();
+        var address;
+        if (patient.isDead()) {
+            address = patient.getDeathLocationConcat();
+        } else {
+            address = patient.getFormattedAddress();
+        }
         modalContent += '<tr>\n' +
            '<th scope=\"row\"><button  onclick="openPatientProfile(\'' + nhi + '\')" type=\"button\" class=\"btn btn-link\" style=\"font-size: 15px; margin-left: -20px\">'+  patient.getNhiNumber() + '</button></th>\n' +
            '<td style=\"font-size: 15px; padding-top: 18px\">' + patient.getNameConcatenated() + '</td>\n' +
-           '<td style=\"font-size: 15px; padding-top: 18px\">' + patient.getDeathLocationConcat() + '</td>\n' +
+           '<td style=\"font-size: 15px; padding-top: 18px\">' + address + '</td>\n' +
            '</tr>';
     });
     if (failedPatientArray.length ===  0){

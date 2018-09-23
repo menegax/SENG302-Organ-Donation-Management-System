@@ -33,10 +33,7 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
@@ -871,7 +868,13 @@ public class Patient extends User {
     }
 
     public String getFormattedAddress() {
-        return streetNumber + " " + streetName + " " + suburb + " " + region + " " + zip;
+        return String.format("%s %s %s %s %s %s",
+                Objects.toString(streetNumber, ""),
+                Objects.toString(streetName, ""),
+                Objects.toString(suburb, ""),
+                Objects.toString(city, ""),
+                Objects.toString(region, ""),
+                Objects.toString(zip, ""));
     }
 
     /**
