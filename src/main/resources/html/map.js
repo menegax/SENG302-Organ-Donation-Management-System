@@ -120,7 +120,7 @@ function attachRadius(patient) {
 function createMarkerRadii(radius, color, organ) {
     var markerCircle;
 
-    // Add the circle for this city to the map.
+    // Add the circle for this organ to the map.
     var isCurrentOrgan = organ === currentOrgan;
     markerCircle = new google.maps.Circle({
         map: null,

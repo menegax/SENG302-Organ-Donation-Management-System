@@ -33,7 +33,7 @@ public class MapBridge {
     }
 
     private IPatientDataService patientDataService = new PatientDataService();
-    private int LENGTHOFNZ = 1500000;
+    private int LENGTHOFNZ = 1600000;
 
     /**
      * Calculates marker radii
@@ -68,12 +68,26 @@ public class MapBridge {
             radius = remaining * heloTravelSpeedMps;
             GUIMap.getJSBridge().call("createMarkerRadii", radius, targetPatientOrgan.getProgressTask().getColor(), organ.toString());
         } else {
-            GUIMap.getJSBridge().call("createMarkerRadii", value, "#008000", organ.toString());
+            GUIMap.getJSBridge().call("createMarkerRadii", radius, "#008000", organ.toString());
         }
         targetPatientOrgan.getProgressTask().messageProperty().addListener((observable, oldValue, newValue) -> {
             if (!oldValue.equals("")) { // first circle always gives green
+                double rem = 0;
+                double rad;
+                String[] time = newValue.split(":");
+                rem += Integer.parseInt(time[0]) * 3600;
+                rem += Integer.parseInt(time[1]) * 60;
+                rem += Integer.parseInt(time[2]);
+
+                rem = rem - organLoadTime - organUnloadtime;
+                rad = rem * heloTravelSpeedMps;
+
+                if (rad > LENGTHOFNZ) {
+                    rad = LENGTHOFNZ;
+                }
+                System.out.println(rad);
                 String color = targetPatientOrgan.getProgressTask().getColor();
-                GUIMap.getJSBridge().call("updateMarkerRadii", value, color, organ.toString());
+                GUIMap.getJSBridge().call("updateMarkerRadii", rad, color, organ.toString());
             }
         });
     }
