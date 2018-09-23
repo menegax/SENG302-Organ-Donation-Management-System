@@ -1,6 +1,7 @@
 package utility.undoRedo;
 
 import controller.ScreenControl;
+import javafx.event.Event;
 import javafx.scene.Node;
 import javafx.scene.input.KeyCombination;
 import model.User;
@@ -11,7 +12,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCodeCombination;
 import utility.undoRedo.stateHistoryWidgets.*;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
@@ -173,13 +176,14 @@ public class StatesHistoryScreen {
             }
         });
         ((TextField) entry).setOnKeyPressed(event -> {
-            if (screenControl.getUndo().match(event)) {
-                ((TextField) entry).getParent().requestFocus();
-                undoableWrapper.undo();
-            }
-            else if (screenControl.getRedo().match(event)) {
-                ((TextField) entry).getParent().requestFocus();
-                undoableWrapper.redo();
+            if (!screenControl.isTouch()) {
+                if (screenControl.getUndo().match(event)) {
+                    ((TextField) entry).getParent().requestFocus();
+                    undoableWrapper.undo();
+                } else if (screenControl.getRedo().match(event)) {
+                    ((TextField) entry).getParent().requestFocus();
+                    undoableWrapper.redo();
+                }
             }
         });
 
@@ -292,8 +296,7 @@ public class StatesHistoryScreen {
      */
     private void createStateHistoriesDatePicker(Object datePicker) {
         stateHistories.add(new StateHistoryDatePicker((DatePicker) datePicker));
-        ((DatePicker) datePicker).valueProperty()
-                .addListener((observable, oldValue, newValue) -> {
+        ((DatePicker) datePicker).valueProperty().addListener((observable, oldValue, newValue) -> {
                     if (newValue != oldValue) {
                         store();
                     }
@@ -302,6 +305,8 @@ public class StatesHistoryScreen {
         ((DatePicker) datePicker).setOnKeyPressed(event -> {
             ((DatePicker) datePicker).getParent().requestFocus();
         });
+        ((DatePicker) datePicker).setOnMousePressed(Event::consume);
+        ((DatePicker) datePicker).setOnTouchPressed(Event::consume);
     }
 
 
