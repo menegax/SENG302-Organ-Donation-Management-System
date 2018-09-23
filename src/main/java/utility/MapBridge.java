@@ -6,7 +6,6 @@ import controller.ScreenControl;
 import javafx.scene.control.ProgressBar;
 import model.Patient;
 import model.PatientOrgan;
-import netscape.javascript.JSObject;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
 
@@ -17,7 +16,7 @@ import java.util.Random;
  */
 public class MapBridge {
 
-    private JSObject jsBridge;
+    private ProgressTask radiiTask;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -54,8 +53,13 @@ public class MapBridge {
         PatientOrgan targetPatientOrgan = new PatientOrgan(patient, organ);
         targetPatientOrgan.startTask();
         targetPatientOrgan.getProgressTask().setProgressBar(new ProgressBar()); //dummy progress task
-        CachedThreadPool.getCachedThreadPool().getThreadService().submit(targetPatientOrgan.getProgressTask());
-        String remainingTime = targetPatientOrgan.getProgressTask().getMessage();
+        if (radiiTask != null) {
+            System.out.println("INTERUPPTTED THE THREAD");
+            radiiTask.setInterrupted();
+        }
+        radiiTask = targetPatientOrgan.getProgressTask();
+        CachedThreadPool.getCachedThreadPool().getThreadService().submit(radiiTask);
+        String remainingTime = radiiTask.getMessage();
         double remaining = 0;
         if (!(remainingTime.equals("Cannot calculate")) && !remainingTime.equals("")) {
             String[] times = remainingTime.split(":");
@@ -67,11 +71,11 @@ public class MapBridge {
             remaining = remaining - organLoadTime - organUnloadtime;
             radius = remaining * heloTravelSpeedMps;
             System.out.println(organ);
-            GUIMap.getJSBridge().call("createMarkerRadii", radius, targetPatientOrgan.getProgressTask().getColor(), organ.toString());
+            GUIMap.getJSBridge().call("createMarkerRadii", radius, radiiTask.getColor(), organ.toString());
         } else {
             GUIMap.getJSBridge().call("createMarkerRadii", radius, "#008000", organ.toString());
         }
-        targetPatientOrgan.getProgressTask().messageProperty().addListener((observable, oldValue, newValue) -> {
+        radiiTask.messageProperty().addListener((observable, oldValue, newValue) -> {
             if (!oldValue.equals("")) { // first circle always gives green
                 double rem = 0;
                 double rad;
@@ -99,10 +103,19 @@ public class MapBridge {
     @SuppressWarnings("unused") // used in corrresponding javascript
     public void loadCircles(String patientNhi) {
         Patient patient = patientDataService.getPatientByNhi(patientNhi);
+        GUIMap.getJSBridge().setMember("currentOrgan", patient.getDonations().get(0).toString().toLowerCase());
         for (GlobalEnums.Organ organ: patient.getDonations()) {
             GUIMap.getJSBridge().call("createOrganButtons", organ.toString(), patient.getDonations().size());
             updateMarkerRadii(patient, organ);
         }
         GUIMap.getJSBridge().call("createOpenPatientButton", patient.getDonations().size());
+    }
+
+    public void loadCircle(String patientNhi, String organStr) {
+        Patient patient = patientDataService.getPatientByNhi(patientNhi);
+        GlobalEnums.Organ organ = GlobalEnums.Organ.getEnumFromString(organStr);
+        if (patient.getDonations().contains(organ)) {
+            updateMarkerRadii(patient, organ);
+        }
     }
 }

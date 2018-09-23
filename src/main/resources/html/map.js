@@ -4,7 +4,7 @@ var markers = [];
 var infoWindows = [];
 var donations = [];
 var currentMarker;
-var currentOrgan = '';
+var currentOrgan = undefined;
 var currentInfoWindow;
 var editedInfos = [];
 var createdOpenPatient = [];
@@ -67,7 +67,7 @@ function addMarker(patient) {
         var organOptions = getOrganOptions(patient);
         var finalLoc = new google.maps.LatLng(currentLocation.lat, currentLocation.lng);
         var marker = new google.maps.Marker({
-            map: map, position: finalLoc, title: name
+            map: map, position: finalLoc, title: name, nhi: patient.getNhiNumber()
         });
 
         // create info window
@@ -76,6 +76,7 @@ function addMarker(patient) {
             + patient.getAddressString() + '<br><br>' + organOptions.donating + '<br><br>' + organOptions.receiving
             + '</span><br>'
         });
+
         infoWindows.push(infoWindow);
 
         // add listener to open infoWindow when marker clicked
@@ -84,6 +85,10 @@ function addMarker(patient) {
             currentInfoWindow = infoWindow;
             currentMarker = marker;
             currentPatient = patient;
+            for (let i = 0; i < patient.getDonations().size(); i++) {
+                createOrganButtons(patient.getDonations().get(i).toString(), patient.getDonations().size());
+            }
+            createOpenPatientButton();
             //infoWindow.open(map, marker);
             infoWindows.forEach(function (iw) {
                 if (iw !== infoWindow) {
@@ -94,6 +99,7 @@ function addMarker(patient) {
                 }
             });
             clearCircles();
+
             if (patient.getDonations() != null && patient.getDeathDate() != null) {
                 attachRadius(patient);
             } else {
@@ -114,8 +120,8 @@ function createOrganButtons(organ, numberOfOrgans) {
     if (!(editedInfos.includes(currentInfoWindow))){
         currentInfoWindow.setOptions({
             content: currentInfoWindow.content
-            + `<input type="button" onclick="setCurrentOrgan(\'' + currentOrgan
-            + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value=${organ}>` + ' '
+            + `<input type="button" onclick="setCurrentOrgan('${organ}')"
+                class="btn btn-sm btn-primary mt-3" style="margin: auto" value=${organ}> `
         });
         currentTickOfOrganButtons += 1;
         if (numberOfOrgans === currentTickOfOrganButtons) {
@@ -127,16 +133,14 @@ function createOrganButtons(organ, numberOfOrgans) {
 /**
  * create the open patient button
  */
-function createOpenPatientButton(numberOfOrgans) {
+function createOpenPatientButton() {
     if (!(createdOpenPatient.includes(currentInfoWindow))) {
         currentInfoWindow.setOptions({
             content: currentInfoWindow.content
             + '<br><input type="button" onclick="openPatientProfile(\'' + currentPatient.getNhiNumber()
             + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>'
         });
-        if (numberOfOrgans === currentTickOfOrganButtons) {
-            createdOpenPatient.push(currentInfoWindow);
-        }
+        createdOpenPatient.push(currentInfoWindow);
     }
 }
 
@@ -149,7 +153,7 @@ function attachRadius(patient) {
     var orange = '#e49505';
     var red = '#e4330d';
 
-    mapBridge.loadCircles(patient.getNhiNumber());
+    //mapBridge.loadCircles(patient.getNhiNumber());
     // patient.getDonations().forEach (function (organ){
     //     mapBridge.updateMarkerRadii(patient.getNhiNumber(), organ);
     // });
@@ -177,9 +181,8 @@ function createMarkerRadii(radius, color, organ) {
 }
 
 function setCurrentOrgan(organ) {
-    console.log("Setting Current Organ to... ");
-    console.log(organ);
     currentOrgan = organ;
+    mapBridge.loadCircle(currentMarker.nhi, currentOrgan);
 }
 
 /**
@@ -189,14 +192,14 @@ function updateMarkerRadii(radius, color, organ) {
     circles.forEach(function(circle){
         console.log(circle.organ);
         console.log(currentOrgan + "\n");
-        // if (circle.organ === currentOrgan) {
+         if (circle.organ === currentOrgan) {
             if (circle.organ === organ) {
                 circle.setOptions({radius: radius, fillColor: color, map: map});
             }
-        // }
-        // else {
-        //     circle.setOptions({map: null});
-        // }
+        }
+        else {
+            circle.setOptions({map: null});
+        }
     });
 }
 
