@@ -66,6 +66,7 @@ public class MapBridge {
 
             remaining = remaining - organLoadTime - organUnloadtime;
             radius = remaining * heloTravelSpeedMps;
+            System.out.println(organ);
             GUIMap.getJSBridge().call("createMarkerRadii", radius, targetPatientOrgan.getProgressTask().getColor(), organ.toString());
         } else {
             GUIMap.getJSBridge().call("createMarkerRadii", radius, "#008000", organ.toString());
@@ -85,7 +86,7 @@ public class MapBridge {
                 if (rad > LENGTHOFNZ) {
                     rad = LENGTHOFNZ;
                 }
-                System.out.println(rad);
+//                System.out.println(rad);
                 String color = targetPatientOrgan.getProgressTask().getColor();
                 GUIMap.getJSBridge().call("updateMarkerRadii", rad, color, organ.toString());
             }
@@ -95,11 +96,13 @@ public class MapBridge {
     /**
      * Sets donations in map.js
      */
+    @SuppressWarnings("unused") // used in corrresponding javascript
     public void loadCircles(String patientNhi) {
         Patient patient = patientDataService.getPatientByNhi(patientNhi);
         for (GlobalEnums.Organ organ: patient.getDonations()) {
+            GUIMap.getJSBridge().call("createOrganButtons", organ.toString(), patient.getDonations().size());
             updateMarkerRadii(patient, organ);
         }
-        jsBridge.setMember("donations", patient.getDonations());
+        GUIMap.getJSBridge().call("createOpenPatientButton", patient.getDonations().size());
     }
 }

@@ -4,7 +4,12 @@ var markers = [];
 var infoWindows = [];
 var donations = [];
 var currentMarker;
-var currentOrgan = 'lung';
+var currentOrgan = '';
+var currentInfoWindow;
+var editedInfos = [];
+var createdOpenPatient = [];
+var currentPatient;
+var currentTickOfOrganButtons;
 
 function init() {
     geocoder = new google.maps.Geocoder();
@@ -57,7 +62,6 @@ function addMarker(patient) {
     var currentLocation = patient.getCurrentLocation();
     var name = patient.getNameConcatenated();
     console.log("Adding marker to map for patient " + patient.getNhiNumber());
-    console.log(currentLocation);
     if (currentLocation != null) {
         successCount++;
         var organOptions = getOrganOptions(patient);
@@ -70,15 +74,16 @@ function addMarker(patient) {
         var infoWindow = new google.maps.InfoWindow({
             content: '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</h5><span style="font-size: 14px">'
             + patient.getAddressString() + '<br><br>' + organOptions.donating + '<br><br>' + organOptions.receiving
-            + '</span><br><input type="button" onclick="openPatientProfile(\'' + patient.getNhiNumber()
-            + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>'
-            + '<input type="button" onclick="setCurrentOrgan(\'liver\')" value="liver"/>'
+            + '</span><br>'
         });
         infoWindows.push(infoWindow);
 
         // add listener to open infoWindow when marker clicked
         marker.addListener('click', function () {
+            currentTickOfOrganButtons = 0;
+            currentInfoWindow = infoWindow;
             currentMarker = marker;
+            currentPatient = patient;
             //infoWindow.open(map, marker);
             infoWindows.forEach(function (iw) {
                 if (iw !== infoWindow) {
@@ -91,6 +96,8 @@ function addMarker(patient) {
             clearCircles();
             if (patient.getDonations() != null && patient.getDeathDate() != null) {
                 attachRadius(patient);
+            } else {
+                createOpenPatientButton(0);
             }
         });
         markers.push(marker);
@@ -99,6 +106,40 @@ function addMarker(patient) {
         console.log('Geocode failed for patient ' + patient.getNhiNumber() + ' because: ' + status);
     }
 }
+
+/**
+ * Create Buttons
+ */
+function createOrganButtons(organ, numberOfOrgans) {
+    if (!(editedInfos.includes(currentInfoWindow))){
+        currentInfoWindow.setOptions({
+            content: currentInfoWindow.content
+            + `<input type="button" onclick="setCurrentOrgan(\'' + currentOrgan
+            + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value=${organ}>` + ' '
+        });
+        currentTickOfOrganButtons += 1;
+        if (numberOfOrgans === currentTickOfOrganButtons) {
+            editedInfos.push(currentInfoWindow);
+        }
+    }
+}
+
+/**
+ * create the open patient button
+ */
+function createOpenPatientButton(numberOfOrgans) {
+    if (!(createdOpenPatient.includes(currentInfoWindow))) {
+        currentInfoWindow.setOptions({
+            content: currentInfoWindow.content
+            + '<br><input type="button" onclick="openPatientProfile(\'' + currentPatient.getNhiNumber()
+            + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>'
+        });
+        if (numberOfOrgans === currentTickOfOrganButtons) {
+            createdOpenPatient.push(currentInfoWindow);
+        }
+    }
+}
+
 
 /**
  * Creates radius around selected marker
@@ -121,7 +162,6 @@ function createMarkerRadii(radius, color, organ) {
     var markerCircle;
 
     // Add the circle for this organ to the map.
-    var isCurrentOrgan = organ === currentOrgan;
     markerCircle = new google.maps.Circle({
         map: null,
         strokeColor: "#484848",
@@ -137,6 +177,8 @@ function createMarkerRadii(radius, color, organ) {
 }
 
 function setCurrentOrgan(organ) {
+    console.log("Setting Current Organ to... ");
+    console.log(organ);
     currentOrgan = organ;
 }
 
@@ -145,14 +187,16 @@ function setCurrentOrgan(organ) {
  */
 function updateMarkerRadii(radius, color, organ) {
     circles.forEach(function(circle){
-        if (circle.organ === currentOrgan) {
+        console.log(circle.organ);
+        console.log(currentOrgan + "\n");
+        // if (circle.organ === currentOrgan) {
             if (circle.organ === organ) {
                 circle.setOptions({radius: radius, fillColor: color, map: map});
             }
-        }
-        else {
-            circle.setOptions({map: null});
-        }
+        // }
+        // else {
+        //     circle.setOptions({map: null});
+        // }
     });
 }
 
