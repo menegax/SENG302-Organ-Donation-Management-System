@@ -7,7 +7,6 @@ import static org.junit.Assert.assertNull;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
-import com.google.maps.errors.ApiException;
 import com.google.maps.model.LatLng;
 import model.Disease;
 import model.Patient;
@@ -21,7 +20,6 @@ import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.SystemLogger;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -314,7 +312,7 @@ public class PatientTest implements Serializable {
      * Due to the getCurrentLocation checking for null, this test can only test certain parts of the address (e.g. not street)
      */
     @Test
-    public void resetCurrentLocation() throws DataFormatException, InterruptedException, ApiException, IOException {
+    public void resetCurrentLocation() throws DataFormatException {
         testPatient.setCurrentLocation(new LatLng(-43.525650, 172.639847)); // set to UC
         testPatient.setStreetNumber("10");
         assertNull(testPatient.getCurrentLocationForTestingOnly());
@@ -353,7 +351,6 @@ public class PatientTest implements Serializable {
      */
     @AfterClass
     public static void tearDown() {
-
         userActions.setLevel(Level.INFO);
     }
 
