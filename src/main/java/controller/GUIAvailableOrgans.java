@@ -1,5 +1,7 @@
 package controller;
 
+import static utility.UserActionHistory.userActions;
+
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -10,22 +12,33 @@ import javafx.collections.ObservableList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Point2D;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Pagination;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
-import javafx.scene.control.*;
 import model.Patient;
 import model.PatientOrgan;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
-import utility.*;
+import utility.CachedThreadPool;
+import utility.ExpiryObservable;
+import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
+import utility.ProgressBarCustomTableCell;
+import utility.ProgressTask;
 import utility.undoRedo.StatesHistoryScreen;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
-
-import static utility.UserActionHistory.userActions;
 
 /**
  * Controller class to manage organ waiting list for patients who require an organ.
@@ -61,7 +74,7 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
     public static ObservableList<PatientOrgan> masterData = FXCollections.observableArrayList();
 
     @FXML
-    private Pane pane;
+    private Pane availableOrgans;
 
     private ObservableList<PatientOrgan> filterData = FXCollections.observableArrayList();
 
@@ -259,7 +272,7 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
                 Patient selected = availableOrgansTableView.getSelectionModel()
                         .getSelectedItem()
                         .getPatient();
-                Parent parent = screenControl.getTouchParent(pane);
+                Parent parent = screenControl.getTouchParent(availableOrgans);
                 GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected , parent);
                 controller.setTarget(selected);
                 patientDataService.save(patientDataService.getPatientByNhi(selected.getNhiNumber())); //save to local
@@ -280,7 +293,7 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
         } else if (selected.getPatient().getBloodGroup() == null) {
             userActions.log(Level.WARNING, "Selected donor does not have a blood group set. Please set a blood group.", "Attempted to view available matches for a donor without a blood group");
         } else {
-            Parent parent = screenControl.getTouchParent(pane);
+            Parent parent = screenControl.getTouchParent(availableOrgans);
             GUIClinicianPotentialMatches controller = (GUIClinicianPotentialMatches) screenControl.show("/scene/clinicianPotentialMatches.fxml", false, this, selected.getPatient(), parent);
             controller.setTarget(selected);
         }
