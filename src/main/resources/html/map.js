@@ -159,9 +159,9 @@ function getDeadPatientInfoContent(patient) {
         + '<label>Blood Group: ' + patient.getBloodGroup() + '</label><br>'
         + '<label>Age: ' + patient.getAge() + '</label><br>'
         + '<label>Birth Gender: ' + patient.getBirthGender() + '</label><br>'
-        + '<label>Organ to Assign</label>'
-        + '<select id="dropdown" style="margin-left: 5%"></select>' + '<br><br>'
-        + '<input type="button" onclick="assignOrgan()" class="btn btn-sm btn-primary mt-3 float-left" value="Assign Organ" style="margin-top: 20px"/>';
+        + '<label style="padding-top: 5px;">Organ to Assign</label>'
+        + '<select id="dropdown" style="margin-left: 5%; float: right; height: 25px"></select>'
+        + '<input type="button" onclick="assignOrgan()" class="btn btn-sm btn-block btn-primary mt-3 float-left" value="Assign Organ" style="margin-top: 20px"/>';
 }
 
 /**
