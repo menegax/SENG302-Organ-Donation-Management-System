@@ -124,7 +124,7 @@ class ScreenControlTouch extends ScreenControl {
             touchPane.getChildren().addAll(panes);
             Scene newScene = new Scene(touchPane);
             touchStage.setScene(newScene);
-            if (fullScreen) {
+            if (!fullScreen) {
             	ensureFullScreen();
             }
             addCanvas(newScene);
@@ -172,8 +172,8 @@ class ScreenControlTouch extends ScreenControl {
     	pane.setPrefHeight(touchPane.getHeight());
     	pane.setTranslateX(0);
     	pane.setTranslateY(0);
-    	pane.setScaleX(0.6);
-    	pane.setScaleY(0.6);
+    	pane.setScaleX(1);
+    	pane.setScaleY(1);
     }
     
     /**
