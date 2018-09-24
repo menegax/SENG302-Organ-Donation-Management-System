@@ -3,7 +3,8 @@ package data_access.mysqlDAO;
 import data_access.factories.MySqlFactory;
 import data_access.interfaces.ITransplantWaitListDataAccess;
 import service.OrganWaitlist;
-import utility.GlobalEnums.*;
+import utility.GlobalEnums.Organ;
+import utility.GlobalEnums.Region;
 import utility.ResourceManager;
 
 import java.sql.Connection;
@@ -50,7 +51,9 @@ public class TransplantWaitingListDAO implements ITransplantWaitListDataAccess {
         try(Connection connection = daoFactory.getConnectionInstance()){
             PreparedStatement preparedStatement = connection.prepareStatement(ResourceManager.getStringForQuery("UPDATE_TRANSPLANT_WAIT"));
             if (organRequests != null) {
-                deleteWaitingList();
+                for (OrganWaitlist.OrganRequest organRequest : organRequests) {
+                    deleteRequestsByNhi(organRequest.getReceiverNhi());
+                }
                 for (OrganWaitlist.OrganRequest organRequest : organRequests) {
                     preparedStatement.setString(1, organRequest.getReceiverNhi());
                     preparedStatement.setString(2, organRequest.getRequestDate().toString());

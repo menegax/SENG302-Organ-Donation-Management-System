@@ -2,12 +2,12 @@ import csv
 
 addresses = []
 patients = []
-with open('C:/Users/Hayden Taylor/Downloads/regions.csv', 'rt', encoding="utf8") as csvfile:
+with open('GENERATED_REGIONS', 'rt', encoding="utf8") as csvfile:
         spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
         for row in spamreader:
             addresses.append(row)
 i = 1 # ignore header
-with open('C:/Users/Hayden Taylor/Downloads/testCSV2.csv', 'rt', encoding="utf8") as csvfile:
+with open('READING_DATA_PRODVIDED', 'rt', encoding="utf8") as csvfile:
         spamreader = csv.reader(csvfile, delimiter=',', quotechar='|')
         header = next(spamreader, None) #skip header
         patients.append(header)
@@ -23,8 +23,7 @@ with open('C:/Users/Hayden Taylor/Downloads/testCSV2.csv', 'rt', encoding="utf8"
                 i = 0
             i += 1
 
-with open('C:/Users/Hayden Taylor/Downloads/patients.csv', 'w', encoding="utf8") as myfile:
-    wr = csv.writer(myfile, quoting=csv.QUOTE_ALL)
+with open('PATH_TO_WRITE_TO', 'w', newline='', encoding="utf8") as myfile:
+    wr = csv.writer(myfile)
     for patient in patients:
         wr.writerow(patient)
-

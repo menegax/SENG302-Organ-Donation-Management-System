@@ -34,7 +34,8 @@ public class GlobalEnums {
 		MOBILEPHONE("(\\+[0-9]{11}|0[0-9]{9})"), EMAIL("([0-9|a-z|A-Z|.|_|-]+[@][a-z]+([.][a-z])+){0,254}"),
 		RELATIONSHIP("[a-z|-|A-Z]{0,30}"),        DISEASENAME("[a-z|-|A-Z]{1,50}"), ZIP("[0-9]{4}"),
 		WEIGHT("[0-9]+([.][0-9]+)?"),             HEIGHT("[0-9]+([.][0-9]+)?"),      USERNAME("[A-Z|0-9|_|-]{0,30}"),
-        DEATH_LOCATION("[0-9|a-z|A-Z| |-|.]{0,35}"), CITY("[a-z|A-Z|-| ]{0,70}"), NUMBER("[0-9]{0,5}");
+        DEATH_LOCATION("[0-9|a-z|A-Z| |-|.]{0,35}"), CITY("[a-z|A-Z|-| ]{0,70}"), NUMBER("[0-9]{0,5}"),
+        DONATINGLIST("^\\w+\\s\\|\\s(\\w{3}\\d{4})$"), RECEIVINGLIST("^\\w+\\s\\|\\s.{10}\\s\\|\\s(\\w{3}\\d{4})$");
 
 		private String value;
 
@@ -343,7 +344,7 @@ public class GlobalEnums {
                 "patientRegister"), PATIENTUPDATECONTACTS("patientUpdateContacts"), PATIENTUPDATEDONATIONS("patientUpdateDonations"), PATIENTUPDATEPROFILE(
                 "patientUpdateProfile"), PATIENTUPDATEDIAGNOSIS("patientUpdateDiagnosis"), PATIENTUPDATEREQUIREMENTS("patientUpdateRequirements"), CLINICIANDIAGNOSIS(
                 "clinicianDiagnosis"), PATIENTPROCEDUREFORM("patientProcedureForm"), PATIENTPROCEDURES("patientProcedures"), ADMINISTRATORUSERREGISTER("administratorUserRegister"),
-        ADMINISTRATORSEARCHUSERS("administratorSearchUsers"), ADMINISTRATORPROFILEUPDATE("administratorProfileUpdate");
+        ADMINISTRATORSEARCHUSERS("administratorSearchUsers"), ADMINISTRATORPROFILEUPDATE("administratorProfileUpdate"), CLINICIANAVAILABLEORGANS("clinicianAvailableOrgans");
 
         private String value;
 

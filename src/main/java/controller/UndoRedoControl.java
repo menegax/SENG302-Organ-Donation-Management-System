@@ -1,9 +1,8 @@
 package controller;
 
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 import utility.GlobalEnums;
-import utility.undoRedo.Action;
+import utility.undoRedo.IAction;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.UndoableWrapper;
 
@@ -95,7 +94,7 @@ public class UndoRedoControl {
      * @param actions the actions to set to
      * @param statesHistoryScreen the statesHistoryScreen whose actions need to be set
      */
-    public void setActions(Map<Integer, List<Action>> actions, StatesHistoryScreen statesHistoryScreen) {
+    public void setActions(Map<Integer, List<IAction>> actions, StatesHistoryScreen statesHistoryScreen) {
         statesHistoryScreen.setActions(actions);
     }
 
@@ -104,7 +103,7 @@ public class UndoRedoControl {
      * @param action the action to have
      * @param undoableScreen the undoable screen of the statesHistoryScreen to add it to
      */
-    public void addAction(Action action, GlobalEnums.UndoableScreen undoableScreen) {
+    public void addAction(IAction action, GlobalEnums.UndoableScreen undoableScreen) {
         for (UndoableWrapper undoableWrapper : screenControl.getUndoableWrappers()) {
             for (StatesHistoryScreen statesHistoryScreen : undoableWrapper.getStatesHistoryScreens()) {
                 if (statesHistoryScreen.getUndoableScreen().equals(undoableScreen)) {

@@ -12,11 +12,10 @@ import model.Administrator;
 import service.AdministratorDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.UIRegex;
-import utility.undoRedo.Action;
+import utility.undoRedo.IAction;
+import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
 
-import java.io.InvalidObjectException;
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -55,9 +54,9 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
     /**
      * Initializes the administrator editing screen.
      * Populates the Region drop down menu using region enums.
-     * Calls to load the administrator profile and calls to set up undo/redo functionality
+     * Calls to loadController the administrator profile and calls to set up undo/redo functionality
      */
-    public void load() {
+    public void loadController() {
         // Registering a change event to clear the invalid class
         loadProfile(((Administrator) target).getUsername());
         setUpStateHistory();
@@ -173,7 +172,7 @@ public class GUIAdministratorUpdateProfile extends UndoableController {
 
             after.userModified();
 
-            Action action = new Action(target, after);
+            IAction action = new SingleAction(target, after);
             new AdministratorDataService().save(after);
             statesHistoryScreen.addAction(action);
 

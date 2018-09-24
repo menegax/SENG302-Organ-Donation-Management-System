@@ -12,12 +12,14 @@ import javafx.scene.layout.Pane;
 import model.Patient;
 import model.Procedure;
 import service.PatientDataService;
-import model.User;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.MultiTouchHandler;
 import utility.TouchDatePickerSkin;
-import utility.undoRedo.Action;
+import utility.TouchPaneController;
+import utility.TouchscreenCapable;
+import utility.undoRedo.IAction;
+import utility.undoRedo.SingleAction;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -65,7 +67,7 @@ public class GUIPatientProcedureForm extends TargetedController {
     /**
      * Initial setup. Sets up undo/redo, Populates the affected organs dropdown
      */
-    public void load() {
+    public void loadController() {
         patientClone = (Patient) target.deepClone();
         setupDonations();
         for (MenuItem menuItem : affectedInput.getItems()) { //Adding organ checkboxes to the undo/redo controls
@@ -156,7 +158,7 @@ public class GUIPatientProcedureForm extends TargetedController {
             this.procedureClone.setDescription(descriptionInput.getText());
             this.procedureClone.setAffectedDonations(affectedDonations);
             this.procedureClone.setDate(dateInput.getValue());
-            Action action = new Action(target, patientClone);
+            IAction action = new SingleAction(target, patientClone);
             undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.PATIENTPROCEDURES);
             userActions.log(Level.INFO, "Updated procedure " + this.procedure.getSummary(), new String[]{"Attempted to update procedure", ((Patient) target).getNhiNumber()});
             goBackToProcedures();
@@ -180,7 +182,7 @@ public class GUIPatientProcedureForm extends TargetedController {
             procedureClone = new Procedure( summaryInput.getText(), descriptionInput.getText(),
                     dateInput.getValue(), affectedDonations );
             patientClone.addProcedure( procedureClone );
-            Action action = new Action(target, patientClone);
+            IAction action = new SingleAction(target, patientClone);
             undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.PATIENTPROCEDURES);
             userActions.log(Level.INFO, "Added procedure " + procedureClone.getSummary(), new String[]{"Attempted to add a procedure", patientClone.getNhiNumber()});
             goBackToProcedures();
@@ -222,7 +224,7 @@ public class GUIPatientProcedureForm extends TargetedController {
      */
     private void setupDonations() {
         ObservableList<CustomMenuItem> donations = FXCollections.observableArrayList();
-        for (Organ organ : ((Patient) target).getDonations()) {
+        for (Organ organ : ((Patient) target).getDonations().keySet()) {
             CustomMenuItem organSelection = new CustomMenuItem(new CheckBox(organ.getValue()));
             organSelection.setHideOnClick(false);
             donations.add(organSelection);
