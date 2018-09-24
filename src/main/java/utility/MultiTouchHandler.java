@@ -48,6 +48,8 @@ public class MultiTouchHandler {
      */
     private int MAXTOUCHESPERPANE = 2;
 
+    
+    private final double MAXVELOCITY = 50;
     private final double DEGREES45 = Math.PI / 4;
     private final double DEGREES135 = Math.PI - DEGREES45;
     private final double DEGREES180 = Math.PI;
@@ -185,6 +187,12 @@ public class MultiTouchHandler {
                         newVelY = velocity.getY() + (DECELERATION * SLEEPTIME);
                     } else if (velocity.getY() > 20) {
                         newVelY = velocity.getY() - (DECELERATION * SLEEPTIME);
+                    }
+                    if (newVelY > MAXVELOCITY) {
+                    	newVelY = MAXVELOCITY;
+                    }
+                    if (newVelX > MAXVELOCITY) {
+                    	newVelX = MAXVELOCITY;
                     }
                     velocity = new Point2D(newVelX, newVelY);
                     try {
