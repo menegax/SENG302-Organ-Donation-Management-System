@@ -30,13 +30,14 @@ public class TUIOFXMain extends Application {
 
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
+        stage.setFullScreen(true);
+        stage.setFullScreenExitKeyCombination(new KeyCodeCombination(KeyCode.F, KeyCodeCombination.CONTROL_DOWN));
+        stage.setFullScreenExitHint("Press CTRL + F to exit full screen.");
+        
         stage.setX(primaryScreenBounds.getMinX());
         stage.setY(primaryScreenBounds.getMinY());
         stage.setWidth(primaryScreenBounds.getWidth());
         stage.setHeight(primaryScreenBounds.getHeight());
-        stage.setFullScreen(true);
-        stage.setFullScreenExitKeyCombination(new KeyCodeCombination(KeyCode.F, KeyCodeCombination.CONTROL_DOWN));
-        stage.setFullScreenExitHint("Press CTRL + F to exit full screen.");
         return stage;
 
     }
