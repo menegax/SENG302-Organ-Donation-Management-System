@@ -24,7 +24,7 @@ function init() {
  */
 function setMapDragEnd() {
     // Bounds for the World
-    var allowedBounds = new google.maps.LatLngBounds(new google.maps.LatLng(-84.220892, -177.871399), new google.maps.LatLng(84.889374, 179.872535));
+    var allowedBounds = new google.maps.LatLngBounds(new google.maps.LatLng(-56.831005, 140.304953), new google.maps.LatLng(-22.977599, -165.689951));
 
     // Listen for the dragend event
     google.maps.event.addListener(map, 'dragend', function () {
