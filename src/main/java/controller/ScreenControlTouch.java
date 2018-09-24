@@ -1,13 +1,21 @@
 package controller;
 
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static utility.SystemLogger.systemLogger;
+import static utility.UserActionHistory.userActions;
+
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -24,11 +32,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-import static utility.SystemLogger.systemLogger;
-import static utility.UserActionHistory.userActions;
 
 class ScreenControlTouch extends ScreenControl {
 
@@ -166,8 +169,8 @@ class ScreenControlTouch extends ScreenControl {
     	pane.setPrefHeight(touchPane.getHeight());
     	pane.setTranslateX(0);
     	pane.setTranslateY(0);
-    	pane.setScaleX(1);
-    	pane.setScaleY(1);
+    	pane.setScaleX(0.6);
+    	pane.setScaleY(0.6);
     }
     
     /**
