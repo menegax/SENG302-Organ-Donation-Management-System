@@ -174,7 +174,6 @@ public class PatientDAO implements IPatientDataAccess {
         }
         catch (Exception e) {
             SystemLogger.systemLogger.log(Level.SEVERE, "Could not import patient batch", this);
-            e.printStackTrace(); //todo rm
         }
         return true;
     }
