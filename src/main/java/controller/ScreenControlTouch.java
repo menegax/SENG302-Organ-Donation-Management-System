@@ -139,6 +139,7 @@ class ScreenControlTouch extends ScreenControl {
             	setMapPanePosition(pane);
                 mapController = (GUIMap) controller;
                 mapController.loadMap();
+                pane.toBack();
                 pane.visibleProperty().addListener(((observable, oldValue, newValue) -> {
                     if (!newValue) {
                         setMapOpen(false);
