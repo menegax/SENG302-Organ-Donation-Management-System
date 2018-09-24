@@ -305,8 +305,6 @@ public class StatesHistoryScreen {
         ((DatePicker) datePicker).setOnKeyPressed(event -> {
             ((DatePicker) datePicker).getParent().requestFocus();
         });
-        ((DatePicker) datePicker).setOnMousePressed(Event::consume);
-        ((DatePicker) datePicker).setOnTouchPressed(Event::consume);
     }
 
 

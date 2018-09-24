@@ -1,17 +1,21 @@
 package controller;
 
+import com.sun.javafx.scene.control.skin.DatePickerSkin;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import model.Patient;
 import service.PatientDataService;
 import tornadofx.control.DateTimePicker;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.SystemLogger;
+import utility.TouchDatePickerSkin;
 import utility.UserActionHistory;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
@@ -32,6 +36,9 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
     @FXML
     private GridPane patientUpdateAnchorPane;
+
+    @FXML
+    private GridPane leftGridPane;
 
     @FXML
     private Label lastModifiedLbl;
@@ -114,6 +121,8 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
     private UserControl userControl = UserControl.getUserControl();
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
     /**
      * Initializes the profile update screen. Gets the logged in or viewed user and loads the user's profile.
      * Dropdown menus are populated. The enter key press event for saving changes is set up
@@ -123,13 +132,15 @@ public class GUIPatientUpdateProfile extends UndoableController {
         if (userControl.getLoggedInUser() instanceof Patient) {
             disablePatientElements();
         }
-        loadProfile(((Patient) target).getNhiNumber());
         // Enter key
         patientUpdateAnchorPane.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 saveProfileUpdater();
             }
         });
+        TouchDatePickerSkin datePickerSkin = new TouchDatePickerSkin(dateOfDeath, (Pane) screenControl.getTouchParent(patientUpdateAnchorPane));
+        dateOfDeath.setSkin(datePickerSkin);
+        loadProfile(((Patient) target).getNhiNumber());
     }
 
 
