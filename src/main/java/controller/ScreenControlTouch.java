@@ -6,6 +6,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -115,6 +117,7 @@ class ScreenControlTouch extends ScreenControl {
             touchPane.getChildren().addAll(panes);
             Scene newScene = new Scene(touchPane);
             touchStage.setScene(newScene);
+            ensureFullScreen();
             addCanvas(newScene);
             pane.visibleProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue && parentController != null) {
@@ -143,12 +146,20 @@ class ScreenControlTouch extends ScreenControl {
     }
 
     /**
+     * Ensures the application remains in full screen mode.
+     */
+    private void ensureFullScreen() {
+    	touchStage.setFullScreenExitHint("");
+        touchStage.setFullScreen(true);
+    }
+    
+    /**
      * Sets the position, rotation and size of the map pane.
      * @param pane The map pane
      */
     private void setMapPanePosition(Region pane) {
-    	pane.setPrefWidth(screenBounds.getMaxX());
-    	pane.setPrefHeight(screenBounds.getMaxY());
+    	pane.setPrefWidth(touchPane.getWidth());
+    	pane.setPrefHeight(touchPane.getHeight());
     	pane.setTranslateX(0);
     	pane.setTranslateY(0);
     	pane.setScaleX(1);
@@ -201,6 +212,7 @@ class ScreenControlTouch extends ScreenControl {
             Scene newScene = new Scene(touchPane);        
             addCanvas(newScene);
             touchStage.setScene(newScene);
+            ensureFullScreen();
             setLoginShowing(true);
             setCSS();
             setInitialPaneSize(root);
