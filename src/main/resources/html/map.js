@@ -2,6 +2,7 @@ var map, geocoder, patients, mapBridge, successCount;
 var markers = [];
 var infoWindows = [];
 var failedPatientArray = [];
+var markerSetId = 0;
 
 function init() {
     geocoder = new google.maps.Geocoder();
@@ -20,7 +21,8 @@ function init() {
             markers = [];
             patients = mapBridge.getAvailableOrgans();
             successCount = 0;
-            addMarkers(patients.size());
+            markerSetId++;
+            addMarkers(patients.size(), markerSetId);
         });
     });
 }
@@ -228,21 +230,28 @@ function setPatients(_patients) {
     patients = _patients;
     clearMarkers();
     successCount = 0;
-    addMarkers(patients.size());
+    infoWindows = [];
+    markerSetId++;
+    hideNotification();
+    addMarkers(patients.size(), markerSetId);
 }
 
 /**
  * Add markers to the map
  * @param i
+ * @param id
  */
-function addMarkers(i) {
+function addMarkers(i, id) {
     if (i < 1) {
         showNotification(successCount, patients.size());
         return;
     }
+    if (id !== markerSetId) {
+        return; //break task
+    }
     addMarker(patients.get(i-1));
     setTimeout(function() {
-        addMarkers(--i);
+        addMarkers(--i, id);
     }, 700);
 }
 
