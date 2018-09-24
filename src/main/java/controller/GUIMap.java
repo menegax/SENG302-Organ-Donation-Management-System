@@ -61,9 +61,6 @@ public class GUIMap {
     void loadMap() {
         webEngine = webViewMap1.getEngine();
         SystemLogger.systemLogger.log(Level.INFO, "Loading map...", "Attempted to open map");
-        if (!screenControl.getIsCustomSetMap()) {
-             patients = getInitialPatients();
-        }
 
         setUpWebEngine();
         setUpJsLogging();
@@ -126,13 +123,4 @@ public class GUIMap {
         WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> SystemLogger.systemLogger.log(Level.FINE, message));
     }
 
-
-    /**
-     * Gets a collection of initial patients from the search results to auto-populate the map on startup
-     * @return the results of the default search
-     */
-    @NotNull
-    private List<Patient> getInitialPatients() {
-        return new ArrayList<>(new ClinicianDataService().searchPatients("", null, 50));
-    }
 }
