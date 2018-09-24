@@ -69,7 +69,6 @@ function setMapDragEnd() {
 function addMarker(patient) {
     console.log("Adding marker to map for patient " + patient.getNhiNumber());
     var latLong = patient.getCurrentLocation();
-    console.log(latLong);
     if (latLong !== null) {
         successCount++;
         var marker = makeMarker(patient, latLong); //set up markers
@@ -100,7 +99,7 @@ function makeMarker(patient, results) {
             position: finalLoc,
             title: name,
             animation: google.maps.Animation.DROP,
-            label: 'D',
+            // label: 'D',
             nhi: patient.getNhiNumber(),
             icon: '../image/markers/blue.png'
         });
@@ -111,7 +110,7 @@ function makeMarker(patient, results) {
             position: finalLoc,
             title: name,
             animation: google.maps.Animation.DROP,
-            label: 'A',
+            // label: 'A',
             nhi: patient.getNhiNumber(),
             icon: '../image/markers/green.png'
         });
@@ -281,7 +280,7 @@ function hideNotification() {
  */
 function showNotification(numSuccess, numTotal) {
     var modalContent = "";
-    var modalMessage = 'Successfully loaded ' + numSuccess + ' out of ' + numTotal + ' patient locations';
+    var modalMessage = 'Successfully loaded ' + numSuccess + ' out of ' + numTotal + ' patient locations.';
     $('#marker-notification-msg').html();
     $('#marker-notification').show();
     failedPatientArray.forEach(function(patient) {
