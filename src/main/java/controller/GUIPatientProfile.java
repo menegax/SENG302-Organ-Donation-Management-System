@@ -407,7 +407,7 @@ public class GUIPatientProfile extends TargetedController {
 			private void setListInvalidStyle(String item, ListProperty<String> listProperty) {
 				this.setText(item);
 				if (item != null && !item.equals("")) {
-					String[] itemArray = item.split(" ");
+					String[] itemArray = item.split(" \\|");
 					String organ = itemArray[0];
 					for (String listItem : listProperty) {
 						if (listItem.contains(organ)) {

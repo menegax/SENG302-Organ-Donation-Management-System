@@ -1,27 +1,25 @@
 package utility;
 
 import com.sun.javafx.scene.control.skin.LabeledText;
-import impl.org.controlsfx.skin.RangeSliderSkin;
 import javafx.event.Event;
 import javafx.event.EventTarget;
+import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
 import javafx.scene.input.RotateEvent;
-import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.TouchEvent;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.Pane;
-
-import javafx.geometry.Point2D;
 import javafx.stage.Screen;
+import org.controlsfx.control.RangeSlider;
 
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.controlsfx.control.RangeSlider;
-import utility.MathUtilityMethods;
 
 /**
  * Handler class to deal with multiple users interacting with the application via touch events.
@@ -36,42 +34,51 @@ import utility.MathUtilityMethods;
  */
 public class MultiTouchHandler {
 
-
     private Logger systemLogger = SystemLogger.systemLogger;
 
     /**
      * Root pane handled
      */
     private Pane rootPane;
+
     /**
      * Max number of touch events allowed on the root pane
      */
     private int MAXTOUCHESPERPANE = 2;
 
+    private final double MINPANESIZE = 0.4;
+
+    private final double MAXPANESIZE = 1.0;
+
+    private final double MAXVELOCITY = 100;
+
     private final double DEGREES45 = Math.PI / 4;
+
     private final double DEGREES135 = Math.PI - DEGREES45;
+
     private final double DEGREES180 = Math.PI;
+
     private final double RADS2DEGREES = 180 / Math.PI;
+
     private Point2D velocity = new Point2D(0, 0);
 
-    private Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
+    private Rectangle2D screenBounds = Screen.getPrimary()
+            .getVisualBounds();
+
     //deceleration shizz
     private final double DECELERATION = screenBounds.getWidth();
+
     private final double SLEEPTIME = 0.03;
 
     private final Object lock = new Object();
 
     //velocity from previous -> current
 
-
-
-    private final double ZOOMFACTOR = 1/((screenBounds.getWidth()/screenBounds.getHeight())*100);
-
+    private final double ZOOMFACTOR = 1 / ((screenBounds.getWidth() / screenBounds.getHeight()) * 100);
 
     private boolean isScroll = false;
 
     private boolean moving = false;
-
 
     /**
      * List of touch events on the pane.
@@ -80,6 +87,7 @@ public class MultiTouchHandler {
 
     private Point2D[] originCoordinates = new Point2D[MAXTOUCHESPERPANE];
 
+
     /**
      * Initialises a new MultiTouchHandler instance
      */
@@ -87,8 +95,10 @@ public class MultiTouchHandler {
 
     }
 
+
     /**
      * Initialises event filters and sets the root pane
+     *
      * @param rootPane Pane for touch handler
      */
     public void initialiseHandler(Pane rootPane) {
@@ -97,10 +107,11 @@ public class MultiTouchHandler {
             rootPane.addEventFilter(TouchEvent.ANY, event -> {
                 synchronized (lock) {
                     if (moving) {
-                        velocity = new Point2D(0,0);
+                        velocity = new Point2D(0, 0);
                         try {
                             lock.notify();
-                        } catch (IllegalMonitorStateException e) {
+                        }
+                        catch (IllegalMonitorStateException e) {
                             SystemLogger.systemLogger.log(Level.SEVERE, "Pane momentum thread not found.", "Attempted to stop pane momentum thread.");
                         }
                     }
@@ -113,13 +124,17 @@ public class MultiTouchHandler {
         thread1.start();
     }
 
+
     /**
-     *
      * @param event touch event
      */
     private void handleTouch(TouchEvent event) {
-        CustomTouchEvent touchEvent = new CustomTouchEvent(event.getTouchPoint().getId(), event.getTarget());
-        Point2D coordinates = new Point2D(event.getTouchPoint().getScreenX(), event.getTouchPoint().getScreenY());
+        CustomTouchEvent touchEvent = new CustomTouchEvent(event.getTouchPoint()
+                .getId(), event.getTarget());
+        Point2D coordinates = new Point2D(event.getTouchPoint()
+                .getScreenX(),
+                event.getTouchPoint()
+                        .getScreenY());
         touchEvent.setCoordinates(coordinates);
         //nano is 10^-9
         touchEvent.setEventTime(System.nanoTime());
@@ -130,24 +145,29 @@ public class MultiTouchHandler {
             previousEvent = touches[findIndexOfTouchEvent(touchEvent.getId())];
         }
 
-        if (previousEvent == null && touchEvent.getId() <= 10 &&
-                notMaxTouches()) {
+        if (previousEvent == null && touchEvent.getId() <= 10 && notMaxTouches()) {
             velocity = new Point2D(0, 0);
             setPaneFocused();
             addTouchEvent(touchEvent);
-        } else {
-            if (previousEvent != null && event.getEventType().equals(TouchEvent.TOUCH_RELEASED)) {
+        }
+        else {
+            if (previousEvent != null && event.getEventType()
+                    .equals(TouchEvent.TOUCH_RELEASED)) {
                 checkLeftClick();
                 originCoordinates[findIndexOfTouchEvent(touchEvent.getId())] = null;
                 touches[findIndexOfTouchEvent(touchEvent.getId())] = null;
                 processPaneMomentum();
-            } else if (previousEvent != null && event.getEventType().equals(TouchEvent.TOUCH_MOVED) && !(isNegligableMovement(touchEvent, previousEvent))) {
+            }
+            else if (previousEvent != null && event.getEventType()
+                    .equals(TouchEvent.TOUCH_MOVED) && !(isNegligableMovement(touchEvent, previousEvent))) {
                 processEventMovement(previousEvent, touchEvent);
-            } else {
+            }
+            else {
                 checkRightClick();
             }
         }
     }
+
 
     private void processPaneMomentum() {
         Thread thread2 = new Thread(() -> {
@@ -158,19 +178,23 @@ public class MultiTouchHandler {
                 while (velocity.getX() != 0 || velocity.getY() != 0) {
                     if (!outOfBoundsX()) {
                         rootPane.setTranslateX(rootPane.getTranslateX() + (velocity.getX() * SLEEPTIME));
-                    } else {
-                        if(velocity.getX() > 0) {
+                    }
+                    else {
+                        if (velocity.getX() > 0) {
                             rootPane.setTranslateX(screenBounds.getMinX() - rootPane.getWidth() / 2 + 1);
-                        } else {
+                        }
+                        else {
                             rootPane.setTranslateX(screenBounds.getMaxX() - rootPane.getWidth() / 2);
                         }
                     }
                     if (!outOfBoundsY()) {
                         rootPane.setTranslateY(rootPane.getTranslateY() + (velocity.getY() * SLEEPTIME));
-                    } else {
-                        if(velocity.getY() > 0) {
+                    }
+                    else {
+                        if (velocity.getY() > 0) {
                             rootPane.setTranslateY(screenBounds.getMinY() - rootPane.getHeight() / 2 + 1);
-                        } else {
+                        }
+                        else {
                             rootPane.setTranslateY(screenBounds.getMaxY() - rootPane.getHeight() / 2);
                         }
                     }
@@ -178,18 +202,31 @@ public class MultiTouchHandler {
                     newVelY = 0;
                     if (velocity.getX() < -20) {
                         newVelX = velocity.getX() + (DECELERATION * SLEEPTIME);
-                    } else if (velocity.getX() > 20) {
+                    }
+                    else if (velocity.getX() > 20) {
                         newVelX = velocity.getX() - (DECELERATION * SLEEPTIME);
                     }
                     if (velocity.getY() < -20) {
                         newVelY = velocity.getY() + (DECELERATION * SLEEPTIME);
-                    } else if (velocity.getY() > 20) {
+                    }
+                    else if (velocity.getY() > 20) {
                         newVelY = velocity.getY() - (DECELERATION * SLEEPTIME);
+                    }
+                    if (newVelY > MAXVELOCITY) {
+                        newVelY = MAXVELOCITY;
+                    } else if (newVelY < -MAXVELOCITY) {
+                    	newVelY = -MAXVELOCITY;
+                    }
+                    if (newVelX > MAXVELOCITY) {
+                        newVelX = MAXVELOCITY;
+                    } else if (newVelX < -MAXVELOCITY) {
+                        newVelX = -MAXVELOCITY;
                     }
                     velocity = new Point2D(newVelX, newVelY);
                     try {
                         lock.wait(30);
-                    } catch (InterruptedException e) {
+                    }
+                    catch (InterruptedException e) {
                         velocity = new Point2D(0, 0);
                     }
                 }
@@ -199,12 +236,14 @@ public class MultiTouchHandler {
         thread2.start();
     }
 
+
     /**
      * Returns true if any index of the touches array is null (i.e. not all touches are used)
+     *
      * @return boolean max touches made
      */
     private boolean notMaxTouches() {
-        for(int i = 0; i < MAXTOUCHESPERPANE; i++) {
+        for (int i = 0; i < MAXTOUCHESPERPANE; i++) {
             if (touches[i] == null) {
                 return true;
             }
@@ -212,8 +251,10 @@ public class MultiTouchHandler {
         return false;
     }
 
+
     /**
      * Finds the index of a touch event with the same id as the provided id
+     *
      * @param id the id of the touch event to find
      * @return the index of the event in the touches array or -1 if not found
      */
@@ -226,12 +267,14 @@ public class MultiTouchHandler {
         return -1;
     }
 
+
     /**
      * Brings the pane of this touch handler to the front
      */
     private void setPaneFocused() {
         rootPane.toFront();
     }
+
 
     /**
      * Evaluates whether the current states of the touch events meet right click requirements
@@ -240,6 +283,7 @@ public class MultiTouchHandler {
 
     }
 
+
     /**
      * Evaluates whether the current states of touch events meet left click requirements
      */
@@ -247,11 +291,13 @@ public class MultiTouchHandler {
 
     }
 
+
     /**
      * Checks what type of movement the touch events represent
      * and performs the appropriate actions
+     *
      * @param previousEvent the previous touch event before movement
-     * @param currentEvent the current touch event after movement
+     * @param currentEvent  the current touch event after movement
      */
     private void processEventMovement(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) {
         int numberOfTouches = 0;
@@ -262,16 +308,19 @@ public class MultiTouchHandler {
         }
         if (numberOfTouches == 1) {
             processOneTouchMovement(previousEvent, currentEvent);
-        } else if (numberOfTouches == 2) {
+        }
+        else if (numberOfTouches == 2) {
             processTwoTouchMovement(previousEvent, currentEvent);
         }
         touches[findIndexOfTouchEvent(previousEvent.getId())] = currentEvent;
     }
 
+
     /**
      * Processes single touch events to translate or scroll on the pane
+     *
      * @param previousEvent previous event
-     * @param currentEvent current event
+     * @param currentEvent  current event
      */
     private void processOneTouchMovement(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) {
         if (!scrollable(currentEvent.getTarget())) {
@@ -279,35 +328,46 @@ public class MultiTouchHandler {
         }
     }
 
+
     /**
      * Checks whether the target of the touch event can be scrolled or not
+     *
      * @param target the object which the touch event occurred on
      * @return whether that object can be scrolled or not
      */
     private boolean scrollable(EventTarget target) {
-        if (target instanceof ListView || target instanceof ListCell || target instanceof TableView || target instanceof TableColumn || target instanceof TableRow || target instanceof TableCell) {
+        if (target instanceof ListView || target instanceof ListCell || target instanceof TableView || target instanceof TableColumn
+                || target instanceof TableRow || target instanceof TableCell) {
             return true;
-        } else if (target instanceof RangeSlider || target.getClass().toString().equals("class impl.org.controlsfx.skin.RangeSliderSkin$ThumbPane")) {
+        }
+        else if (target instanceof RangeSlider || target.getClass()
+                .toString()
+                .equals("class impl.org.controlsfx.skin.RangeSliderSkin$ThumbPane")) {
             return true;
-        } else {
-            return (target instanceof LabeledText) && ((((LabeledText) target).getParent() instanceof TableCell || ((LabeledText) target).getParent() instanceof ListCell));
+        }
+        else {
+            return (target instanceof LabeledText) && ((((LabeledText) target).getParent() instanceof TableCell
+                    || ((LabeledText) target).getParent() instanceof ListCell));
         }
     }
 
+
     /**
      * Translates the pane by the difference in coordinates between the current and previous event
+     *
      * @param previousEvent previous event
-     * @param currentEvent current event
+     * @param currentEvent  current event
      */
     private void executeTranslate(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) {
-        Point2D delta = currentEvent.getCoordinates().subtract(previousEvent.getCoordinates());
+        Point2D delta = currentEvent.getCoordinates()
+                .subtract(previousEvent.getCoordinates());
         long timeDiff = currentEvent.getEventTime() - previousEvent.getEventTime();
         velocity = new Point2D(delta.getX() / (timeDiff * Math.pow(10, -9)), delta.getY() / (timeDiff * Math.pow(10, -9)));
         //fix this shite
-        if(!outOfBoundsX()) {
+        if (!outOfBoundsX()) {
             rootPane.setTranslateX(rootPane.getTranslateX() + delta.getX());
         }
-        if(!outOfBoundsY()) {
+        if (!outOfBoundsY()) {
             rootPane.setTranslateY(rootPane.getTranslateY() + delta.getY());
         }
     }
@@ -315,9 +375,10 @@ public class MultiTouchHandler {
 
     /**
      * Finds the best fit for a two touch movement and executes it
+     *
      * @param previousEvent the previous touch event before movement
-     * @param currentEvent the current touch event after movement
-     * @throws NullPointerException should not occur (less than two touches)
+     * @param currentEvent  the current touch event after movement
+     * @exception NullPointerException should not occur (less than two touches)
      */
     private void processTwoTouchMovement(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) throws NullPointerException {
         int movingPointIndex = findIndexOfTouchEvent(currentEvent.getId());
@@ -328,64 +389,82 @@ public class MultiTouchHandler {
             }
         }
         if (stationaryPoint != null) {
-            double angle = MathUtilityMethods.calculateAngle(stationaryPoint.getCoordinates(), previousEvent.getCoordinates(), currentEvent.getCoordinates());
+            double angle = MathUtilityMethods.calculateAngle(stationaryPoint.getCoordinates(),
+                    previousEvent.getCoordinates(),
+                    currentEvent.getCoordinates());
             double displacement = MathUtilityMethods.calculateDisplacement(previousEvent.getCoordinates(), currentEvent.getCoordinates());
             if (Math.abs(angle) > DEGREES45 && Math.abs(angle) <= DEGREES135) {
-                double rotatedAngle = MathUtilityMethods.calculateAngle(previousEvent.getCoordinates(), stationaryPoint.getCoordinates(), currentEvent.getCoordinates());
+                double rotatedAngle = MathUtilityMethods.calculateAngle(previousEvent.getCoordinates(),
+                        stationaryPoint.getCoordinates(),
+                        currentEvent.getCoordinates());
                 executeRotate(DEGREES180 - rotatedAngle);
-            } else {
-                double distance = (Math.cos(angle))*displacement;
+            }
+            else {
+                double distance = (Math.cos(angle)) * displacement;
                 executeZoom(distance);
             }
 
-        } else {
-            systemLogger.log(Level.SEVERE, "Two touch movement processed with less than two touches", "Attempted to process a two touch movement with less than two touches");
+        }
+        else {
+            systemLogger.log(Level.SEVERE,
+                    "Two touch movement processed with less than two touches",
+                    "Attempted to process a two touch movement with less than two touches");
             throw new NullPointerException();
         }
     }
 
+
     /**
      * executes a zoom action proportional to the provide distance
+     *
      * @param distance the distance moved by the touch gesture in the relevant direction
      */
     private void executeZoom(double distance) {
-        if (rootPane.getScaleX() > 0.25 && rootPane.getScaleY() > 0.25) {
-            if (rootPane.getScaleX() < 0.9 && rootPane.getScaleY() < 0.9) {
-                rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
-                rootPane.setScaleY(rootPane.getScaleY() + (distance * ZOOMFACTOR));
-            }  else if (distance < 0) {
+        if (rootPane.getScaleX() > MINPANESIZE || rootPane.getScaleY() > MINPANESIZE) {
+            if (rootPane.getScaleX() < MAXPANESIZE || rootPane.getScaleY() < MAXPANESIZE) {
                 rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
                 rootPane.setScaleY(rootPane.getScaleY() + (distance * ZOOMFACTOR));
             }
-        } else if (distance > 0) {
+            else if (distance < 0) {
+                rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
+                rootPane.setScaleY(rootPane.getScaleY() + (distance * ZOOMFACTOR));
+            }
+        }
+        else if (distance > 0) {
             rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
             rootPane.setScaleY(rootPane.getScaleY() + (distance * ZOOMFACTOR));
         }
     }
 
+
     /**
      * Executes a rotate on the pane to the amount specified by the angle given
+     *
      * @param angle the angle to rotate given in radians
      */
     private void executeRotate(double angle) {
         rootPane.setRotate(rootPane.getRotate() + angle * RADS2DEGREES);
     }
 
+
     /**
      * Checks if the difference location of the new event compared to the old event is less than 2 pixels, and so is the same event,
      * and returns true if that is the case
+     *
      * @param newEvent new event
      * @param oldEvent old event
      * @return boolean movement less than 2 pixels
      */
     private boolean isNegligableMovement(CustomTouchEvent newEvent, CustomTouchEvent oldEvent) {
-        Point2D delta = newEvent.getCoordinates().subtract(oldEvent.getCoordinates());
+        Point2D delta = newEvent.getCoordinates()
+                .subtract(oldEvent.getCoordinates());
         return Math.sqrt(delta.getX() * delta.getX() + delta.getY() * delta.getY()) < 2;
     }
 
 
     /**
      * Adds a touch event to the array at the first null index
+     *
      * @param touchEvent the touch event to add to the touches array
      */
     private void addTouchEvent(CustomTouchEvent touchEvent) {
@@ -398,26 +477,30 @@ public class MultiTouchHandler {
         }
     }
 
+
     /**
      * Returns true if the pane is out of bounds of the stage.
      * Buffers of half the pane width and the pane width for positive and negative translations respectively
      * are given to minimise risk of pane stopping off screen.
+     *
      * @return boolean out of bounds
      */
     private boolean outOfBoundsX() {
-        return rootPane.getTranslateX() > screenBounds.getMaxX() - rootPane.getWidth() / 2 ||
-                rootPane.getTranslateX() <= screenBounds.getMinX() - rootPane.getWidth() / 2;
+        return rootPane.getTranslateX() > screenBounds.getMaxX() - rootPane.getWidth() / 2
+                || rootPane.getTranslateX() <= screenBounds.getMinX() - rootPane.getWidth() / 2;
     }
+
 
     /**
      * Returns true if the pane is out of bounds of the stage.
      * Buffers of half the pane height and the pane height for positive and negative translations respectively
      * are given to minimise risk of pane stopping off screen.
+     *
      * @return boolean out of bounds
      */
     private boolean outOfBoundsY() {
-        return rootPane.getTranslateY() > screenBounds.getMaxY() - rootPane.getHeight() / 2 ||
-                rootPane.getTranslateY() <= screenBounds.getMinY() - rootPane.getHeight() / 2;
+        return rootPane.getTranslateY() > screenBounds.getMaxY() - rootPane.getHeight() / 2
+                || rootPane.getTranslateY() <= screenBounds.getMinY() - rootPane.getHeight() / 2;
     }
 
 }
