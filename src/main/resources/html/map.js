@@ -123,7 +123,7 @@ function attachInfoWindow(patient, marker) {
             content: getDeadPatientInfoContent(patient),
             maxWidth:550
         });
-        buildOrganDropdown(patient, infoWindow);
+        buildOrganDropdown(infoWindow);
     } else {
         infoWindow = new google.maps.InfoWindow({
             content: getAlivePatientInfoContent(patient),
@@ -211,8 +211,7 @@ function getOrganOptions(patient) {
     }
     else {
         donationStr = 'No Donations';
-
-        }
+    }
     var required = patient.getRequiredOrgans().toString();
     if (required !== '{}') {
         reg = /(\w+)=\w+,?/g;
@@ -280,7 +279,6 @@ function hideNotification() {
  * @param numTotal total patients to load
  */
 function showNotification(numSuccess, numTotal) {
-    console.log(failedPatientArray.length);
     var modalContent = "";
     var modalMessage = 'Successfully loaded ' + numSuccess + ' out of ' + numTotal + ' patient locations';
     $('#marker-notification-msg').html();
@@ -316,9 +314,7 @@ function showNotification(numSuccess, numTotal) {
  * @param infowindow - info window being displayed
  */
 function buildOrganDropdown(infowindow) {
-    console.log("ASGASFSafasf");
     google.maps.event.addListener(infowindow, "domready", function() {
-        console.log("ASGASFf");
         infoWindows.forEach(function(iw) {
             if (iw["iwindow"] === infowindow) {
                 var patient2 = iw["patient"];
@@ -359,6 +355,7 @@ function reloadInfoWindow(patient) {
             infoWindows[i]["patient"] = patient;
             if (patient.isDead()) {
                 infoWindows[i]["iwindow"].setContent(getDeadPatientInfoContent(patient));
+                buildOrganDropdown(infoWindows[i]["iwindow"]);
             } else {
                 infoWindows[i]["iwindow"].setContent(getAlivePatientInfoContent(patient));
             }
