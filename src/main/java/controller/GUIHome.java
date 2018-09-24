@@ -618,10 +618,6 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
             });
             menu4.getItems().addAll(menu4Item1);
             if(screenControl.isTouch()) {
-                MenuItem menu4item2 = new MenuItem("Open Keyboard");
-                menu4item2.setOnAction(event -> openKeyboard());
-                menu4.getItems().addAll(menu4item2);
-
                 MenuItem menu4itemCentre = new MenuItem("Re-center Panes");
                 menu4itemCentre.setOnAction(event -> screenControl.centerPanes());
                 menu4.getItems().addAll(menu4itemCentre);
@@ -676,25 +672,6 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
             for (MenuItem menuItem : menu.getItems()) {
                 menuItem.setStyle("-fx-font-size: 15px;");
             }
-        }
-    }
-
-    /**
-     * Opens OS keyboard for Windows systems
-     */
-    private void openKeyboard() {
-        if(System.getProperty("os.name")
-                .startsWith("Windows")) {
-            try {
-                Runtime.getRuntime().exec("cmd /c osk");
-            } catch (IOException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("Error");
-                alert.setContentText("System keyboard could not be opened");
-                alert.show();
-            }
-        } else {
-            SystemLogger.systemLogger.log(Level.INFO, "System keyboard can not be opened on non-Windows system", this);
         }
     }
 

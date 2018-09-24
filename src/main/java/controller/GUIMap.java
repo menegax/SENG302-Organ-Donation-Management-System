@@ -3,26 +3,20 @@ package controller;
 import com.sun.javafx.webkit.WebConsoleListener;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.geometry.Point2D;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import javafx.stage.Screen;
 import model.Patient;
 import netscape.javascript.JSObject;
 import org.jetbrains.annotations.NotNull;
 import service.ClinicianDataService;
-import service.PatientDataService;
 import utility.MapBridge;
 import utility.SystemLogger;
-import utility.UserActionHistory;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 
 /**
@@ -66,7 +60,7 @@ public class GUIMap {
      */
     void loadMap() {
         webEngine = webViewMap1.getEngine();
-        UserActionHistory.userActions.log(Level.INFO, "Loading map...", "Attempted to open map");
+        SystemLogger.systemLogger.log(Level.INFO, "Loading map...", "Attempted to open map");
         if (!screenControl.getIsCustomSetMap()) {
              patients = getInitialPatients();
         }
