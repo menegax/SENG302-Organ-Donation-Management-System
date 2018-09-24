@@ -1,5 +1,6 @@
 package data_access.interfaces;
 
+import model.OrganReceival;
 import utility.GlobalEnums;
 
 import java.time.LocalDate;
@@ -22,7 +23,7 @@ public interface IRequiredOrganDataAccess {
      * @param nhi The nhi for the patient to fetch required organs for
      * @return The list of diseases
      */
-    Map<GlobalEnums.Organ, LocalDate> getRequiredOrganByNhi(String nhi);
+    Map<GlobalEnums.Organ, OrganReceival> getRequiredOrganByNhi(String nhi);
 
     /**
      * Removes a required organ for a certain patient (given by the nhi)

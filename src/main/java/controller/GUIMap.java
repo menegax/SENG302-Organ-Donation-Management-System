@@ -36,7 +36,7 @@ public class GUIMap {
 
     private WebEngine webEngine;
 
-    private JSObject jsBridge;
+    private static JSObject jsBridge;
 
     private MapBridge mapBridge;
 
@@ -46,6 +46,7 @@ public class GUIMap {
 
     private Collection<Patient> patients = new ArrayList<>();
 
+    public static JSObject getJSBridge(){ return jsBridge; }
 
 
     /**

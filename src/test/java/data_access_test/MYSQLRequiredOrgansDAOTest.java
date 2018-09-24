@@ -2,6 +2,7 @@ package data_access_test;
 
 import data_access.DBHelper;
 import data_access.factories.DAOFactory;
+import model.OrganReceival;
 import model.Patient;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -94,10 +95,10 @@ public class MYSQLRequiredOrgansDAOTest {
      * Checks that the required organs are parsed correctly into the database
      */
     private void thenRequiredOrgansAreInDb() {
-        Map<GlobalEnums.Organ, LocalDate> requiredOrgans = daoFactory.getRequiredOrgansDataAccess()
+        Map<GlobalEnums.Organ, OrganReceival> requiredOrgans = daoFactory.getRequiredOrgansDataAccess()
                 .getRequiredOrganByNhi(patient.getNhiNumber());
-        assert requiredOrgans.get(GlobalEnums.Organ.LIVER).equals(LocalDate.of(2018,8,9));
-        assert requiredOrgans.get(GlobalEnums.Organ.PANCREAS).equals(LocalDate.of(2017,12,30));
+        assert requiredOrgans.get(GlobalEnums.Organ.LIVER).getRegisteredOn().equals(LocalDate.of(2018,8,9));
+        assert requiredOrgans.get(GlobalEnums.Organ.PANCREAS).getRegisteredOn().equals(LocalDate.of(2017,12,30));
         assert requiredOrgans.size() == 2;
     }
 
@@ -105,9 +106,9 @@ public class MYSQLRequiredOrgansDAOTest {
      * Checks that the required organ was deleted correctly from the database
      */
     private void thenRequiredOrganIsInDb() {
-        Map<GlobalEnums.Organ, LocalDate> requiredOrgans = daoFactory.getRequiredOrgansDataAccess()
+        Map<GlobalEnums.Organ, OrganReceival> requiredOrgans = daoFactory.getRequiredOrgansDataAccess()
                 .getRequiredOrganByNhi(patient.getNhiNumber());
-        assert requiredOrgans.get(GlobalEnums.Organ.PANCREAS).equals(LocalDate.of(2017,12,30));
+        assert requiredOrgans.get(GlobalEnums.Organ.PANCREAS).getRegisteredOn().equals(LocalDate.of(2017,12,30));
         assert requiredOrgans.size() == 1;
     }
 
@@ -115,7 +116,7 @@ public class MYSQLRequiredOrgansDAOTest {
      * Checks that the required organs are all correctly deleted from the database
      */
     private void thenNoRequiredOrganIsInDb() {
-        Map<GlobalEnums.Organ, LocalDate> requiredOrgans = daoFactory.getRequiredOrgansDataAccess()
+        Map<GlobalEnums.Organ, OrganReceival> requiredOrgans = daoFactory.getRequiredOrgansDataAccess()
                 .getRequiredOrganByNhi(patient.getNhiNumber());
         assert requiredOrgans.size() == 0;
     }

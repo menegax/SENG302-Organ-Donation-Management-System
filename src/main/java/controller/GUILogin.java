@@ -107,16 +107,17 @@ public class GUILogin implements IWindowObserver {
             if (patient.isSelected()) {
                 Patient patient2 = patientDataService.getPatientByNhi(nhiLogin.getText());
                 if (patient2 == null) {
-                    throw new InvalidObjectException("User doesn't exist");
+                    throw new InvalidObjectException("User doesn't exist or incorrect credentials");
+                } else if (patient2.getDeathDate() != null) {
+                    throw new InvalidObjectException("User deceased");
                 }
                 patientDataService.save(patient2);
                 userControl.addLoggedInUserToCache(patientDataService.getPatientByNhi(nhiLogin.getText()));
-
             } else if (clinician.isSelected()) {
                 IClinicianDataService clinicianDataService = new ClinicianDataService();
                 Clinician clinician = clinicianDataService.getClinician(Integer.parseInt(nhiLogin.getText()));
                 if (clinician == null) {
-                    throw new InvalidObjectException("User doesn't exist");
+                    throw new InvalidObjectException("User doesn't exist or incorrect credentials");
                 }
                 clinicianDataService.save(clinician);
                 userControl.addLoggedInUserToCache(clinicianDataService.getClinician(Integer.parseInt(nhiLogin.getText())));
@@ -136,8 +137,8 @@ public class GUILogin implements IWindowObserver {
             }
         } catch (InvalidObjectException e) {
             password.setText(""); //Reset password field on invalid login
-            userActions.log(Level.WARNING, "Incorrect credentials", "Attempted to log in");
-            Alert alert = new Alert(Alert.AlertType.WARNING, "Incorrect credentials");
+            userActions.log(Level.WARNING, e.getMessage(), "Attempted to log in");
+            Alert alert = new Alert(Alert.AlertType.WARNING, e.getMessage());
             alert.show();
         } catch (NumberFormatException e) {
             userActions.log(Level.WARNING, "Non-numeric staff IDs are not permitted", "Attempted to log in");

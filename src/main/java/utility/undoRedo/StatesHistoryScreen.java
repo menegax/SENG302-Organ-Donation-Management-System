@@ -43,7 +43,7 @@ public class StatesHistoryScreen {
 
     private UndoableWrapper undoableWrapper;
 
-    private Map<Integer, List<Action>> actions = new HashMap<>();
+    private Map<Integer, List<IAction>> actions = new HashMap<>();
 
     private User target;
 
@@ -61,7 +61,9 @@ public class StatesHistoryScreen {
     public StatesHistoryScreen(List<Control> controls, UndoableScreen undoableScreen, User target) {
         this.undoableScreen = undoableScreen;
         this.target = target;
-        findUndoableWrapper(controls.get(0));
+        if (controls.size() > 0) {
+            findUndoableWrapper(controls.get(0));
+        }
         for (Object control : controls) {
             if ((control instanceof TextField)) {
                 createStateHistoriesTextField(control);
@@ -88,6 +90,19 @@ public class StatesHistoryScreen {
                 createStateHistoriesListView(control);
             }
         }
+    }
+
+    /**
+     * Constructor for the StatesHistoryScreen, used for undoable screens with no undoable controls
+     * (only undoable actions)
+     * @param node a node from the undoable screen
+     * @param undoableScreen the enum of the screen this StatesHistoryScreen represents
+     * @param target the target user of the screen this StatesHistoryScreen represents
+     */
+    public StatesHistoryScreen(Node node, UndoableScreen undoableScreen, User target) {
+        this.undoableScreen = undoableScreen;
+        this.target = target;
+        findUndoableWrapper(node);
     }
 
     /**
@@ -343,6 +358,9 @@ public class StatesHistoryScreen {
                 }
             }
         }
+        if (stateHistories.size() == 0) {
+            return false;
+        }
         for (StateHistoryControl stateHistory : stateHistories) {
             Boolean success = stateHistory.undo();
             if (!success) {
@@ -362,7 +380,7 @@ public class StatesHistoryScreen {
     public boolean redo() {
         redone = true; // change to true as to not trigger listeners to store
         if (actions.get(index) != null) {
-            for (Action action : actions.get(index)) {
+            for (IAction action : actions.get(index)) {
                 if (!action.isExecuted()) {
                     action.execute();
                     userActions.log(Level.INFO, "Local change redone", "User redoed through local change");
@@ -420,12 +438,12 @@ public class StatesHistoryScreen {
 
     /**
      * Adds an action to the actions map for this StatesHistoryScreen
-     * Action is assciated with the current index in the undo/redo stack
+     * IAction is assciated with the current index in the undo/redo stack
      * @param action the new action to add
      */
-    public void addAction(Action action) {
+    public void addAction(IAction action) {
         if (actions.get(index) == null) {
-            actions.put(index, new ArrayList<Action>(){{add(action);}});
+            actions.put(index, new ArrayList<IAction>(){{add(action);}});
         } else {
             actions.get(index).add(action);
         }
@@ -435,11 +453,11 @@ public class StatesHistoryScreen {
      * Returns the current actions map, used for passing the existing action map to a new instance of StatesHistoryScreen
      * @return the current actions map
      */
-    public Map<Integer, List<Action>> getActions() {
+    public Map<Integer, List<IAction>> getActions() {
         return actions;
     }
 
-    public void setActions(Map<Integer, List<Action>> actions) {
+    public void setActions(Map<Integer, List<IAction>> actions) {
         this.actions = actions;
     }
 

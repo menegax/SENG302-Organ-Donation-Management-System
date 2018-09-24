@@ -19,17 +19,15 @@ import model.Procedure;
 import service.PatientDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
-import utility.undoRedo.Action;
+import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.INFO;
-import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -91,7 +89,7 @@ public class GUIPatientProcedures extends UndoableController implements IWindowO
     /**
      * Sets the TableViews to the appropriate procedures for the current patient
      */
-    public void load() {
+    public void loadController() {
         if (userControl.getLoggedInUser() instanceof Patient) {
             this.patientClone = (Patient) this.target.deepClone();
             setupTables();
@@ -244,7 +242,7 @@ public class GUIPatientProcedures extends UndoableController implements IWindowO
         }
         if (selectedProcedure != null) {
             patientClone.removeProcedure(selectedProcedure);
-            statesHistoryScreen.addAction(new Action(target, patientClone));
+            statesHistoryScreen.addAction(new SingleAction(target, patientClone));
             userActions.log(INFO, "Removed procedure " + selectedProcedure.getSummary(), new String[]{"Attempted to remove a procedure", ((Patient) target).getNhiNumber()});
             setupTables();
         }

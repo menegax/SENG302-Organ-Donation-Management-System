@@ -15,7 +15,7 @@
 <?import javafx.scene.text.Font?>
 <?import tornadofx.control.DateTimePicker?>
 
-<GridPane fx:id="patientUpdateAnchorPane" prefHeight="489.0" prefWidth="822.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientUpdateProfile">
+<GridPane fx:id="patientUpdateAnchorPane" prefHeight="489.0" prefWidth="822.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientUpdateProfile">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="77.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="317.0" />
@@ -59,8 +59,15 @@
                </GridPane.margin></Label>
             <TextField fx:id="nhiTxt" prefHeight="38.0" prefWidth="320.0" promptText="NHI Number" GridPane.columnIndex="2" GridPane.rowIndex="1" />
             <TextField fx:id="firstnameTxt" prefHeight="36.0" prefWidth="320.0" promptText="First name" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-            <TextField fx:id="lastnameTxt" prefHeight="39.0" prefWidth="320.0" promptText="Last name" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <TextField fx:id="preferrednameTxt" prefHeight="40.0" prefWidth="320.0" promptText="Preferred Name" GridPane.columnIndex="2" GridPane.rowIndex="3" />
             <TextField fx:id="middlenameTxt" prefHeight="40.0" prefWidth="320.0" promptText="Middle name(s)" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+            <TextField fx:id="lastnameTxt" prefHeight="39.0" prefWidth="320.0" promptText="Last name" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+            <ChoiceBox fx:id="bloodGroupDD" prefHeight="38.0" prefWidth="1106.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
+            <DatePicker fx:id="dobDate" editable="false" prefHeight="38.0" prefWidth="998.0" promptText="Date of birth" showWeekNumbers="true" GridPane.columnIndex="2" GridPane.rowIndex="7" />
+            <DateTimePicker fx:id="dateOfDeath" editable="true" prefHeight="38.0" prefWidth="902.0" promptText="Date of death" showWeekNumbers="true" GridPane.columnIndex="2" GridPane.rowIndex="8" />
+            <TextField fx:id="deathLocationTxt" prefHeight="39.0" prefWidth="320.0" promptText="Death location" GridPane.columnIndex="2" GridPane.rowIndex="9" />
+            <TextField fx:id="deathCity" prefHeight="39.0" prefWidth="320.0" promptText="Death city" GridPane.columnIndex="2" GridPane.rowIndex="10" />
+            <ChoiceBox fx:id="deathRegion" prefHeight="38.0" prefWidth="527.0" GridPane.columnIndex="2" GridPane.rowIndex="11" />
             <Label text="First Name:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets right="5.0" />
@@ -73,8 +80,6 @@
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></Label>
-            <DatePicker fx:id="dobDate" editable="false" prefHeight="38.0" prefWidth="998.0" promptText="Date of birth" showWeekNumbers="true" GridPane.columnIndex="2" GridPane.rowIndex="7" />
-            <ChoiceBox fx:id="bloodGroupDD" prefHeight="38.0" prefWidth="1106.0" GridPane.columnIndex="2" GridPane.rowIndex="6" />
             <Label text="Date of Birth:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="7">
                <GridPane.margin>
                   <Insets right="5.0" />
@@ -87,8 +92,6 @@
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></Label>
-            <TextField fx:id="preferrednameTxt" prefHeight="40.0" prefWidth="320.0" promptText="Preferred Name" GridPane.columnIndex="2" GridPane.rowIndex="3" />
-            <TextField fx:id="deathLocationTxt" prefHeight="39.0" prefWidth="320.0" promptText="Death location" GridPane.columnIndex="2" GridPane.rowIndex="9" />
             <Label alignment="CENTER_RIGHT" text="Death Street:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="9" GridPane.valignment="CENTER">
                <padding>
                   <Insets right="5.0" />
@@ -99,22 +102,18 @@
                   <Insets right="5.0" />
                </GridPane.margin>
             </Label>
-            <TextField fx:id="deathCity" prefHeight="39.0" prefWidth="320.0" promptText="Death city" GridPane.columnIndex="2" GridPane.rowIndex="10" />
             <Label alignment="CENTER_RIGHT" text="Death City:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="10" GridPane.valignment="CENTER">
                <padding>
                   <Insets right="5.0" />
                </padding>
             </Label>
-            <ChoiceBox fx:id="deathRegion" prefHeight="38.0" prefWidth="527.0" GridPane.columnIndex="2" GridPane.rowIndex="11" />
             <Label alignment="CENTER_RIGHT" text="Death Region:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="11" GridPane.valignment="CENTER">
                <padding>
                   <Insets right="5.0" />
                </padding>
             </Label>
-            <DateTimePicker fx:id="dateOfDeath" editable="true" prefHeight="38.0" prefWidth="902.0" promptText="Date of death" showWeekNumbers="true" GridPane.columnIndex="2" GridPane.rowIndex="8" />
          </children>
       </GridPane>
-      <Button fx:id="saveButtonForUpdate" mnemonicParsing="false" onAction="#saveProfileUpdater" prefHeight="39.0" prefWidth="115.0" styleClass="save-button" stylesheets="@../css/guiStyle.css" text="Set" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
       <Label fx:id="lastModifiedLbl" prefHeight="18.0" prefWidth="283.0" text="Last Modified:" GridPane.columnSpan="2" GridPane.halignment="LEFT" GridPane.rowIndex="5" GridPane.valignment="BOTTOM">
          <GridPane.margin>
             <Insets left="10.0" />
@@ -150,7 +149,12 @@
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></Label>
-            <TextField fx:id="street1Txt" prefHeight="38.0" prefWidth="320.0" promptText="Street" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+               <children>
+                  <TextField fx:id="streetNumberTxt" prefHeight="40.0" prefWidth="176.0" promptText="Number" />
+                  <TextField fx:id="streetNameTxt" prefHeight="38.0" prefWidth="320.0" promptText="Street Name" />
+               </children>
+            </HBox>
             <TextField fx:id="cityTxt" prefHeight="38.0" prefWidth="320.0" promptText="City" GridPane.columnIndex="2" GridPane.rowIndex="2" />
             <TextField fx:id="suburbTxt" prefHeight="39.0" prefWidth="320.0" promptText="Suburb" GridPane.columnIndex="2" GridPane.rowIndex="3" />
             <Label text="City:" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
@@ -226,13 +230,8 @@
                   <Insets right="5.0" />
                </GridPane.margin>
             </Label>
-            <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
-               <children>
-                  <TextField fx:id="streetNumberTxt" prefHeight="40.0" prefWidth="176.0" promptText="Number" />
-                  <TextField fx:id="streetNameTxt" prefHeight="38.0" prefWidth="320.0" promptText="Street Name" />
-               </children>
-            </HBox>
          </children>
       </GridPane>
+      <Button fx:id="saveButtonForUpdate" mnemonicParsing="false" onAction="#saveProfileUpdater" prefHeight="39.0" prefWidth="115.0" styleClass="save-button" stylesheets="@../css/guiStyle.css" text="Set" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="5" />
    </children>
 </GridPane>

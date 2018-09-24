@@ -25,6 +25,6 @@ public interface IPatientDataService {
      */
     public void save(List<Patient> patientList);
 
-    public List<Patient> getDeadPatients();
+    public List<Patient> getDeadDonors();
 
 }
