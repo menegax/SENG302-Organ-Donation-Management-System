@@ -791,6 +791,9 @@ public class Patient extends User {
             if (this.isDead()) {
                 this.currentLocation = APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getDeathLocationConcat());
             } else {
+                if (this.getFormattedAddress().trim().equals("0")) { //if only part of address to google is 0 for default zip
+                    return null;
+                }
                 this.currentLocation = APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getFormattedAddress());
             }
         }
