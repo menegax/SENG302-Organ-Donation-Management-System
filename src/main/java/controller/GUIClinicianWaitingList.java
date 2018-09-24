@@ -24,9 +24,7 @@ import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -215,8 +213,19 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
     @FXML
     public void viewOnMap() {
         List<Patient> patients = new ArrayList<>();
-        for (int i = 0; i < masterData.size(); i++) {
-            patients.add(patientDataService.getPatientByNhi(masterData.get(i).getReceiverNhi()));
+        boolean found = false;
+        for (OrganWaitlist.OrganRequest aMasterData : masterData) {
+            for (Patient patient : patients) {
+                found = false;
+                if (patient.getNhiNumber().equals(aMasterData.getReceiverNhi())) {
+                    found = true;
+                    break;
+
+                }
+            }
+            if (!found) {
+                patients.add(patientDataService.getPatientByNhi(aMasterData.getReceiverNhi()));
+            }
         }
 
         Alert alert;

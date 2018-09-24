@@ -69,6 +69,7 @@ function setMapDragEnd() {
 function addMarker(patient) {
     console.log("Adding marker to map for patient " + patient.getNhiNumber());
     var latLong = patient.getCurrentLocation();
+    console.log(latLong);
     if (latLong !== null) {
         successCount++;
         var marker = makeMarker(patient, latLong); //set up markers
@@ -286,7 +287,6 @@ function showNotification(numSuccess, numTotal) {
     failedPatientArray.forEach(function(patient) {
         var nhi = patient.getNhiNumber();
         var address;
-        console.log(patient);
         if (patient.isDead()) {
             address = patient.getDeathLocationConcat();
         } else {
