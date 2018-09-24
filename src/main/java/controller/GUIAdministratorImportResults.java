@@ -16,7 +16,6 @@ import javafx.stage.Stage;
 import model.Patient;
 import utility.GlobalEnums;
 import utility.MultiTouchHandler;
-import utility.TouchscreenCapable;
 
 import java.time.LocalDate;
 import java.util.Set;

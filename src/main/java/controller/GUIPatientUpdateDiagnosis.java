@@ -16,7 +16,6 @@ import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.MultiTouchHandler;
 import utility.TouchDatePickerSkin;
-import utility.TouchscreenCapable;
 import utility.undoRedo.IAction;
 import utility.undoRedo.SingleAction;
 

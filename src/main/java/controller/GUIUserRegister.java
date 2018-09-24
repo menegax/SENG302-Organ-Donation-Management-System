@@ -28,7 +28,6 @@ import utility.GlobalEnums.Region;
 import utility.GlobalEnums.UIRegex;
 import utility.MultiTouchHandler;
 import utility.TouchDatePickerSkin;
-import utility.TouchscreenCapable;
 
 import java.io.IOException;
 import java.time.LocalDate;
