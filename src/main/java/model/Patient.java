@@ -844,8 +844,6 @@ public class Patient extends User {
 
     public void clearRequiredOrgans() {
         requiredOrgans.clear();
-        System.out.println("clearing..."); //todo rm
-        System.out.println("patient is: " + this);
     }
 
     /**
