@@ -1,17 +1,25 @@
 package model_test;
 
-import com.google.maps.errors.ApiException;
+import static java.util.logging.Level.OFF;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static utility.SystemLogger.systemLogger;
+import static utility.UserActionHistory.userActions;
+
 import com.google.maps.model.LatLng;
 import model.Disease;
 import model.Patient;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.SystemLogger;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -274,18 +282,38 @@ public class PatientTest implements Serializable {
      * Due to the getCurrentLocation checking for null, this test can only test certain parts of the address (e.g. not street)
      */
     @Test
-    public void resetCurrentLocation() throws DataFormatException, InterruptedException, ApiException, IOException {
+    public void resetCurrentLocation() throws DataFormatException {
         testPatient.setCurrentLocation(new LatLng(-43.525650, 172.639847)); // set to UC
         testPatient.setStreetNumber("10");
-        assertNull(testPatient.getCurrentLocation());
+        assertNull(testPatient.getCurrentLocationForTestingOnly());
+
+        testPatient.setCurrentLocation(new LatLng(-43.525650, 172.639847)); // set to UC
+        testPatient.setStreetName("Ilam");
+        assertNull(testPatient.getCurrentLocationForTestingOnly());
 
         testPatient.setCurrentLocation(new LatLng(-43.525650, 172.639847)); // set to UC
         testPatient.setSuburb("Avonside");
-        assertNull(testPatient.getCurrentLocation());
+        assertNull(testPatient.getCurrentLocationForTestingOnly());
 
         testPatient.setCurrentLocation(new LatLng(-43.525650, 172.639847)); // set to UC
         testPatient.setCity("Christchurch");
-        assertNull(testPatient.getCurrentLocation());
+        assertNull(testPatient.getCurrentLocationForTestingOnly());
+
+        testPatient.setCurrentLocation(new LatLng(-43.525650, 172.639847)); // set to UC
+        testPatient.setRegion(GlobalEnums.Region.CANTERBURY);
+        assertNull(testPatient.getCurrentLocationForTestingOnly());
+
+        testPatient.setCurrentLocation(new LatLng(-43.525650, 172.639847)); // set to UC
+        testPatient.setDeathStreet("10 Ilam");
+        assertNull(testPatient.getCurrentLocationForTestingOnly());
+
+        testPatient.setCurrentLocation(new LatLng(-43.525650, 172.639847)); // set to UC
+        testPatient.setDeathCity("Chch");
+        assertNull(testPatient.getCurrentLocationForTestingOnly());
+
+        testPatient.setCurrentLocation(new LatLng(-43.525650, 172.639847)); // set to UC
+        testPatient.setDeathRegion(GlobalEnums.Region.CANTERBURY);
+        assertNull(testPatient.getCurrentLocationForTestingOnly());
     }
 
     /**
@@ -293,7 +321,6 @@ public class PatientTest implements Serializable {
      */
     @AfterClass
     public static void tearDown() {
-
         userActions.setLevel(Level.INFO);
     }
 

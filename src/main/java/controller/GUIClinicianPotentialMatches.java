@@ -13,7 +13,13 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
@@ -35,12 +41,19 @@ import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
 import utility.TouchPaneController;
 import utility.TouchscreenCapable;
+import utility.TouchPaneController;
+import utility.TouchscreenCapable;
 import utility.undoRedo.IAction;
 import utility.undoRedo.MultiAction;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
 import static java.lang.Math.abs;
@@ -89,6 +102,9 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
     public GridPane potentialMatchesPane;
 
     public Button closeButton;
+
+    @FXML
+    public Button infoWindowBtn;
 
     @FXML
     private GridPane filterGrid;
@@ -847,4 +863,31 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
         screenControl.getMapController().setPatients(patients);
         screenControl.setMapOpen(true);
     }
+
+
+    /**
+     * Displays the matching criteria in an info window for the user to read
+     */
+    @FXML
+    public void openInfoWindow() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("Matching Criteria");
+        alert.setWidth(30.0);
+
+        StringBuilder infoText = new StringBuilder();
+        infoText.append("To match, the receiver must meet the following criteria:\n\n");
+        infoText.append("* The requesting organ must be the same as the donor is donating.\n");
+        infoText.append("* The potential recipient must not be dead.\n");
+        infoText.append("* The donor and receiver must be within 15 years apart in age.\n");
+        infoText.append("* If under 12, both the receiver and donor must be under 12 years old.\n");
+        infoText.append("* The donating organ must not have expired.\n");
+        infoText.append("* Those waiting the longest have the highest priority.\n");
+        infoText.append("* After comparing wait times, recipients with the closest location to the donor are prioritized.");
+
+        alert.setContentText(infoText.toString());
+
+        alert.show();
+
+    }
+
 }
