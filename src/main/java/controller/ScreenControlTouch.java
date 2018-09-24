@@ -1,16 +1,11 @@
 package controller;
 
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.scene.text.Font;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -20,13 +15,13 @@ import model.User;
 import org.tuiofx.internal.base.TuioFXCanvas;
 import service.UserDataService;
 import utility.undoRedo.UndoableWrapper;
-import javafx.geometry.Point2D;
-import javafx.geometry.Rectangle2D;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
@@ -83,6 +78,7 @@ class ScreenControlTouch extends ScreenControl {
      * @param fxml the fxml to display
      * @param undoable if the pane to be displayed is undoable or not
      * @param parentController controller to notify when pane shown closes
+     * @param targetUser The targeted user for the pane
      * @param parent The parent to orientate this fxml to
      * @return the controller created for this fxml
      */
@@ -198,6 +194,10 @@ class ScreenControlTouch extends ScreenControl {
         }
     }
 
+    /**
+     * Sets a new touch stage
+     * @param touchStage The new touch stage
+     */
     void setTouchStage(Stage touchStage) {
         this.touchStage = touchStage;
     }
@@ -224,6 +224,10 @@ class ScreenControlTouch extends ScreenControl {
         }
     }
 
+    /**
+     * Sets the login showing flag
+     * @param showing The new value
+     */
     void setLoginShowing(boolean showing) {
         this.isLoginShowing = showing;
     }
@@ -254,6 +258,10 @@ class ScreenControlTouch extends ScreenControl {
         return false;
     }
 
+    /**
+     * Adds a new tuiofx canvas for the given scene
+     * @param scene The scene to add a canvas for
+     */
     private void addCanvas(Scene scene) {
         if(scene != null && !(scene.getRoot() instanceof TuioFXCanvas)) {
             TuioFXCanvas tuioFXCanvas = new TuioFXCanvas();
@@ -312,6 +320,9 @@ class ScreenControlTouch extends ScreenControl {
         resizeFonts(touchPane);
     }
 
+    /**
+     * Centers all of the panes in the touchpane
+     */
     public void centerPanes() {
         for(Node pane : touchPane.getChildren()) {
             if(pane instanceof Pane) {
