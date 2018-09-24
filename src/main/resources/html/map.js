@@ -283,6 +283,9 @@ function showNotification(numSuccess, numTotal) {
     var modalMessage = 'Successfully loaded ' + numSuccess + ' out of ' + numTotal + ' patient locations.';
     $('#marker-notification-msg').html();
     $('#marker-notification').show();
+    setTimeout(function() {
+        hideNotification();
+    }, 10000);
     failedPatientArray.forEach(function(patient) {
         var nhi = patient.getNhiNumber();
         var address;
