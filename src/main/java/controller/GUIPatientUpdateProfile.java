@@ -1,9 +1,19 @@
 package controller;
 
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
+import static utility.UserActionHistory.userActions;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Control;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
 import model.Patient;
@@ -12,6 +22,13 @@ import tornadofx.control.DateTimePicker;
 import utility.GlobalEnums;
 import utility.GlobalEnums.*;
 import utility.MapBridge;
+import utility.GlobalEnums.BirthGender;
+import utility.GlobalEnums.BloodGroup;
+import utility.GlobalEnums.Organ;
+import utility.GlobalEnums.PreferredGender;
+import utility.GlobalEnums.Region;
+import utility.GlobalEnums.UIRegex;
+import utility.GlobalEnums.UndoableScreen;
 import utility.SystemLogger;
 import utility.UserActionHistory;
 import utility.undoRedo.IAction;
@@ -26,10 +43,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
-
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.WARNING;
-import static utility.UserActionHistory.userActions;
 
 public class GUIPatientUpdateProfile extends UndoableController {
 
@@ -338,6 +351,17 @@ public class GUIPatientUpdateProfile extends UndoableController {
 
 
     /**
+     * Dereigsters the patient's required organs if they are dead
+     */
+    private void removeRequestedOrgansIfDead() {
+        if (after.isDead()) {
+            after.clearRequiredOrgans();
+        }
+    }
+
+
+
+    /**
      * Validates and generates a pop up alert to inform the user that a location must be set for the patient to donate or receive donations
      */
     private void warnIfNoLocation() {
@@ -519,6 +543,9 @@ public class GUIPatientUpdateProfile extends UndoableController {
                     .getSelectedItem()));
         }
 
+        removeRequestedOrgansIfDead();
+
+        // undo/redo
         IAction action;
         if (donorBefore != null) {
             action = new MultiAction((Patient) target, after, donorBefore, donorAfter);
@@ -526,8 +553,9 @@ public class GUIPatientUpdateProfile extends UndoableController {
             action = new SingleAction(target, after);
         }
         statesHistoryScreen.addAction(action);
+
         patientDataService.save(after);
-        SystemLogger.systemLogger.log(Level.FINE, "Successfuly update patient to:\n" + after);
+        SystemLogger.systemLogger.log(Level.FINE, "Successfully updated patient to:\n" + after);
     }
 
 

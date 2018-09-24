@@ -1,22 +1,60 @@
 package data_access.mysqlDAO;
 
+import static utility.GlobalEnums.FilterOption.AGELOWER;
+import static utility.GlobalEnums.FilterOption.AGEUPPER;
+import static utility.GlobalEnums.FilterOption.BIRTHGENDER;
+import static utility.GlobalEnums.FilterOption.DONATIONS;
+import static utility.GlobalEnums.FilterOption.DONOR;
+import static utility.GlobalEnums.FilterOption.RECIEVER;
+import static utility.GlobalEnums.FilterOption.REGION;
+import static utility.GlobalEnums.FilterOption.REQUESTEDDONATIONS;
+import static utility.SystemLogger.systemLogger;
+
 import data_access.factories.MySqlFactory;
-import data_access.interfaces.*;
-import model.*;
-import utility.*;
+import data_access.interfaces.IContactDataAccess;
+import data_access.interfaces.IDiseaseDataAccess;
+import data_access.interfaces.IDonationsDataAccess;
+import data_access.interfaces.ILogDataAccess;
+import data_access.interfaces.IMedicationDataAccess;
+import data_access.interfaces.IPatientDataAccess;
+import data_access.interfaces.IProcedureDataAccess;
+import data_access.interfaces.IRequiredOrganDataAccess;
+import data_access.interfaces.ITransplantWaitListDataAccess;
+import model.Disease;
+import model.Medication;
+import model.OrganReceival;
+import model.Patient;
+import model.Procedure;
+import utility.GlobalEnums;
+import utility.GlobalEnums.BirthGender;
+import utility.GlobalEnums.BloodGroup;
+import utility.GlobalEnums.DiseaseState;
+import utility.GlobalEnums.FilterOption;
+import utility.GlobalEnums.MedicationStatus;
+import utility.GlobalEnums.Organ;
+import utility.GlobalEnums.PreferredGender;
+import utility.GlobalEnums.Region;
+import utility.ImportObservable;
+import utility.PatientActionRecord;
+import utility.ResourceManager;
+import utility.SystemLogger;
 
-import utility.GlobalEnums.*;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.zip.DataFormatException;
-
-import static utility.GlobalEnums.FilterOption.*;
-import static utility.SystemLogger.systemLogger;
 
 public class PatientDAO implements IPatientDataAccess {
 

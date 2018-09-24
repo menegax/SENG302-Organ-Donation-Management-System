@@ -10,7 +10,6 @@ import com.univocity.parsers.annotations.EnumOptions;
 import com.univocity.parsers.annotations.Parsed;
 import com.univocity.parsers.annotations.Validate;
 import org.apache.commons.lang3.StringUtils;
-import org.mockito.cglib.core.Local;
 import service.APIGoogleMaps;
 import utility.GlobalEnums;
 import utility.GlobalEnums.BirthGender;
@@ -22,6 +21,14 @@ import utility.GlobalEnums.PreferredGender;
 import utility.GlobalEnums.Region;
 import utility.GlobalEnums.Status;
 import utility.MapBridge;
+import utility.GlobalEnums.BirthGender;
+import utility.GlobalEnums.BloodGroup;
+import utility.GlobalEnums.DiseaseState;
+import utility.GlobalEnums.MedicationStatus;
+import utility.GlobalEnums.Organ;
+import utility.GlobalEnums.PreferredGender;
+import utility.GlobalEnums.Region;
+import utility.GlobalEnums.Status;
 import utility.PatientActionRecord;
 import utility.Searcher;
 import utility.parsing.DateConverterCSV;
@@ -43,9 +50,6 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
-
-import static java.util.logging.Level.INFO;
-import static utility.UserActionHistory.userActions;
 
 public class Patient extends User {
 
