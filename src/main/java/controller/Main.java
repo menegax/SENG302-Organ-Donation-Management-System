@@ -22,6 +22,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         // setup GUI
         primaryStage.setTitle("Login");
+        primaryStage.setMaximized(true);
         ScreenControl screenControl = ScreenControl.getScreenControl();
         screenControl.show("/scene/login.fxml", false, null, null, null);
 

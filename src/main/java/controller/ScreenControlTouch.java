@@ -14,12 +14,14 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import model.User;
 import org.tuiofx.internal.base.TuioFXCanvas;
 import service.UserDataService;
 import utility.undoRedo.UndoableWrapper;
 import javafx.geometry.Point2D;
+import javafx.geometry.Rectangle2D;
 
 import java.io.IOException;
 import java.util.*;
@@ -37,6 +39,8 @@ class ScreenControlTouch extends ScreenControl {
     private final double INITIAL_PANE_SIZE = 0.85;
 	
 	private Stage touchStage;
+	
+	private Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
     private Region rootPane;
 
@@ -138,8 +142,12 @@ class ScreenControlTouch extends ScreenControl {
             resizeFonts(touchPane);
             if (fxml.equals(MAPFXML)) {
                 // Cast should always be safe
+            	pane.setPrefWidth(screenBounds.getMaxX());
+            	pane.setPrefHeight(screenBounds.getMaxY());
             	pane.setTranslateX(0);
             	pane.setTranslateY(0);
+            	pane.setScaleX(1);
+            	pane.setScaleY(1);
                 mapController = (GUIMap) controller;
                 mapController.loadMap();
                 pane.visibleProperty().addListener(((observable, oldValue, newValue) -> {
