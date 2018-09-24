@@ -22,6 +22,7 @@ public class ProgressBarCustomTableCell {
                 super.updateItem(item, empty);
                 if (item != null) {
                     item.setProgressBar(progressBar);
+                    progressBar.setMinHeight(15.0);
                     item.setColor(item.getElapsedTime() / item.getOrgan().getOrganUpperBoundSeconds());
                     progressBar.progressProperty().bind(item.progressProperty());
                     progressBar.minWidthProperty().bind(column.widthProperty().subtract(10));

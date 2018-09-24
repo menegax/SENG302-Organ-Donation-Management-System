@@ -11,6 +11,8 @@ import utility.Searcher;
 import utility.SystemLogger;
 import utility.UserActionHistory;
 import javafx.geometry.Point2D;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCode;
 
 import java.util.UUID;
 
@@ -22,7 +24,6 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         // set up GUI
         primaryStage.setTitle("Login");
-        primaryStage.setMaximized(true);
         ScreenControl screenControl = ScreenControl.getScreenControl();
         screenControl.show("/scene/login.fxml", false, null, null, null);
 
