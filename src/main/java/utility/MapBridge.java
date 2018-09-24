@@ -37,8 +37,7 @@ public class MapBridge {
     /**
      * Calculates marker radii
      */
-    @SuppressWarnings("unused") // used in corrresponding javascript
-    public void updateMarkerRadii(Patient patient, GlobalEnums.Organ organ) {
+    private void updateMarkerRadii(Patient patient, GlobalEnums.Organ organ) {
         //constants using kilometers and seconds
         long organLoadTime = 1800;
         long organUnloadtime = 1800;
@@ -66,7 +65,6 @@ public class MapBridge {
 
             remaining = remaining - organLoadTime - organUnloadtime;
             radius = remaining * heloTravelSpeedMps;
-            System.out.println(organ);
             GUIMap.getJSBridge().call("createMarkerRadii", radius, radiiTask.getColor(), organ.toString());
         } else {
             GUIMap.getJSBridge().call("createMarkerRadii", radius, "#008000", organ.toString());
@@ -86,7 +84,6 @@ public class MapBridge {
                 if (rad > LENGTHOFNZ) {
                     rad = LENGTHOFNZ;
                 }
-//                System.out.println(rad);
                 String color = targetPatientOrgan.getProgressTask().getColor();
                 GUIMap.getJSBridge().call("updateMarkerRadii", rad, color, organ.toString());
             }
@@ -94,19 +91,10 @@ public class MapBridge {
     }
 
     /**
-     * Sets donations in map.js
+     * Interrupts thread and stops the task if there is one already created
+     * Triggers method to updateMarker's radius to create/update the circle on the map
      */
-//    @SuppressWarnings("unused") // used in corrresponding javascript
-//    public void loadCircles(String patientNhi) {
-//        Patient patient = patientDataService.getPatientByNhi(patientNhi);
-//        GUIMap.getJSBridge().setMember("currentOrgan", patient.getDonations().get(0).toString().toLowerCase());
-//        for (GlobalEnums.Organ organ: patient.getDonations()) {
-//            GUIMap.getJSBridge().call("createOrganButtons", organ.toString(), patient.getDonations().size());
-//            updateMarkerRadii(patient, organ);
-//        }
-//        GUIMap.getJSBridge().call("createOpenPatientButton", patient.getDonations().size());
-//    }
-
+    @SuppressWarnings("unused")
     public void loadCircle(String patientNhi, String organStr) {
         if (radiiTask != null) {
             radiiTask.setInterrupted();

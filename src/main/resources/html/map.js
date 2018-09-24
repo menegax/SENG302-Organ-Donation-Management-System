@@ -85,8 +85,8 @@ function addMarker(patient) {
             currentInfoWindow = infoWindow;
             currentMarker = marker;
             currentPatient = patient;
-            // createOpenPatientButton();
-            //infoWindow.open(map, marker);
+            clearCircles();
+
             infoWindows.forEach(function (iw) {
                 if (iw !== infoWindow) {
                     iw.close();
@@ -95,7 +95,7 @@ function addMarker(patient) {
                     iw.open(map, marker);
                 }
             });
-            clearCircles();
+
             if (patient.getDonations().size() > 0 && patient.getDeathDate() != null) {
                 for (let i = 0; i < patient.getDonations().size(); i++) {
                     createOrganButtons(patient.getDonations().get(i).toString(), patient.getDonations().size());
@@ -112,7 +112,8 @@ function addMarker(patient) {
 }
 
 /**
- * Create Buttons
+ * Create organ buttons for every organ that the patient has.
+ * Triggered via Java, in MapBridge
  */
 function createOrganButtons(organ, numberOfOrgans) {
     if (!(editedInfos.includes(currentInfoWindow))){
@@ -142,23 +143,8 @@ function createOpenPatientButton() {
     }
 }
 
-
-// /**
-//  * Creates radius around selected marker
-//  */
-// function attachRadius(patient) {
-//     var green = '#28a847';
-//     var orange = '#e49505';
-//     var red = '#e4330d';
-
-    //mapBridge.loadCircles(patient.getNhiNumber());
-    // patient.getDonations().forEach (function (organ){
-    //     mapBridge.updateMarkerRadii(patient.getNhiNumber(), organ);
-    // });
-// }
-
 /**
- * Creates a circle radii for current marker selected
+ * Creates a circle radii for current organ marker selected
  */
 function createMarkerRadii(radius, color, organ) {
     var markerCircle;
@@ -178,6 +164,10 @@ function createMarkerRadii(radius, color, organ) {
     circles.push(markerCircle);
 }
 
+/**
+ * Sets the current organ to the organ selected to view or the first one in a patient profile if no organ is selected
+ * @param organ - String format of organ to set currentOrgan to
+ */
 function setCurrentOrgan(organ) {
     currentOrgan = organ;
     mapBridge.loadCircle(currentMarker.nhi, currentOrgan);
@@ -187,7 +177,6 @@ function setCurrentOrgan(organ) {
  * Updates the circle radii and colour for current marker selected
  */
 function updateMarkerRadii(radius, color, organ) {
-    console.log(radius);
     circles.forEach(function(circle){
          if (circle.organ === currentOrgan) {
             if (circle.organ === organ) {
