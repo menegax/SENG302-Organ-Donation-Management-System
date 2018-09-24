@@ -48,6 +48,8 @@ public class MultiTouchHandler {
      */
     private int MAXTOUCHESPERPANE = 2;
 
+    
+    private final double MAXVELOCITY = 50;
     private final double DEGREES45 = Math.PI / 4;
     private final double DEGREES135 = Math.PI - DEGREES45;
     private final double DEGREES180 = Math.PI;
@@ -185,6 +187,12 @@ public class MultiTouchHandler {
                         newVelY = velocity.getY() + (DECELERATION * SLEEPTIME);
                     } else if (velocity.getY() > 20) {
                         newVelY = velocity.getY() - (DECELERATION * SLEEPTIME);
+                    }
+                    if (newVelY > MAXVELOCITY) {
+                    	newVelY = MAXVELOCITY;
+                    }
+                    if (newVelX > MAXVELOCITY) {
+                    	newVelX = MAXVELOCITY;
                     }
                     velocity = new Point2D(newVelX, newVelY);
                     try {
@@ -349,15 +357,17 @@ public class MultiTouchHandler {
      * @param distance the distance moved by the touch gesture in the relevant direction
      */
     private void executeZoom(double distance) {
-        if (rootPane.getScaleX() > 0.25 && rootPane.getScaleY() > 0.25) {
-            if (rootPane.getScaleX() < 0.9 && rootPane.getScaleY() < 0.9) {
-                rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
-                rootPane.setScaleY(rootPane.getScaleY() + (distance * ZOOMFACTOR));
-            }  else if (distance < 0) {
-                rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
-                rootPane.setScaleY(rootPane.getScaleY() + (distance * ZOOMFACTOR));
-            }
+        if (rootPane.getScaleX() > 0.4 && rootPane.getScaleY() > 0.4) {
+            rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
+            rootPane.setScaleY(rootPane.getScaleY() + (distance * ZOOMFACTOR));
         } else if (distance > 0) {
+            rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
+            rootPane.setScaleY(rootPane.getScaleY() + (distance * ZOOMFACTOR));
+        }
+        if (rootPane.getScaleX() < 1.25 && rootPane.getScaleY() < 1.25) {
+            rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
+            rootPane.setScaleY(rootPane.getScaleY() + (distance * ZOOMFACTOR));
+        }  else if (distance < 0) {
             rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
             rootPane.setScaleY(rootPane.getScaleY() + (distance * ZOOMFACTOR));
         }
