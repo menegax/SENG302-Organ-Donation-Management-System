@@ -113,10 +113,12 @@ class ScreenControlTouch extends ScreenControl {
             List<Node> panes;
             if(isLoginShowing) {
                 panes = new ArrayList<>();
-                rootPane = pane;
                 setLoginShowing(false);
             } else {
                 panes = new ArrayList<>(touchPane.getChildren());
+            }
+            if(rootPane == null && !fxml.equals(MAPFXML) && !fxml.equals(LOGINFXML)) {
+                rootPane = pane;
             }
             panes.add(pane);
             Region root = new FXMLLoader(getClass().getResource("/scene/touchScene.fxml")).load();
@@ -217,6 +219,7 @@ class ScreenControlTouch extends ScreenControl {
         try {
             new UserDataService().prepareApplication();
             Region root = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
+            rootPane = null;
             touchPane = new Pane();
             touchPane.getChildren().addAll(new Pane(root));           
             Scene newScene = new Scene(touchPane);        
