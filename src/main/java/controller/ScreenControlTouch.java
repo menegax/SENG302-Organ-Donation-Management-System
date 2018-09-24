@@ -6,6 +6,8 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -48,6 +50,8 @@ class ScreenControlTouch extends ScreenControl {
     private boolean isLoginShowing;
 
     private Map<String, Integer> fontMap = new HashMap<>();
+    
+    private boolean fullScreen;
 
     private ScreenControlTouch() {
         isLoginShowing = true;
@@ -99,21 +103,7 @@ class ScreenControlTouch extends ScreenControl {
             }
             pane.getProperties().put("focusArea", "true");
             pane.setStyle("-fx-background-color: #2c2f34; -fx-border-color: #f5f5f5;");
-            if (parent != null) {
-                double centerParentX = ((Pane)parent).getPrefWidth()/2;
-                double centerParentY = ((Pane)parent).getPrefHeight()/2;
-                double centerChildX = pane.getPrefWidth() / 2;
-                double centerChildY = pane.getPrefHeight() / 2;
-                pane.setTranslateX(parent.getTranslateX() + centerParentX - centerChildX);
-                pane.setTranslateY(parent.getTranslateY() + centerParentY - centerChildY);
-                pane.setLayoutX(parent.getLayoutX());
-                pane.setLayoutY(parent.getLayoutY());
-                pane.setRotate(parent.getRotate());
-                pane.setScaleX(parent.getScaleX());
-                pane.setScaleY(parent.getScaleY());
-            } else {
-            	setInitialPaneSize(pane);
-            }
+            setPanePosition(pane, parent);
             addCanvas(pane.getScene());
             List<Node> panes;
             if(isLoginShowing) {
@@ -129,6 +119,9 @@ class ScreenControlTouch extends ScreenControl {
             touchPane.getChildren().addAll(panes);
             Scene newScene = new Scene(touchPane);
             touchStage.setScene(newScene);
+            if (fullScreen) {
+            	ensureFullScreen();
+            }
             addCanvas(newScene);
             pane.visibleProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue && parentController != null) {
@@ -138,12 +131,7 @@ class ScreenControlTouch extends ScreenControl {
             resizeFonts(touchPane);
             if (fxml.equals(MAPFXML)) {
                 // Cast should always be safe
-            	pane.setPrefWidth(screenBounds.getMaxX());
-            	pane.setPrefHeight(screenBounds.getMaxY());
-            	pane.setTranslateX(0);
-            	pane.setTranslateY(0);
-            	pane.setScaleX(1);
-            	pane.setScaleY(1);
+            	setMapPanePosition(pane);
                 mapController = (GUIMap) controller;
                 mapController.loadMap();
                 pane.visibleProperty().addListener(((observable, oldValue, newValue) -> {
@@ -161,6 +149,50 @@ class ScreenControlTouch extends ScreenControl {
         return null;
     }
 
+    /**
+     * Ensures the application remains in full screen mode.
+     */
+    private void ensureFullScreen() {
+    	touchStage.setFullScreenExitHint("");
+        touchStage.setFullScreen(true);
+    }
+    
+    /**
+     * Sets the position, rotation and size of the map pane.
+     * @param pane The map pane
+     */
+    private void setMapPanePosition(Region pane) {
+    	pane.setPrefWidth(touchPane.getWidth());
+    	pane.setPrefHeight(touchPane.getHeight());
+    	pane.setTranslateX(0);
+    	pane.setTranslateY(0);
+    	pane.setScaleX(1);
+    	pane.setScaleY(1);
+    }
+    
+    /**
+     * Sets the position, rotation and size of a pane.
+     * @param pane The pane to format.
+     * @param parent Parent that created the pane.
+     */
+    private void setPanePosition(Region pane, Parent parent) {
+        if (parent != null) {
+            double centerParentX = ((Pane)parent).getPrefWidth()/2;
+            double centerParentY = ((Pane)parent).getPrefHeight()/2;
+            double centerChildX = pane.getPrefWidth() / 2;
+            double centerChildY = pane.getPrefHeight() / 2;
+            pane.setTranslateX(parent.getTranslateX() + centerParentX - centerChildX);
+            pane.setTranslateY(parent.getTranslateY() + centerParentY - centerChildY);
+            pane.setLayoutX(parent.getLayoutX());
+            pane.setLayoutY(parent.getLayoutY());
+            pane.setRotate(parent.getRotate());
+            pane.setScaleX(parent.getScaleX());
+            pane.setScaleY(parent.getScaleY());
+        } else {
+        	setInitialPaneSize(pane);
+        }
+    }
+    
     /**
      * Sets the correct location and size for the initial log in pane
      * @param pane The pane to set location and size for
@@ -184,6 +216,9 @@ class ScreenControlTouch extends ScreenControl {
             Scene newScene = new Scene(touchPane);        
             addCanvas(newScene);
             touchStage.setScene(newScene);
+            if (fullScreen) {
+            	ensureFullScreen();
+            }
             setLoginShowing(true);
             setCSS();
             setInitialPaneSize(root);
@@ -318,6 +353,10 @@ class ScreenControlTouch extends ScreenControl {
      */
     public void setCSS() {
         resizeFonts(touchPane);
+    }
+    
+    public void setFullScreen(boolean fullScreen) {
+    	this.fullScreen = fullScreen;
     }
 
     /**
