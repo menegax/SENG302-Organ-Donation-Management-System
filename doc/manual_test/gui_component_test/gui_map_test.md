@@ -130,6 +130,16 @@
 
 ## Test History
 
+### 24/09/18 - Joshua
+
+Test 12: PASS
+
+Test 13: PASS
+
+Test 14: PASS
+
+Test 15: PASS
+
 ### 09/09/18 - Joshua
 
 Test 7: PASS
