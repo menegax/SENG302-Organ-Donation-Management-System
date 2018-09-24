@@ -51,6 +51,8 @@ public abstract class ScreenControl {
 
     protected GUIMap mapController;
 
+    protected String LOGINFXML = "/scene/login.fxml";
+
     protected String MAPFXML = "/scene/map.fxml";
 
     abstract void setUpNewLogin();
