@@ -32,7 +32,7 @@ public class MapBridge {
     }
 
     private IPatientDataService patientDataService = new PatientDataService();
-    private int LENGTHOFNZ = 1600000;
+    private int LENGTHOFNZ = 1500000;
 
     /**
      * Calculates marker radii

@@ -187,6 +187,7 @@ function setCurrentOrgan(organ) {
  * Updates the circle radii and colour for current marker selected
  */
 function updateMarkerRadii(radius, color, organ) {
+    console.log(radius);
     circles.forEach(function(circle){
          if (circle.organ === currentOrgan) {
             if (circle.organ === organ) {

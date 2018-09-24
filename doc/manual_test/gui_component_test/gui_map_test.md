@@ -93,7 +93,40 @@
 6. Select 'OK' on the popup that opens up
 6. Expected: The map should be populated with the patients in the table. These include patients with the following Nhi's: ANM8474, CTH2080, DMR2101, EQV5740, FUZ3183, KJD8772
 
-### Test 12 - 
+### Test 12 - Circles are created to deceased patients with organs that are not expired yet.
+
+1. Log in as Clinician
+2. Select `Available organs` tab
+3. Select `View on Map` button.
+4. Select a patient marker.
+5. EXPECTED: If the organ is still alive (most likely), a circle should appear.
+
+### Test 13 - Circles are colored in the correct color according to the proportion of time the organ has remaining before expiry.
+
+1. Log in as Clinician
+2. Select `Available organs` tab
+3. Select `View on Map` button.
+4. Select a patient marker.
+5. EXPECTED: Organ circle is colored green if it has a lot of time remaining, orange if it has moderate time remaining and red if it has very little time remaining.
+
+### Test 14 - Circles are shrinking in size (as long as the distance has not maxed out).
+
+1. Log in as Clinician.
+2. Select `Available organs` tab.
+3. Select `View on Map` button.
+4. Select a patient marker.
+5. Select an organ button (avoid bone, go for 'liver or pancreas).
+6. Ensure that the organ is still alive.
+7. EXPECTED: If you zoom in very close to the perimeter of the circle, you can see the circle shrinking every second
+
+### Test 15 - Circles are maxed out at the length of NZ
+
+1. Log in as Clinician.
+2. Select `Available organs` tab.
+3. Select `View on Map` button.
+4. Select a patient marker with a bone available either at the top or bottom of NZ.
+5. Select the `Bone` button.
+6. EXPECTED: The green circle will cover the whole of NZ and no more at the opposite edge.
 
 ## Test History
 
