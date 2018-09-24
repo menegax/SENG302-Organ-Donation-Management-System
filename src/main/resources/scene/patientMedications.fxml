@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane fx:id="medicationPane" prefHeight="342.0" prefWidth="731.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientMedications">
+<GridPane fx:id="medicationPane" prefHeight="342.0" prefWidth="731.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientMedications">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="32.19997367858887" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="90.0" />
@@ -36,8 +36,16 @@
       <RowConstraints maxHeight="55.19998779296873" minHeight="10.0" prefHeight="21.599951171874977" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
+      <TextField fx:id="newMedication" prefHeight="32.0" prefWidth="266.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+         <contextMenu>
+            <ContextMenu fx:id="contextMenu">
+              <items>
+                <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+              </items>
+            </ContextMenu>
+         </contextMenu></TextField>
+      <Button fx:id="registerMed" mnemonicParsing="false" onAction="#registerMedication" prefHeight="32.0" prefWidth="145.0" text="Register" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
       <ListView fx:id="pastMedications" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.rowSpan="3" />
-      <ListView fx:id="currentMedications" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.rowSpan="3" />
       <GridPane GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.rowSpan="3">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="0.0" prefWidth="13.599987792968747" />
@@ -52,7 +60,6 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="compareMeds" accessibleRole="PARENT" mnemonicParsing="false" onAction="#reviewInteractions" prefHeight="32.0" prefWidth="111.0" text="Compare" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
             <Button fx:id="removeMed" accessibleRole="PARENT" mnemonicParsing="false" onAction="#makeHistory" prefHeight="32.0" prefWidth="107.0" text="&lt;&lt;" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                <font>
                   <Font name="System Bold" size="22.0" />
@@ -63,8 +70,11 @@
                   <Font name="System Bold" size="22.0" />
                </font>
             </Button>
+            <Button fx:id="compareMeds" accessibleRole="PARENT" mnemonicParsing="false" onAction="#reviewInteractions" prefHeight="32.0" prefWidth="111.0" text="Compare" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
          </children>
       </GridPane>
+      <ListView fx:id="currentMedications" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="3" GridPane.rowSpan="3" />
+      <ListView fx:id="medicineInformation" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="4" />
       <Label text="Past Medications" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
          <font>
             <Font size="24.0" />
@@ -75,22 +85,12 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <Button fx:id="registerMed" mnemonicParsing="false" onAction="#registerMedication" prefHeight="32.0" prefWidth="145.0" text="Register" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-      <TextField fx:id="newMedication" prefHeight="32.0" prefWidth="266.0" GridPane.columnIndex="1" GridPane.columnSpan="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-         <contextMenu>
-            <ContextMenu fx:id="contextMenu">
-              <items>
-                <MenuItem mnemonicParsing="false" text="Unspecified Action" />
-              </items>
-            </ContextMenu>
-         </contextMenu></TextField>
-      <ListView fx:id="medicineInformation" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="4" />
       <Label text="Medication Information" GridPane.columnIndex="7" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
          <font>
             <Font size="24.0" />
          </font>
       </Label>
-      <Button fx:id="clearMed" mnemonicParsing="false" onAction="#clearSelections" prefHeight="32.0" prefWidth="145.0" text="Clear" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER" />
       <Button fx:id="deleteMed" mnemonicParsing="false" onAction="#deleteMedication" prefHeight="32.0" prefWidth="145.0" text="Delete" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER" />
+      <Button fx:id="clearMed" mnemonicParsing="false" onAction="#clearSelections" prefHeight="32.0" prefWidth="145.0" text="Clear" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="7" GridPane.valignment="CENTER" />
    </children>
 </GridPane>

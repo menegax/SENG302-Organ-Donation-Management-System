@@ -95,8 +95,9 @@ public class ClinicianDataService implements IClinicianDataService {
             task.get();
             return results;
         } catch (InterruptedException | ExecutionException e) {
-            return null;
+            e.printStackTrace();
         }
+        return null;
     }
 
     @Override

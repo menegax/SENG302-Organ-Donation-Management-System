@@ -20,7 +20,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        // setup GUI
+        // set up GUI
         primaryStage.setTitle("Login");
         primaryStage.setMaximized(true);
         ScreenControl screenControl = ScreenControl.getScreenControl();

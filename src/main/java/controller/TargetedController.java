@@ -8,8 +8,8 @@ public abstract class TargetedController {
 
     public void setTarget(User target) {
         this.target = target;
-        load();
+        loadController();
     }
 
-    protected abstract void load();
+    protected abstract void loadController();
 }

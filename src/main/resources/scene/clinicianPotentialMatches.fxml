@@ -5,12 +5,9 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-
 <GridPane fx:id="potentialMatchesPane" prefHeight="725.0" prefWidth="951.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianPotentialMatches">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="501.0" minWidth="10.0" prefWidth="443.0" />
@@ -22,9 +19,8 @@
       <RowConstraints maxHeight="61.0" minHeight="10.0" prefHeight="10.0" vgrow="NEVER" />
       <RowConstraints maxHeight="102.0" minHeight="8.0" prefHeight="80.0" vgrow="NEVER" />
       <RowConstraints maxHeight="39.0" minHeight="5.0" prefHeight="19.0" vgrow="NEVER" />
-      <RowConstraints maxHeight="500.0" minHeight="10.0" prefHeight="300.0" vgrow="SOMETIMES" />
-      <RowConstraints fillHeight="false" maxHeight="69.0" minHeight="1.0" prefHeight="16.0" />
-      <RowConstraints maxHeight="69.0" minHeight="32.0" prefHeight="32.0" />
+      <RowConstraints maxHeight="500.0" minHeight="10.0" prefHeight="312.0" vgrow="SOMETIMES" />
+      <RowConstraints fillHeight="false" maxHeight="69.0" minHeight="1.0" prefHeight="52.0" />
    </rowConstraints>
    <children>
       <TableView fx:id="potentialMatchesTable" onSort="#onSort" prefHeight="340.0" prefWidth="827.0" GridPane.columnSpan="2" GridPane.rowIndex="5" GridPane.rowSpan="2">
@@ -187,6 +183,7 @@
                   <Insets right="22.0" />
                </GridPane.margin></Text>
             <Text fx:id="ageSliderLabel" styleClass="TEXT" strokeType="OUTSIDE" strokeWidth="0.0" text="0-100" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+            <Button fx:id="infoWindowBtn" mnemonicParsing="false" onAction="#openInfoWindow" text="Info" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
          </children>
       </GridPane>
       <Button fx:id="closeButton" alignment="CENTER" mnemonicParsing="false" onAction="#closeMatchWindow" prefHeight="30.0" prefWidth="109.0" text="Close" GridPane.halignment="LEFT" GridPane.rowIndex="6">
@@ -200,6 +197,11 @@
       <Button minHeight="-Infinity" mnemonicParsing="false" onAction="#viewOnMap" prefHeight="31.0" prefWidth="109.0" text="View on Map" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
          <GridPane.margin>
             <Insets bottom="20.0" right="60.0" />
+         </GridPane.margin>
+      </Button>
+      <Button fx:id="assignOrganButton" mnemonicParsing="false" onAction="#assignOrganToPatient" prefHeight="30.0" prefWidth="110.0" text="Assign Organ" GridPane.halignment="LEFT" GridPane.rowIndex="6">
+         <GridPane.margin>
+            <Insets bottom="20.0" left="200.0" />
          </GridPane.margin>
       </Button>
    </children>
