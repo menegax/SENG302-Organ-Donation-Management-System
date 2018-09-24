@@ -48,7 +48,8 @@ public class MultiTouchHandler {
      */
     private int MAXTOUCHESPERPANE = 2;
 
-    
+    private final double MINPANESIZE = 0.4;
+    private final double MAXPANESIZE = 1.15;
     private final double MAXVELOCITY = 50;
     private final double DEGREES45 = Math.PI / 4;
     private final double DEGREES135 = Math.PI - DEGREES45;
@@ -357,17 +358,15 @@ public class MultiTouchHandler {
      * @param distance the distance moved by the touch gesture in the relevant direction
      */
     private void executeZoom(double distance) {
-        if (rootPane.getScaleX() > 0.4 && rootPane.getScaleY() > 0.4) {
-            rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
-            rootPane.setScaleY(rootPane.getScaleY() + (distance * ZOOMFACTOR));
+        if (rootPane.getScaleX() > MINPANESIZE || rootPane.getScaleY() > MINPANESIZE) {
+            if (rootPane.getScaleX() < MAXPANESIZE || rootPane.getScaleY() < MAXPANESIZE) {
+                rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
+                rootPane.setScaleY(rootPane.getScaleY() + (distance * ZOOMFACTOR));
+            }  else if (distance < 0) {
+                rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
+                rootPane.setScaleY(rootPane.getScaleY() + (distance * ZOOMFACTOR));
+            }
         } else if (distance > 0) {
-            rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
-            rootPane.setScaleY(rootPane.getScaleY() + (distance * ZOOMFACTOR));
-        }
-        if (rootPane.getScaleX() < 1.25 && rootPane.getScaleY() < 1.25) {
-            rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
-            rootPane.setScaleY(rootPane.getScaleY() + (distance * ZOOMFACTOR));
-        }  else if (distance < 0) {
             rootPane.setScaleX(rootPane.getScaleX() + (distance * ZOOMFACTOR));
             rootPane.setScaleY(rootPane.getScaleY() + (distance * ZOOMFACTOR));
         }
