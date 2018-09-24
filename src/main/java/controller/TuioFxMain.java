@@ -21,7 +21,7 @@ import static utility.SystemLogger.systemLogger;
 import java.util.Arrays;
 import java.util.List;
 
-public class TUIOFXMain extends Application {
+public class TuioFxMain extends Application {
 	
 	private static boolean fullScreen;
 
