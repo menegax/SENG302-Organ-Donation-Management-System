@@ -379,7 +379,7 @@ public class GUIPatientProfile extends TargetedController {
 				this.setStyle("-fx-background-color: WHITE");
 				this.setText(item);
 				if (item != null) {
-					String[] itemArray = item.split(" ");
+					String[] itemArray = item.split(" \\|");
 					String organ = itemArray[0];
 					for (String listItem : listProperty) {
 						if (listItem.contains(organ)) {
