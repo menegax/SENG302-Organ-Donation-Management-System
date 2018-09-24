@@ -507,11 +507,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
      */
     @FXML
     public void viewOnMap() {
-        List<Patient> patients = new ArrayList<>();
-
-        for (int i = 0; i < masterData.size(); i++) {
-            patients.add(patientDataService.getPatientByNhi(masterData.get(i).getNhiNumber()));
-        }
+        List<Patient> patients = new ArrayList<>(masterData);
 
         if (screenControl.getMapOpen()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?", ButtonType.OK, ButtonType.NO);
