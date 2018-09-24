@@ -286,7 +286,7 @@ public class GUIPatientProfile extends TargetedController {
 		Matcher matcher = pattern.matcher(listItem);
 		if (matcher.find()) {
 			Patient selected = patientDataService.getPatientByNhi(matcher.group(1));
-			GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, selected);
+			GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, selected, screenControl.getTouchParent(patientProfilePane));
 			controller.setTarget(selected);
 		}
 	}

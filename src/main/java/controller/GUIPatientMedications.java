@@ -417,9 +417,10 @@ public class GUIPatientMedications extends UndoableController {
                         "Deleted medication: " + medication,
                         new String[]{"Attempted to delete medication: " + medication, ((Patient) target).getNhiNumber()});
 
-            viewCurrentMedications();
+                viewCurrentMedications();
+            }
+            statesHistoryScreen.addAction(new SingleAction(target, after));
         }
-        statesHistoryScreen.addAction(new SingleAction(target, after));
     }
 
 

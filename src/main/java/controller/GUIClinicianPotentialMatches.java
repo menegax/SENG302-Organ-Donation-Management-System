@@ -68,7 +68,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
-public class GUIClinicianPotentialMatches extends UndoableController implements IWindowObserver, TouchscreenCapable {
+public class GUIClinicianPotentialMatches extends UndoableController implements IWindowObserver {
 
     private int SECONDSINHOURS = 3600;
 
