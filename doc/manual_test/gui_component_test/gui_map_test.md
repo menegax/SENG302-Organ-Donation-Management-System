@@ -53,7 +53,7 @@
 3. Filter search to search for 26 year old males in Wellington
 3. Select 'View on map' button
 4. Select 'OK' on the popup that opens up
-5. Expected: The map should re-populte with the patients in the table. These include patients with the following Nhi's: BRK3714, CGC2343, JLP9988, PXB9300, GLB4745, JBS0871, JAC2680, ETD6078, ADB1975
+5. Expected: The map should re-populate with the patients in the table.
 
 ### Test 8 - 'View on map' button clinician transplant waiting list
 
@@ -80,7 +80,7 @@
 4. select 'View potential matches'
 5. Select 'View on map' button
 6. Select 'OK' on the popup that opens up
-7. Expected: The map should re-populte with the patients in the table. These include patients with the following Nhi's: AKY4149
+7. Expected: The map should re-populate with the potential matches in the table and the organ donor.
 
 ### Test 11 - 'View on map' button administrator search patients
 
@@ -110,9 +110,9 @@
 3. Click view on map
 4. Click a marker
 5. Expected : NHI, Name, Address, Blood Group, Age to be correct (validate this again patient profile)
-6. Expected : Label & dd align in same row
+6. Expected : Label & dropdown align in same row
 7. Expected : Fields to be aligned on top of each other
-8. Expected : Assign button align on the bottom right
+8. Expected : Assign button align on the bottom left
 
 ### Test 14 - Clicking on Dead patients marker - assign organs dropdown
 
@@ -138,7 +138,7 @@
 3. Count the number of organs in this table (with valid death addresses).
 4. Change one of these addresses to be invalid 
 5. Click view on map
-6. Expected : The success count of valid organs to be the same as noted in available organs + sum of all patients in available organs
+6. Expected : The success count of valid organs to be the same as noted in available organs, sum of all patients in available organs
 7: Expected : To be able to click "view failed patients"
 
 ### Test 17 - Displaying correct popup message
@@ -217,6 +217,27 @@ Test 17: Pass
 
 ### 23/09/18 - Andrew
 
+Test 18: Pass
+
+### 24/09/18 - Kyle & Hayden
+
+Test 1: Pass
+Test 2: Pass
+Test 3: Pass
+Test 4: Pass
+Test 5: Pass
+Test 6: Pass
+Test 7: Pass
+Test 8: Pass
+Test 9: Pass
+Test 10: Pass
+Test 11: Pass
+Test 12: Pass
+Test 13: Pass
+Test 14: Pass
+Test 15: Pass
+Test 16: Pass
+Test 17: Pass 
 Test 18: Pass
 
 **ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**
