@@ -3,6 +3,8 @@ package controller;
 import com.sun.javafx.css.StyleManager;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -32,7 +34,9 @@ public class TUIOFXMain extends Application {
         stage.setY(primaryScreenBounds.getMinY());
         stage.setWidth(primaryScreenBounds.getWidth());
         stage.setHeight(primaryScreenBounds.getHeight());
-
+        stage.setFullScreen(true);
+        stage.setFullScreenExitKeyCombination(new KeyCodeCombination(KeyCode.F, KeyCodeCombination.CONTROL_DOWN));
+        stage.setFullScreenExitHint("Press CTRL + F to exit full screen.");
         return stage;
 
     }
