@@ -334,8 +334,10 @@ function buildOrganDropdown(infowindow) {
                 var reg = /(\w+)=\w+,?/g;
                 var donationsArray = [];
                 var result;
-                while (result = reg.exec(patient2.getDonations().toString().slice(1, -1))) {
-                    donationsArray.push(result[1]);
+                if (patient.getDonations().size() > 0) {
+                    while (result = reg.exec(patient2.getDonations().toString().slice(1, -1))) {
+                        donationsArray.push(result[1]);
+                    }
                 }
                 for (var i = 0; i< donationsArray.length; i++) {
                     $('#dropdown').append($('<option>', {
