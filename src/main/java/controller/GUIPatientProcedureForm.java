@@ -8,6 +8,7 @@ import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import model.Patient;
 import model.Procedure;
 import service.PatientDataService;
@@ -15,6 +16,7 @@ import model.User;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.MultiTouchHandler;
+import utility.TouchDatePickerSkin;
 import utility.undoRedo.Action;
 
 import java.time.LocalDate;
@@ -75,6 +77,8 @@ public class GUIPatientProcedureForm extends TargetedController {
             touchHandler = new MultiTouchHandler();
             touchHandler.initialiseHandler(procedureUpdatePane);
         }
+        TouchDatePickerSkin dateOfProcedureSkin = new TouchDatePickerSkin(dateInput, procedureUpdatePane);
+        dateInput.setSkin(dateOfProcedureSkin);
     }
 
     /**

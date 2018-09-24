@@ -138,8 +138,10 @@ public class GUIPatientUpdateProfile extends UndoableController {
                 saveProfileUpdater();
             }
         });
-        TouchDatePickerSkin datePickerSkin = new TouchDatePickerSkin(dateOfDeath, (Pane) screenControl.getTouchParent(patientUpdateAnchorPane));
-        dateOfDeath.setSkin(datePickerSkin);
+        TouchDatePickerSkin dateOfDeathSkin = new TouchDatePickerSkin(dateOfDeath, (Pane) screenControl.getTouchParent(patientUpdateAnchorPane));
+        dateOfDeath.setSkin(dateOfDeathSkin);
+        TouchDatePickerSkin dateOfBirthSkin = new TouchDatePickerSkin(dobDate, (Pane) screenControl.getTouchParent(patientUpdateAnchorPane));
+        dobDate.setSkin(dateOfBirthSkin);
         loadProfile(((Patient) target).getNhiNumber());
     }
 

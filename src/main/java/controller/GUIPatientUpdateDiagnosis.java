@@ -8,6 +8,7 @@ import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import model.Disease;
 import model.Patient;
 import model.User;
@@ -15,6 +16,7 @@ import service.PatientDataService;
 import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.MultiTouchHandler;
+import utility.TouchDatePickerSkin;
 import utility.TouchscreenCapable;
 import utility.undoRedo.Action;
 
@@ -118,6 +120,8 @@ public class GUIPatientUpdateDiagnosis extends TargetedController {
             touchHandler = new MultiTouchHandler();
             touchHandler.initialiseHandler(diagnosisUpdatePane);
         }
+        TouchDatePickerSkin dateOfDiagnosisSkin = new TouchDatePickerSkin(diagnosisDate, diagnosisUpdatePane);
+        diagnosisDate.setSkin(dateOfDiagnosisSkin);
     }
 
     /**

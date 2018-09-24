@@ -10,6 +10,7 @@ import javafx.scene.control.*;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.util.StringConverter;
 import model.Administrator;
 import model.Clinician;
@@ -19,6 +20,7 @@ import service.ClinicianDataService;
 import service.PatientDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
+import utility.TouchDatePickerSkin;
 import utility.undoRedo.Action;
 import utility.undoRedo.StatesHistoryScreen;
 
@@ -76,6 +78,8 @@ public class GUIAdministratorUserRegister extends UndoableController {
 
     DAOFactory factory = DAOFactory.getDAOFactory(GlobalEnums.FactoryType.LOCAL);
 
+    private ScreenControl screenControl = ScreenControl.getScreenControl();
+
     /**
      * Sets up register page GUI elements
      */
@@ -103,6 +107,8 @@ public class GUIAdministratorUserRegister extends UndoableController {
                 register();
             }
         });
+        TouchDatePickerSkin dateOfBirthSkin = new TouchDatePickerSkin(birthRegister, (Pane) screenControl.getTouchParent(userRegisterPane));
+        birthRegister.setSkin(dateOfBirthSkin);
     }
 
     /**

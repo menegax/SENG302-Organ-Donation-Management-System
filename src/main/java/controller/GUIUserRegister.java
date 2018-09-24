@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import model.Administrator;
@@ -26,6 +27,7 @@ import service.interfaces.IUserDataService;
 import utility.GlobalEnums.Region;
 import utility.GlobalEnums.UIRegex;
 import utility.MultiTouchHandler;
+import utility.TouchDatePickerSkin;
 import utility.TouchscreenCapable;
 
 import java.io.IOException;
@@ -92,7 +94,8 @@ public class GUIUserRegister {
             touchHandler = new MultiTouchHandler();
             touchHandler.initialiseHandler(userRegisterPane);
         }
-
+        TouchDatePickerSkin dateOfBirthSkin = new TouchDatePickerSkin(birthRegister, userRegisterPane);
+        birthRegister.setSkin(dateOfBirthSkin);
     }
 
     /**
