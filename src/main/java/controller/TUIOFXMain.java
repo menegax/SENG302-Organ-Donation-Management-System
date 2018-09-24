@@ -18,7 +18,12 @@ import javafx.geometry.Point2D;
 import static java.util.logging.Level.INFO;
 import static utility.SystemLogger.systemLogger;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class TUIOFXMain extends Application {
+	
+	private static boolean fullScreen;
 
     /**
      * Creates a new Stage and positions and sizes the stage to be the size of the screen boundaries
@@ -29,11 +34,13 @@ public class TUIOFXMain extends Application {
         Stage stage = new Stage();
 
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
-
-        stage.setFullScreen(true);
-        stage.setFullScreenExitKeyCombination(new KeyCodeCombination(KeyCode.F, KeyCodeCombination.CONTROL_DOWN));
-        stage.setFullScreenExitHint("Press CTRL + F to exit full screen.");
         
+        stage.setMaximized(true);
+        if (fullScreen) {
+	        stage.setFullScreen(true);
+	        stage.setFullScreenExitKeyCombination(new KeyCodeCombination(KeyCode.F, KeyCodeCombination.CONTROL_DOWN));
+	        stage.setFullScreenExitHint("Press CTRL + F to exit full screen.");
+        }
         stage.setX(primaryScreenBounds.getMinX());
         stage.setY(primaryScreenBounds.getMinY());
         stage.setWidth(primaryScreenBounds.getWidth());
@@ -48,6 +55,7 @@ public class TUIOFXMain extends Application {
         Stage stage = setUpStage();
         ScreenControlTouch screenControl = (ScreenControlTouch) ScreenControl.getScreenControl();
         screenControl.setTouchStage(stage);
+        screenControl.setFullScreen(fullScreen);
         screenControl.show("/scene/login.fxml", false,null, null, null);
         screenControl.setLoginShowing(true);
         Application.setUserAgentStylesheet("MODENA");
@@ -75,6 +83,11 @@ public class TUIOFXMain extends Application {
 
 
     public static void main(String[] args) {
+    	List<String> argArrayList = Arrays.asList(args);
+    	fullScreen = false;
+    	if (argArrayList.contains("fullscreen")) {
+    		fullScreen = true;
+    	}
         UserActionHistory.setup();
         SystemLogger.setup();
         TuioFX.enableJavaFXTouchProperties();

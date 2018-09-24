@@ -22,7 +22,7 @@ public class App {
         }
         else if (argArrayList.contains("touch")) {
             ScreenControl.setUpScreenControl("touch");
-            TUIOFXMain.main(null);
+            TUIOFXMain.main(argv);
         }
         else {
             ScreenControl.setUpScreenControl("desktop");

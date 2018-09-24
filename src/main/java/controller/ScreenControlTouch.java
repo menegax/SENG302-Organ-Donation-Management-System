@@ -50,6 +50,8 @@ class ScreenControlTouch extends ScreenControl {
     private boolean isLoginShowing;
 
     private Map<String, Integer> fontMap = new HashMap<>();
+    
+    private boolean fullScreen;
 
     private ScreenControlTouch() {
         isLoginShowing = true;
@@ -117,7 +119,9 @@ class ScreenControlTouch extends ScreenControl {
             touchPane.getChildren().addAll(panes);
             Scene newScene = new Scene(touchPane);
             touchStage.setScene(newScene);
-            ensureFullScreen();
+            if (fullScreen) {
+            	ensureFullScreen();
+            }
             addCanvas(newScene);
             pane.visibleProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue && parentController != null) {
@@ -212,7 +216,9 @@ class ScreenControlTouch extends ScreenControl {
             Scene newScene = new Scene(touchPane);        
             addCanvas(newScene);
             touchStage.setScene(newScene);
-            ensureFullScreen();
+            if (fullScreen) {
+            	ensureFullScreen();
+            }
             setLoginShowing(true);
             setCSS();
             setInitialPaneSize(root);
@@ -347,6 +353,10 @@ class ScreenControlTouch extends ScreenControl {
      */
     public void setCSS() {
         resizeFonts(touchPane);
+    }
+    
+    public void setFullScreen(boolean fullScreen) {
+    	this.fullScreen = fullScreen;
     }
 
     /**
