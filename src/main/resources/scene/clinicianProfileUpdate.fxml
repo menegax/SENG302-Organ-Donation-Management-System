@@ -51,22 +51,22 @@
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></Label>
-            <TextField fx:id="staffId" editable="false" focusTraversable="false" prefWidth="320.0" promptText="Staff ID" GridPane.columnIndex="1" />
+            <TextField fx:id="staffId" editable="false" prefWidth="320.0" promptText="Staff ID" GridPane.columnIndex="1" />
             <Label text="First Name:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></Label>
-            <TextField fx:id="firstnameTxt" focusTraversable="false" prefWidth="320.0" promptText="First name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="firstnameTxt" prefWidth="320.0" promptText="First name" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <Label ellipsisString=".." text="Middle Name(s):" textAlignment="RIGHT" wrapText="true" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></Label>
-            <TextField fx:id="middlenameTxt" focusTraversable="false" prefWidth="320.0" promptText="Middle name(s)" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="middlenameTxt" prefWidth="320.0" promptText="Middle name(s)" GridPane.columnIndex="1" GridPane.rowIndex="2" />
             <Label text="Last Name:" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets right="5.0" />
                </GridPane.margin></Label>
-            <TextField fx:id="lastnameTxt" focusTraversable="false" prefWidth="320.0" promptText="Last name" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <TextField fx:id="lastnameTxt" prefWidth="320.0" promptText="Last name" GridPane.columnIndex="1" GridPane.rowIndex="3" />
          </children>
       </GridPane>
       <GridPane GridPane.columnIndex="3" GridPane.rowIndex="3" GridPane.rowSpan="2">
