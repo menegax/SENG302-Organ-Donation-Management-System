@@ -52,7 +52,7 @@
                   </MenuButton>
                </children>
             </HBox>
-            <Label text="Patient Procedure" GridPane.halignment="CENTER">
+            <Label fx:id="heading" text="Patient Procedure" GridPane.halignment="CENTER">
                <font>
                   <Font size="24.0" />
                </font>
