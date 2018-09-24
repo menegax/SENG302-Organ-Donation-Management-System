@@ -721,7 +721,9 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
     }
 
     /**
-     * Refreshes the current tab shown
+     * Refreshes the current tab shown by switching to the first tab then switching back
+     * to the current tab. If the current tab is the first tab then it switches to the 
+     * second.
      */
     private void refresh() {
         int selectedIndex = horizontalTabPane.getSelectionModel().getSelectedIndex();
