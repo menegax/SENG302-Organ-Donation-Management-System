@@ -7,13 +7,28 @@ import java.sql.Timestamp;
 
 /**
  * Custom touch event for multi-touch functionality in one pane.
- * Each touch event has a random, unique UUID for identification
+ * Each touch event has a random, unique id for identification
  */
 class CustomTouchEvent {
 
+    /**
+     * Unique id for this event
+     */
     private int id;
+
+    /**
+     * Coordinates of touch point on screen
+     */
     private Point2D coordinates;
+
+    /**
+     * Target of touch event
+     */
     private EventTarget target;
+
+    /**
+     * The system time the event took place (nanoseconds)
+     */
     private long eventTime;
 
     /**

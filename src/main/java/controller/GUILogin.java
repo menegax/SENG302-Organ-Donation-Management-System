@@ -25,7 +25,6 @@ import service.ClinicianDataService;
 import service.PatientDataService;
 import service.interfaces.IClinicianDataService;
 import utility.MultiTouchHandler;
-import utility.TouchscreenCapable;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;

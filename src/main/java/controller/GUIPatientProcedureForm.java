@@ -16,8 +16,6 @@ import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.MultiTouchHandler;
 import utility.TouchDatePickerSkin;
-import utility.TouchPaneController;
-import utility.TouchscreenCapable;
 import utility.undoRedo.IAction;
 import utility.undoRedo.SingleAction;
 

@@ -47,8 +47,6 @@ import utility.ImportObservable;
 import utility.Searcher;
 import utility.StatusObservable;
 import utility.SystemLogger;
-import utility.TouchPaneController;
-import utility.TouchscreenCapable;
 
 import java.io.File;
 import java.io.IOException;
