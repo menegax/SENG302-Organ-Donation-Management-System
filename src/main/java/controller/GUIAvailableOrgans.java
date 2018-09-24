@@ -54,8 +54,8 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
 
     @FXML
     private Button potentialMatchesBtn;
-
-    public static ObservableList<PatientOrgan> masterData = FXCollections.observableArrayList(); //todo
+    @SuppressWarnings("WeakerAccess")
+    public static ObservableList<PatientOrgan> masterData = FXCollections.observableArrayList();
 
     private ObservableList<PatientOrgan> filterData = FXCollections.observableArrayList();
 
