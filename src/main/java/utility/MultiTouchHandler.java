@@ -50,7 +50,7 @@ public class MultiTouchHandler {
 
     private final double MAXPANESIZE = 1.0;
 
-    private final double MAXVELOCITY = 5000;
+    private final double MAXVELOCITY = 2000;
 
     private final double DEGREES45 = Math.PI / 4;
 
