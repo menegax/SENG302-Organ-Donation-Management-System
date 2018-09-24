@@ -10,11 +10,17 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Transform;
-import org.tuiofx.widgets.skin.MTComboBoxListViewSkin;
 import org.tuiofx.widgets.utils.Util;
 import tornadofx.control.DateTimePicker;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class TouchDatePickerSkin extends DatePickerSkin {
+
+    private static Map<Pane, List<TouchDatePickerSkin>> touchSkins = new HashMap<>();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -43,12 +49,7 @@ public class TouchDatePickerSkin extends DatePickerSkin {
                 getPopup().setAnchorY(anchorY);
             });
             getPopup().setAutoHide(false);
-            pane.setOnTouchPressed(event -> {
-                hide();
-            });
-            pane.setOnMouseClicked(event -> {
-                hide();
-            });
+            addTouchSkin(pane);
             datePicker.setOnTouchPressed(event -> {
                 show();
             });
@@ -56,5 +57,43 @@ public class TouchDatePickerSkin extends DatePickerSkin {
                 show();
             });
         }
+    }
+
+    /**
+     * Adds this touchSkin to the static map for the provided pane
+     * @param pane the pane that should close the datePicker when touched
+     */
+    private void addTouchSkin(Pane pane) {
+        if (touchSkins.get(pane) == null) {
+            List<TouchDatePickerSkin> touchDatePickerSkins = new ArrayList<>();
+            touchDatePickerSkins.add(this);
+            touchSkins.put(pane, touchDatePickerSkins);
+            pane.setOnTouchPressed(event -> {
+                notifyTouchSkins(pane);
+            });
+            pane.setOnMouseClicked(event -> {
+                notifyTouchSkins(pane);
+            });
+        } else {
+            touchSkins.get(pane).add(this);
+        }
+    }
+
+    /**
+     * Notifies the touchSkins associated with the pane that the pane was pressed
+     * @param pane the pane which was pressed
+     */
+    private static void notifyTouchSkins(Pane pane) {
+        for (TouchDatePickerSkin touchDatePickerSkin : touchSkins.get(pane)) {
+            touchDatePickerSkin.panePressed();
+        }
+    }
+
+    /**
+     * Called when the touch pane that this datePicker skin is on is pressed
+     * Hides the datePicker
+     */
+    private void panePressed() {
+        hide();
     }
 }

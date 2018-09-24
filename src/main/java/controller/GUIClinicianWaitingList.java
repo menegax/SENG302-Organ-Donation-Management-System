@@ -19,6 +19,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import service.ClinicianDataService;
@@ -27,6 +28,7 @@ import service.PatientDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
+import utility.TouchComboBoxSkin;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -68,6 +70,8 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
         populateTable();
         setupDoubleClickToPatientEdit();
         populateFilterChoiceBoxes();
+        organSelection.setSkin(new TouchComboBoxSkin(organSelection, clinicianWaitingList));
+        regionSelection.setSkin(new TouchComboBoxSkin(regionSelection, clinicianWaitingList));
     }
 
 

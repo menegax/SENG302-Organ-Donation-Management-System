@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -19,6 +20,7 @@ import javafx.stage.Stage;
 import model.User;
 import org.tuiofx.internal.base.TuioFXCanvas;
 import service.UserDataService;
+import utility.TouchComboBoxSkin;
 import utility.undoRedo.UndoableWrapper;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
