@@ -24,20 +24,6 @@
     <RowConstraints fillHeight="false" minHeight="10.0" prefHeight="60.0" vgrow="NEVER" />
   </rowConstraints>
    <children>
-      <TableView fx:id="waitingListTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="3">
-        <columns>
-          <TableColumn fx:id="dateCol" prefWidth="75.0" text="Date" />
-          <TableColumn fx:id="nameCol" prefWidth="75.0" text="Name" />
-            <TableColumn fx:id="organCol" prefWidth="75.0" text="Organ" />
-            <TableColumn fx:id="regionCol" prefWidth="75.0" text="Region" />
-        </columns>
-         <GridPane.margin>
-            <Insets left="60.0" right="60.0" />
-         </GridPane.margin>
-         <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-         </columnResizePolicy>
-      </TableView>
       <GridPane alignment="CENTER_RIGHT" GridPane.columnIndex="1" GridPane.hgrow="SOMETIMES" GridPane.rowIndex="1">
          <columnConstraints>
             <ColumnConstraints hgrow="NEVER" minWidth="10.0" prefWidth="133.5999755859375" />
@@ -69,6 +55,20 @@
             <Insets right="60.0" />
          </GridPane.margin>
       </GridPane>
+      <TableView fx:id="waitingListTableView" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="3">
+        <columns>
+          <TableColumn fx:id="dateCol" prefWidth="75.0" text="Date" />
+          <TableColumn fx:id="nameCol" prefWidth="75.0" text="Name" />
+            <TableColumn fx:id="organCol" prefWidth="75.0" text="Organ" />
+            <TableColumn fx:id="regionCol" prefWidth="75.0" text="Region" />
+        </columns>
+         <GridPane.margin>
+            <Insets left="60.0" right="60.0" />
+         </GridPane.margin>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+      </TableView>
       <Button mnemonicParsing="false" onAction="#viewOnMap" prefWidth="119.0" text="View on Map" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
          <GridPane.margin>
             <Insets right="60.0" />
