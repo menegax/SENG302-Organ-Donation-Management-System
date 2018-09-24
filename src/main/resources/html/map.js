@@ -340,15 +340,18 @@ function buildOrganDropdown(infowindow) {
 /**
  * Intended to be able to reload patients info window,
  * to be called from JAVA
- * @param patient - patient whos info window is to be updated
+ * @param patient - patient whose info window is to be updated
  */
 function reloadInfoWindow(patient) {
     if (patient.isDead()) {
-        markers.filter(function(marker) {
+        let matchedMarkers = markers.filter(function(marker) {
             return marker.nhi === patient.getNhiNumber();
-        })[0].setOptions({
-            icon: '../image/markers/blue.png'
         });
+        if (matchedMarkers.length > 0) {
+            matchedMarkers[0].setOptions({
+                icon: '../image/markers/blue.png'
+            });
+        }
     }
     for (var i =0; i<infoWindows.length; i++) {
         if (infoWindows[i]["nhi"] === patient.getNhiNumber()) {
