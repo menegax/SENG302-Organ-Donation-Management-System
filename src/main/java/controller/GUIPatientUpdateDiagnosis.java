@@ -50,7 +50,7 @@ public class GUIPatientUpdateDiagnosis extends TargetedController {
     public DatePicker diagnosisDate;
 
     @FXML
-    public ChoiceBox tagsDD;
+    private ChoiceBox tagsDD;
 
     /**
      * Diagnosis being updated

@@ -43,6 +43,7 @@ import utility.GlobalEnums.FilterOption;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
 import utility.GlobalEnums.UndoableScreen;
+import utility.TouchComboBoxSkin;
 import utility.undoRedo.StatesHistoryScreen;
 
 public class GUIClinicianSearchPatients extends UndoableController implements IWindowObserver {
@@ -146,6 +147,17 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
 
         setupUndoRedo();
         updateProfileCount();
+        setupComboBoxSkins();
+    }
+
+    /**
+     * Sets the ComboBox skins for ComboBoxes on this screen
+     */
+    private void setupComboBoxSkins() {
+        birthGenderFilter.setSkin(new TouchComboBoxSkin(birthGenderFilter, pane));
+        donationFilter.setSkin(new TouchComboBoxSkin(donationFilter, pane));
+        recievingFilter.setSkin(new TouchComboBoxSkin(recievingFilter, pane));
+        regionFilter.setSkin(new TouchComboBoxSkin(regionFilter, pane));
     }
 
 

@@ -5,6 +5,7 @@ import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
+import javafx.event.Event;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
@@ -24,6 +25,7 @@ import javafx.stage.Stage;
 import model.User;
 import org.tuiofx.internal.base.TuioFXCanvas;
 import service.UserDataService;
+import utility.TouchComboBoxSkin;
 import utility.undoRedo.UndoableWrapper;
 
 import java.io.IOException;
