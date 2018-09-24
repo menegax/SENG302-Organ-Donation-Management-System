@@ -20,13 +20,19 @@
             padding: 0;
         }
 
-        #marker-notification {
+        #marker-notification-float {
             position: fixed;
             z-index: 2000;
             top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
+            width: 100%;
+        }
 
+        #marker-notification-container {
+            text-align: center;
+            margin: auto;
+        }
+
+        #marker-notification {
             border: 2px solid orange;
             border-radius: 5px;
             background: #FFAA00AA;
@@ -48,9 +54,13 @@
     </style>
 </head>
 <body>
-    <div id="marker-notification" style="display: none">
-        <span id="marker-notification-msg"></span>
-        <span class="marker-notification-close" onclick="hideNotification()"> &times;</span>
+    <div id="marker-notification-float">
+        <div id="marker-notification-container">
+            <span id="marker-notification" style="display: none">
+                <span id="marker-notification-msg"></span>
+                <span class="marker-notification-close" onclick="hideNotification()"> &times;</span>
+            </span>
+        </div>
     </div>
     <div id="map"></div>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTrWWBWfYPGFsHvv8sr4tkfpeubCiDIE0"></script>
