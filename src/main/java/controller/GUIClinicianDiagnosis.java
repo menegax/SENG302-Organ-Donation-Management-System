@@ -1,10 +1,8 @@
 package controller;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
@@ -13,10 +11,9 @@ import model.Patient;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
-import utility.undoRedo.Action;
+import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.logging.Level;
@@ -102,7 +99,7 @@ public class GUIClinicianDiagnosis extends UndoableController implements IWindow
      * Double click functions to update a diagnosis are added for both current and past diseases
      */
     @FXML
-    public void load() {
+    public void loadController() {
         if(userControl.getLoggedInUser() instanceof Patient) {
             targetClone = (Patient) target.deepClone();
             addDiagnosisButton.setVisible(false);
@@ -314,13 +311,13 @@ public class GUIClinicianDiagnosis extends UndoableController implements IWindow
         if (pastDiagnosesView.getSelectionModel().getSelectedItem() != null) {
             changed = true;
             pastDiseases.remove(pastDiagnosesView.getSelectionModel().getSelectedItem());
-            statesHistoryScreen.addAction(new Action(target, targetClone));
+            statesHistoryScreen.addAction(new SingleAction(target, targetClone));
             loadPastDiseases();
             userActions.log(Level.FINE, "Successfully deleted a disease",  new String[]{pastDiagnosesView.getSelectionModel().getSelectedItem() + " is successfully deleted", ((Patient) target).getNhiNumber()});
         } else if (currentDiagnosesView.getSelectionModel().getSelectedItem() != null) {
             changed = true;
             currentDiseases.remove(currentDiagnosesView.getSelectionModel().getSelectedItem());
-            statesHistoryScreen.addAction(new Action(target, targetClone));
+            statesHistoryScreen.addAction(new SingleAction(target, targetClone));
             loadCurrentDiseases();
             userActions.log(Level.WARNING, "Successfully deleted a disease", new String[]{currentDiagnosesView.getSelectionModel().getSelectedItem() + " is successfully deleted", ((Patient) target).getNhiNumber()});
         } else {

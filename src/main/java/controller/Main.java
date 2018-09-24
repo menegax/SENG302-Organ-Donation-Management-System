@@ -19,7 +19,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        // setup GUI
+        // set up GUI
         primaryStage.setTitle("Login");
         ScreenControl screenControl = ScreenControl.getScreenControl();
         screenControl.show("/scene/login.fxml", false, null, null);

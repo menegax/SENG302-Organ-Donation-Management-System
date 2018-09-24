@@ -61,7 +61,7 @@ Preconditions: Pass
 Add a diagnosis: Fail - Null pointer exception thrown on add diagnosis popup
 ```
 Caused by: java.lang.NullPointerException
-	at controller.GUIPatientUpdateDiagnosis.load(GUIPatientUpdateDiagnosis.java:97)
+	at loadController(GUIPatientUpdateDiagnosis.java:97)
 ```
 
 ### 14/08/2018 - Maree

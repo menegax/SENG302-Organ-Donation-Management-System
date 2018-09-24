@@ -2,6 +2,7 @@ package data_access.mysqlDAO;
 
 import data_access.factories.MySqlFactory;
 import data_access.interfaces.IRequiredOrganDataAccess;
+import model.OrganReceival;
 import utility.GlobalEnums;
 import utility.ResourceManager;
 
@@ -40,16 +41,18 @@ public class RequiredOrgansDAO implements IRequiredOrganDataAccess {
     }
 
     @Override
-    public Map<GlobalEnums.Organ, LocalDate> getRequiredOrganByNhi(String nhi) {
+    public Map<GlobalEnums.Organ, OrganReceival> getRequiredOrganByNhi(String nhi) {
         try (Connection connection1 = mySqlFactory.getConnectionInstance()){
-            Map<GlobalEnums.Organ, LocalDate> organs = new HashMap<>();
+            Map<GlobalEnums.Organ, OrganReceival> organs = new HashMap<>();
             PreparedStatement statement = connection1.prepareStatement(ResourceManager.getStringForQuery("SELECT_PATIENT_REQUIRED_ORGANS_QUERY"));
             statement.setString(1, nhi);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 GlobalEnums.Organ organ = GlobalEnums.Organ.getEnumFromString(resultSet.getString("Organ"));
                 LocalDate date = LocalDate.parse(resultSet.getString("Date"));
-                organs.put(organ, date);
+                String donorNhi = resultSet.getString("Donor");
+                OrganReceival organReceival = new OrganReceival(date, donorNhi);
+                organs.put(organ, organReceival);
             }
             return organs;
         } catch (SQLException e) {

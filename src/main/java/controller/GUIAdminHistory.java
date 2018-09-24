@@ -40,7 +40,7 @@ public class GUIAdminHistory extends TargetedController {
     /**
      * Initializes the screen and sets up the target for records as the currently logged in user
      */
-    public void load() {
+    public void loadController() {
         masterData.addAll(((Administrator) target).getAdminActionsList());
         populateTable();
     }

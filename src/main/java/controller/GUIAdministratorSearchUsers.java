@@ -1,6 +1,5 @@
 package controller;
 
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -8,10 +7,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
@@ -26,8 +22,6 @@ import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.undoRedo.StatesHistoryScreen;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -70,7 +64,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
     /**
      * Initialises the data within the table to all users
      */
-    public void load() {
+    public void loadController() {
         setupTableColumnsAndData();
         TextWatcher watcher = new TextWatcher();
         searchEntry.textProperty()
@@ -92,7 +86,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
         search();
     }
 
-
+    @SuppressWarnings("WeakerAccess")
     public void search() {
         List<User> results = administratorDataService.searchUsers(searchEntry.getText());
         if (results != null) {
@@ -212,7 +206,7 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
                 else {
                     Patient patient = (Patient) user;
                     StringBuilder tooltipText = new StringBuilder(patient.getNameConcatenated() + ". Donations: ");
-                    for (GlobalEnums.Organ organ : patient.getDonations()) {
+                    for (GlobalEnums.Organ organ : patient.getDonations().keySet()) {
                         tooltipText.append(organ)
                                 .append(", ");
                     }

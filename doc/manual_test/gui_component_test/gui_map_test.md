@@ -53,7 +53,7 @@
 3. Filter search to search for 26 year old males in Wellington
 3. Select 'View on map' button
 4. Select 'OK' on the popup that opens up
-5. Expected: The map should re-populte with the patients in the table. These include patients with the following Nhi's: BRK3714, CGC2343, JLP9988, PXB9300, GLB4745, JBS0871, JAC2680, ETD6078, ADB1975
+5. Expected: The map should re-populate with the patients in the table.
 
 ### Test 8 - 'View on map' button clinician transplant waiting list
 
@@ -80,7 +80,7 @@
 4. select 'View potential matches'
 5. Select 'View on map' button
 6. Select 'OK' on the popup that opens up
-7. Expected: The map should re-populte with the patients in the table. These include patients with the following Nhi's: AKY4149
+7. Expected: The map should re-populate with the potential matches in the table and the organ donor.
 
 ### Test 11 - 'View on map' button administrator search patients
 
@@ -93,7 +93,69 @@
 6. Select 'OK' on the popup that opens up
 6. Expected: The map should be populated with the patients in the table. These include patients with the following Nhi's: ANM8474, CTH2080, DMR2101, EQV5740, FUZ3183, KJD8772
 
-### Test 12 - Circles are created to deceased patients with organs that are not expired yet.
+
+### Test 12 - Clicking on Dead patients marker -> profile
+
+1. Log in as Clinician
+2. Go to available organs
+3. Click view on map
+4. Click a marker
+5. Click the header containing the patients NHI
+6. Expected : Correct Patient Profile to be shown
+
+### Test 13 - Clicking on Dead patients marker - info
+
+1. Log in as Clinician
+2. Go to available organs
+3. Click view on map
+4. Click a marker
+5. Expected : NHI, Name, Address, Blood Group, Age to be correct (validate this again patient profile)
+6. Expected : Label & dropdown align in same row
+7. Expected : Fields to be aligned on top of each other
+8. Expected : Assign button align on the bottom left
+
+### Test 14 - Clicking on Dead patients marker - assign organs dropdown
+
+1. Log in as Clinician
+2. Go to available organs
+3. Click view on map
+4. Click a marker
+5. Click the assign organs dropdown
+6. Expected : Correct organs to be shown (validate against patient profile)
+
+
+### Test 15 - Displaying correct information in information modal
+1. Log in as Clinician
+2. Go to available organs
+3. Edit 2 patients so that their death addresses are garbage. (if no organs in available organs add some)
+4. Click view on map.
+5. Wait for info popup and click view patients
+6. Expected : at least 2 patients that had their addresses changed to garbage 
+
+### Test 16 - Displaying correct success count in popup message
+1. Log in as Clinician
+2. Go to available organs
+3. Count the number of organs in this table (with valid death addresses).
+4. Change one of these addresses to be invalid 
+5. Click view on map
+6. Expected : The success count of valid organs to be the same as noted in available organs, sum of all patients in available organs
+7: Expected : To be able to click "view failed patients"
+
+### Test 17 - Displaying correct popup message
+1. Log in as Clinician
+2. Go to available organs
+3. Ensure that all patients have valid death addresses.
+4. Click view on map
+5. Expected : The success count of valid organs to be the same as noted in available organs
+6: Expected : Should not be any clickable button "view failed patients"
+
+### Test 18 - Marker Colors for Alive/Dead Patients
+1. Log in as a clinician
+2. (Given that there are patients in the database) View the map
+3. Expected: markers are colored differently depending on if the patient is alive or dead
+
+
+### Test 19 - Circles are created to deceased patients with organs that are not expired yet.
 
 1. Log in as Clinician
 2. Select `Available organs` tab
@@ -101,7 +163,7 @@
 4. Select a patient marker.
 5. EXPECTED: If the organ is still alive (most likely), a circle should appear.
 
-### Test 13 - Circles are colored in the correct color according to the proportion of time the organ has remaining before expiry.
+### Test 20 - Circles are colored in the correct color according to the proportion of time the organ has remaining before expiry.
 
 1. Log in as Clinician
 2. Select `Available organs` tab
@@ -109,7 +171,7 @@
 4. Select a patient marker.
 5. EXPECTED: Organ circle is colored green if it has a lot of time remaining, orange if it has moderate time remaining and red if it has very little time remaining.
 
-### Test 14 - Circles are shrinking in size (as long as the distance has not maxed out).
+### Test 21 - Circles are shrinking in size (as long as the distance has not maxed out).
 
 1. Log in as Clinician.
 2. Select `Available organs` tab.
@@ -119,7 +181,7 @@
 6. Ensure that the organ is still alive.
 7. EXPECTED: If you zoom in very close to the perimeter of the circle, you can see the circle shrinking every second
 
-### Test 15 - Circles are maxed out at the length of NZ
+### Test 22 - Circles are maxed out at the length of NZ
 
 1. Log in as Clinician.
 2. Select `Available organs` tab.
@@ -132,13 +194,13 @@
 
 ### 24/09/18 - Joshua
 
-Test 12: PASS
+Test 19: PASS
 
-Test 13: PASS
+Test 20: PASS
 
-Test 14: PASS
+Test 21: PASS
 
-Test 15: PASS
+Test 22: PASS
 
 ### 09/09/18 - Joshua
 
@@ -169,5 +231,58 @@ Test 6: Pass
 ### 15/8/18 - Kyle
 
 Test 3: Pass
+
+### 22/09/18 - Hayden
+
+Test 12: Pass
+
+Test 13: Pass
+
+Test 14: Pass
+
+### 23/09/18 - Hayden
+
+Test 1: Pass
+Test 2: Pass
+Test 3: Pass
+Test 4: Pass - after closing and opening the map default patients arent added
+Test 5: Pass
+Test 6: Pass
+Test 7: Pass
+Test 8: Fail - no markers shown
+Test 9: Pass
+Test 10: Pass
+Test 11: Pass
+Test 12: Pass
+Test 13: Pass
+Test 14: Pass
+Test 15: Pass - may need to add different table for when there are no errors
+Test 16: Pass
+Test 17: Pass
+
+### 23/09/18 - Andrew
+
+Test 18: Pass
+
+### 24/09/18 - Kyle & Hayden
+
+Test 1: Pass
+Test 2: Pass
+Test 3: Pass
+Test 4: Pass
+Test 5: Pass
+Test 6: Pass
+Test 7: Pass
+Test 8: Pass
+Test 9: Pass
+Test 10: Pass
+Test 11: Pass
+Test 12: Pass
+Test 13: Pass
+Test 14: Pass
+Test 15: Pass
+Test 16: Pass
+Test 17: Pass 
+Test 18: Pass
 
 **ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**

@@ -1,5 +1,13 @@
 package controller;
 
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINER;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static utility.SystemLogger.systemLogger;
+import static utility.UserActionHistory.userActions;
+
 import de.codecentric.centerdevice.MenuToolkit;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -15,12 +23,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
-import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -33,7 +41,13 @@ import service.ClinicianDataService;
 import service.PatientDataService;
 import service.UserDataService;
 import service.interfaces.IAdministratorDataService;
-import utility.*;
+import utility.CachedThreadPool;
+import utility.ImportObservable;
+import utility.Searcher;
+import utility.StatusObservable;
+import utility.SystemLogger;
+import utility.TouchPaneController;
+import utility.TouchscreenCapable;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,11 +55,6 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
-
-import static java.util.logging.Level.*;
-import static javafx.scene.control.Alert.AlertType.ERROR;
-import static utility.SystemLogger.systemLogger;
-import static utility.UserActionHistory.userActions;
 
 public class GUIHome extends TargetedController implements Observer, TouchscreenCapable, IWindowObserver {
 
@@ -107,7 +116,7 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
 
 
     @FXML
-    public void load() {
+    public void loadController() {
         if (!loaded) {  // stops listeners from being added twice
         StatusObservable statusObservable = StatusObservable.getInstance();
         Observer statusObserver = (o, arg) -> statusLbl.setText(arg.toString());
@@ -192,8 +201,8 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
                 homePane.setOnScroll(this::scrollWindow);
             }
         } catch (IOException e) {
-            new Alert(ERROR, "Unable to load home").show();
-            systemLogger.log(SEVERE, "Failed to load home scene and its fxmls " + e.getMessage());
+            new Alert(ERROR, "Unable to loadController home").show();
+            systemLogger.log(SEVERE, "Failed to loadController home scene and its fxmls " + e.getMessage());
         }
     }
 
