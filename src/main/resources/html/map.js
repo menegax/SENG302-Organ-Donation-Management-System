@@ -229,11 +229,11 @@ function getOrganOptions(patient) {
  */
 function setPatients(_patients) {
     patients = _patients;
+    hideNotification();
     clearMarkers();
     successCount = 0;
     infoWindows = [];
     markerSetId++;
-    hideNotification();
     addMarkers(patients.size(), markerSetId);
 }
 
@@ -299,7 +299,7 @@ function showNotification(numSuccess, numTotal) {
            '</tr>';
     });
     if (failedPatientArray.length ===  0){
-        $('#marker-notification').html('<span>' + modalMessage + '</span>');
+        $('#marker-notification').html('<span>' + modalMessage + '</span><span class="marker-notification-close" onclick="hideNotification()"> &times;</span>');
     } else {
         $('#marker-notification').html('<span>' + modalMessage + '</span>' +
             '    <a href="#" data-toggle="modal" data-target="#failedPatients">View failed patients</a>\n' +
