@@ -271,6 +271,7 @@ public class Patient extends User {
      * @param height          height in meters
      * @param weight          weight in kilograms
      * @param nhi             NHI
+     * @throws DataFormatException Dataformatexception
      */
     public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames, String preferredName,
                                  LocalDate birth, LocalDateTime death, String streetName, String streetNumber, String city, String suburb,
@@ -776,6 +777,9 @@ public class Patient extends User {
      * Returns the death location if the patient is dead
      * Returns null if the location could not be geocoded correctly
      * @return the location of the patient as a latLong
+     * @throws InterruptedException InterruptedException
+     * @throws ApiException ApiException
+     * @throws IOException IOException
      */
     public LatLng getCurrentLocation() throws InterruptedException, ApiException, IOException {
         if (currentLocation == null) {

@@ -65,13 +65,13 @@ public class ProgressTask extends Task<Void> {
 
     /**
      * Sets the color of the progress bar
+     * @return the color string of the progress bar (in hex)
      */
     public String getColor() { return color; }
 
     /**
      * set the color of progress bar // -fx-accent: green;
      * @param finalI - the ratio of time elapsed / upper bound of the organ
-     * @return color of progress bar
      */
     public void setColor(double finalI) {
         String RED = "#FF0000";

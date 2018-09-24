@@ -94,6 +94,7 @@ public class MapBridge {
 
     /**
      * Collects the patient list from available organs list
+     * @return the list of patients that have available organs
      */
     public List getAvailableOrgans() {
         List<PatientOrgan> masterData = new ArrayList<PatientOrgan>();
@@ -133,6 +134,8 @@ public class MapBridge {
     /**
      * Interrupts thread and stops the task if there is one already created
      * Triggers method to updateMarker's radius to create/update the circle on the map
+     * @param patientNhi the nhi of the currently selected patient on the map
+     * @param organStr the string representation of the selected organ
      */
     @SuppressWarnings("unused")
     public void loadCircle(String patientNhi, String organStr) {
