@@ -98,6 +98,7 @@ function makeMarker(patient, results) {
             title: name,
             animation: google.maps.Animation.DROP,
             label: 'D',
+            nhi: patient.getNhiNumber(),
             icon: '../image/markers/blue.png'
         });
     }
@@ -108,6 +109,7 @@ function makeMarker(patient, results) {
             title: name,
             animation: google.maps.Animation.DROP,
             label: 'A',
+            nhi: patient.getNhiNumber(),
             icon: '../image/markers/green.png'
         });
     }
@@ -278,6 +280,7 @@ function hideNotification() {
  * @param numTotal total patients to load
  */
 function showNotification(numSuccess, numTotal) {
+    console.log(failedPatientArray.length);
     var modalContent = "";
     var modalMessage = 'Successfully loaded ' + numSuccess + ' out of ' + numTotal + ' patient locations';
     $('#marker-notification-msg').html();
@@ -312,8 +315,10 @@ function showNotification(numSuccess, numTotal) {
  * @param patient - patient whos info window is being looked at
  * @param infowindow - info window being displayed
  */
-function buildOrganDropdown(patient, infowindow) {
+function buildOrganDropdown(infowindow) {
+    console.log("ASGASFSafasf");
     google.maps.event.addListener(infowindow, "domready", function() {
+        console.log("ASGASFf");
         infoWindows.forEach(function(iw) {
             if (iw["iwindow"] === infowindow) {
                 var patient2 = iw["patient"];
@@ -342,12 +347,18 @@ function buildOrganDropdown(patient, infowindow) {
  * @param patient - patient whos info window is to be updated
  */
 function reloadInfoWindow(patient) {
+    if (patient.isDead()) {
+        markers.filter(function(marker) {
+            return marker.nhi === patient.getNhiNumber();
+        })[0].setOptions({
+            icon: '../image/markers/blue.png'
+        });
+    }
     for (var i =0; i<infoWindows.length; i++) {
         if (infoWindows[i]["nhi"] === patient.getNhiNumber()) {
             infoWindows[i]["patient"] = patient;
             if (patient.isDead()) {
                 infoWindows[i]["iwindow"].setContent(getDeadPatientInfoContent(patient));
-                buildOrganDropdown(patient, infoWindows[i]["iwindow"]);
             } else {
                 infoWindows[i]["iwindow"].setContent(getAlivePatientInfoContent(patient));
             }
