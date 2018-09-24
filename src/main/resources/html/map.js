@@ -121,7 +121,7 @@ function attachInfoWindow(patient, marker) {
             content: getDeadPatientInfoContent(patient),
             maxWidth:550
         });
-        buildOrganDropdown(patient, infoWindow, marker);
+        buildOrganDropdown(patient, infoWindow);
     } else {
         infoWindow = new google.maps.InfoWindow({
             content: getAlivePatientInfoContent(patient),
@@ -196,21 +196,35 @@ function openPatientProfile(patientNhi) {
 function getOrganOptions(patient) {
     var donations = patient.getDonations().toString();
     var donationStr;
-    if (donations !== '[]') {
-        donationStr = '<b>Donations:</b><br>' + donations.substring(1, donations.length - 1);
+    if (donations !== '{}') {
+        var reg = /(\w+)=\w+,?/g;
+        donationStr = '<b>Donations:</b><br>';
+        var donationsArray = [];
+        var result;
+        var string = donations.substring(1, donations.length - 1);
+        while (result = reg.exec(string)) {
+            donationsArray.push(result[1]);
+        }
+        donationStr += donationsArray.join(", ");
     }
     else {
         donationStr = 'No Donations';
 
         }
     var required = patient.getRequiredOrgans().toString();
-    var matching = required.substring(1, required.length - 1).match(/[a-z]+/g);
-    var requiredStr;
-    if (matching) {
-        requiredStr = '<b>Required:</b><br>' + matching.join(', ');
+    if (required !== '{}') {
+        reg = /(\w+)=\w+,?/g;
+        reqsArray = [];
+        requiredStr = '<b>Required:</b><br>';
+        string = required.substring(1, required.length - 1);
+        while (result = reg.exec(string)) {
+            reqsArray.push(result[1]);
+        }
+        requiredStr += reqsArray.join(", ");
     } else {
         requiredStr = 'No Requirements';
     }
+
     return {donating: donationStr, receiving: requiredStr};
 }
 
@@ -271,6 +285,7 @@ function showNotification(numSuccess, numTotal) {
     failedPatientArray.forEach(function(patient) {
         var nhi = patient.getNhiNumber();
         var address;
+        console.log(patient);
         if (patient.isDead()) {
             address = patient.getDeathLocationConcat();
         } else {
@@ -304,17 +319,20 @@ function buildOrganDropdown(patient, infowindow) {
                 var patient2 = iw["patient"];
                 $('#dropdown').html('');
                 $('#dropdown').html('<option value="organs">None</option>');
-                var dono = patient2.getDonations().toString().slice(1,-1).split(",");
-                for (var i = 0; i< dono.length; i++) {
+                var reg = /(\w+)=\w+,?/g;
+                var donationsArray = [];
+                var result;
+                while (result = reg.exec(patient2.getDonations().toString().slice(1, -1))) {
+                    donationsArray.push(result[1]);
+                }
+                for (var i = 0; i< donationsArray.length; i++) {
                     $('#dropdown').append($('<option>', {
                         value: i + 1,
-                        text: dono[i]
+                        text: donationsArray[i]
                     }));
                 }
-
             }
         });
-
     }, false);
 }
 
@@ -327,7 +345,12 @@ function reloadInfoWindow(patient) {
     for (var i =0; i<infoWindows.length; i++) {
         if (infoWindows[i]["nhi"] === patient.getNhiNumber()) {
             infoWindows[i]["patient"] = patient;
-            infoWindows[i]["iwindow"].setContent(getDeadPatientInfoContent(patient));
+            if (patient.isDead()) {
+                infoWindows[i]["iwindow"].setContent(getDeadPatientInfoContent(patient));
+                buildOrganDropdown(patient, infoWindows[i]["iwindow"]);
+            } else {
+                infoWindows[i]["iwindow"].setContent(getAlivePatientInfoContent(patient));
+            }
         }
     }
 }

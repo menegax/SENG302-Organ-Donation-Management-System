@@ -791,7 +791,6 @@ public class Patient extends User {
             if (this.isDead()) {
                 this.currentLocation = APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getDeathLocationConcat());
             } else {
-                System.out.println("not dead, geocoding" + this.getFormattedAddress());
                 this.currentLocation = APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getFormattedAddress());
             }
         }
@@ -886,7 +885,8 @@ public class Patient extends User {
      * Gets a formatted address that contains no nulls
      * @return - return formatted address string
      */
-    private String getFormattedAddress() {
+    @SuppressWarnings("WeakerAccess")
+    public String getFormattedAddress() {
         return String.format("%s %s %s %s %s %s",
                 Objects.toString(streetNumber, ""),
                 Objects.toString(streetName, ""),

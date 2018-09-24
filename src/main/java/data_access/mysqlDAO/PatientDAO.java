@@ -227,7 +227,9 @@ public class PatientDAO implements IPatientDataAccess {
             }
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Patient patient = mapBasicPatient(resultSet);
+                Map<Organ, String> donations = donatingOrgansDataAccess.getDonatingOrgansByDonorNhi(resultSet.getString("nhi"));
+                Map<Organ, OrganReceival> requiredOrgans = requiredOrgansDataAccess.getRequiredOrganByNhi(resultSet.getString("nhi"));
+                Patient patient = mapBasicPatient(resultSet, requiredOrgans, donations);
                 //Add patient to resultMap with appropriate score
                 if (searchTerm.equals("")) {
                     resultMap.get(0)
@@ -242,6 +244,7 @@ public class PatientDAO implements IPatientDataAccess {
             return resultMap;
         }
         catch (Exception e) {
+            e.printStackTrace();
             systemLogger.log(Level.SEVERE, "Could not search patients from MYSQL DB", this);
         }
         return null;
@@ -275,8 +278,9 @@ public class PatientDAO implements IPatientDataAccess {
             List<Patient> patients = new ArrayList<>();
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
-                Map<Organ, String> donations = donatingOrgansDataAccess.getDonatingOrgansByDonorNhi(resultSet.getString("nhi"));
-                patients.add(mapBasicPatient(rs, donations));
+                Map<Organ, String> donations = donatingOrgansDataAccess.getDonatingOrgansByDonorNhi(rs.getString("nhi"));
+                Map<Organ, OrganReceival> requiredOrgans = requiredOrgansDataAccess.getRequiredOrganByNhi(rs.getString("nhi"));
+                patients.add(mapBasicPatient(rs, requiredOrgans, donations));
             }
             return patients;
         }
@@ -293,7 +297,7 @@ public class PatientDAO implements IPatientDataAccess {
      * @return - return basic patient object with basic info + current address
      * @throws SQLException - thrown when column does not exist
      */
-    private Patient mapBasicPatient(ResultSet rs, Map<Organ, String > donations) throws SQLException{
+    private Patient mapBasicPatient(ResultSet rs, Map<Organ, OrganReceival> required, Map<Organ, String> donations) throws SQLException{
         return constructPatientObject(rs,
                 new ArrayList<String>(){{
                     add(rs.getString("StreetNumber"));
@@ -301,7 +305,7 @@ public class PatientDAO implements IPatientDataAccess {
                     add(rs.getString("Suburb"));
                     add(rs.getString("Zip"));
                     add(rs.getString("Region"));
-                    add(rs.getString("City"));}}, null, null, null, null, null, donations);
+                    add(rs.getString("City"));}}, required, donations);
     }
 
 
@@ -415,22 +419,24 @@ public class PatientDAO implements IPatientDataAccess {
     }
 
 
-    private Patient constructPatientObject(ResultSet attributes, List<String> contacts) throws SQLException {
-        Map<GlobalEnums.Organ, OrganReceival> required = new HashMap<>();
+    private Patient constructPatientObject(ResultSet attributes, List<String> contacts, Map<Organ, OrganReceival> required, Map<Organ, String> donations) throws SQLException {
         try {
             if (attributes.getInt("hasRequired") == 1) {
                 OrganReceival organReceival = new OrganReceival(LocalDate.now());
-                required.put(Organ.BONE, organReceival);
+                if (required == null) {
+                    required = new HashMap<>();
+                }
             }
         }
         catch (SQLException ignore) {
             // pass through
         }
 
-        Map<GlobalEnums.Organ, String> donations = new HashMap<>();
         try {
             if (attributes.getInt("hasDonations") == 1) {
-                donations.put(Organ.BONE, null);
+                if (donations == null) {
+                    donations = new HashMap<>();
+                }
             }
         }
         catch (SQLException ignore) {

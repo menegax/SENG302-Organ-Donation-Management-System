@@ -43,14 +43,16 @@ public class MapBridge {
      */
     public List getAvailableOrgans() {
         List<PatientOrgan> masterData = new ArrayList<PatientOrgan>();
-        List<Patient> deadPatients = patientDataService.getDeadPatients();
+        List<Patient> deadPatients = patientDataService.getDeadDonors();
         for (Patient patient : deadPatients) {
             if (patient.getDeathDate() != null) {
-                for (GlobalEnums.Organ organ : patient.getDonations()) {
-                    PatientOrgan patientOrgan = new PatientOrgan(patient, organ);
-                    if (!masterData.contains(patientOrgan)) {
-                        if (patientOrgan.timeRemaining() < 0) {
-                            masterData.add(patientOrgan);
+                for (GlobalEnums.Organ organ : patient.getDonations().keySet()) {
+                    if (patient.getDonations().get(organ) == null) {
+                        PatientOrgan patientOrgan = new PatientOrgan(patient, organ);
+                        if (!masterData.contains(patientOrgan)) {
+                            if (patientOrgan.timeRemaining() < 0) {
+                                masterData.add(patientOrgan);
+                            }
                         }
                     }
                 }
