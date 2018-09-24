@@ -214,9 +214,13 @@ public class MultiTouchHandler {
                     }
                     if (newVelY > MAXVELOCITY) {
                         newVelY = MAXVELOCITY;
+                    } else if (newVelY < -MAXVELOCITY) {
+                    	newVelY = -MAXVELOCITY;
                     }
                     if (newVelX > MAXVELOCITY) {
                         newVelX = MAXVELOCITY;
+                    } else if (newVelX < -MAXVELOCITY) {
+                        newVelX = -MAXVELOCITY;
                     }
                     velocity = new Point2D(newVelX, newVelY);
                     try {
