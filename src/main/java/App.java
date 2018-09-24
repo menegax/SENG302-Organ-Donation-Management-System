@@ -1,7 +1,7 @@
 import cli.CLIMain;
 import controller.Main;
 import controller.ScreenControl;
-import controller.TUIOFXMain;
+import controller.TuioFxMain;
 import utility.GlobalEnums;
 //import controller.TuioFXApplication;
 
@@ -22,7 +22,7 @@ public class App {
         }
         else if (argArrayList.contains("touch")) {
             ScreenControl.setUpScreenControl("touch");
-            TUIOFXMain.main(argv);
+            TuioFxMain.main(argv);
         }
         else {
             ScreenControl.setUpScreenControl("desktop");
