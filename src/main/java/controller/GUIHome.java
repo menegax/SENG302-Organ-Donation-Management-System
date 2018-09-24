@@ -371,7 +371,6 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
                     }
                 } catch (IOException e) {
                     systemLogger.log(SEVERE, "Failed to create tab", e);
-                    e.printStackTrace(); //todo rm
                 }
             });
         horizontalTabPane.getTabs().add(newTab);
