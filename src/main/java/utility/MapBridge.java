@@ -1,24 +1,16 @@
 package utility;
 
-import controller.GUIAvailableOrgans;
 import controller.GUIHome;
 import controller.GUIMap;
 import controller.ScreenControl;
 import javafx.scene.control.ProgressBar;
 import model.Patient;
 import model.PatientOrgan;
-import netscape.javascript.JSObject;
-import model.PatientOrgan;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
-import java.util.Random;
 
 /**
  * Provides the map javascript access to the java codebase
@@ -44,7 +36,6 @@ public class MapBridge {
         controller.setTarget(patient);
     }
 
-    private IPatientDataService patientDataService = new PatientDataService();
     private int LENGTHOFNZ = 1500000;
 
     /**
@@ -150,7 +141,7 @@ public class MapBridge {
         }
         Patient patient = patientDataService.getPatientByNhi(patientNhi);
         GlobalEnums.Organ organ = GlobalEnums.Organ.getEnumFromString(organStr);
-        if (patient.getDonations().contains(organ)) {
+        if (patient.getDonations().containsKey(organ)) {
             updateMarkerRadii(patient, organ);
         }
     }

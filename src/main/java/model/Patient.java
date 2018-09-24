@@ -1,8 +1,5 @@
 package model;
 
-import static java.util.logging.Level.INFO;
-import static utility.UserActionHistory.userActions;
-
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.LatLng;
 import com.univocity.parsers.annotations.Convert;
@@ -11,26 +8,8 @@ import com.univocity.parsers.annotations.Parsed;
 import com.univocity.parsers.annotations.Validate;
 import org.apache.commons.lang3.StringUtils;
 import service.APIGoogleMaps;
-import utility.GlobalEnums;
-import utility.GlobalEnums.BirthGender;
-import utility.GlobalEnums.BloodGroup;
-import utility.GlobalEnums.DiseaseState;
-import utility.GlobalEnums.MedicationStatus;
-import utility.GlobalEnums.Organ;
-import utility.GlobalEnums.PreferredGender;
-import utility.GlobalEnums.Region;
-import utility.GlobalEnums.Status;
-import utility.MapBridge;
-import utility.GlobalEnums.BirthGender;
-import utility.GlobalEnums.BloodGroup;
-import utility.GlobalEnums.DiseaseState;
-import utility.GlobalEnums.MedicationStatus;
-import utility.GlobalEnums.Organ;
-import utility.GlobalEnums.PreferredGender;
-import utility.GlobalEnums.Region;
-import utility.GlobalEnums.Status;
-import utility.PatientActionRecord;
-import utility.Searcher;
+import utility.*;
+import utility.GlobalEnums.*;
 import utility.parsing.DateConverterCSV;
 import utility.parsing.DateTimeConverterCSV;
 import utility.parsing.EnumConverterCSV;
@@ -42,15 +21,14 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
+
+import static java.util.logging.Level.INFO;
+import static utility.UserActionHistory.userActions;
 
 public class Patient extends User {
 
@@ -799,7 +777,7 @@ public class Patient extends User {
      * Returns null if the location could not be geocoded correctly
      * @return the location of the patient as a latLong
      */
-    public LatLng getCurrentLocation() {
+    public LatLng getCurrentLocation() throws InterruptedException, ApiException, IOException {
         if (currentLocation == null) {
             if (this.isDead()) {
                 this.currentLocation = APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getDeathLocationConcat());
