@@ -289,7 +289,7 @@ class ScreenControlTouch extends ScreenControl {
                             + "linear-gradient(#ff9999 0%, #ff8080 49%, #ff6666 50%, #ff4d4d 100%);");
                 } else if (child.getStyleClass().toString().equals("TEXT")) {
                     child.setStyle("-fx-fill: white; -fx-font-size: 10px");
-                } else if (child instanceof ListView) {
+                } else if (child instanceof ListView || child instanceof TableView) {
                     child.setStyle("-fx-font-size: 10px; -fx-border-color: white;" +
                             "-fx-border-width: 1.5;");
                 } else if (child.getId() == null || (!fontMap.containsKey(child.getId()))) {
