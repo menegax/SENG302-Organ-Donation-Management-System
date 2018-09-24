@@ -150,7 +150,7 @@ function attachInfoWindow(patient, marker) {
             else {
                 iw["iwindow"].open(map, marker);
             }
-        })
+        });
     });
 }
 
@@ -199,13 +199,12 @@ function openPatientProfile(patientNhi) {
  */
 function getOrganOptions(patient) {
     var donations = patient.getDonations().toString();
-    var donationStr;
+    var donationStr, reg, string, result;
     if (donations !== '{}') {
-        var reg = /(\w+)=\w+,?/g;
+        reg = /(\w+)=\w+,?/g;
         donationStr = '<b>Donations:</b><br>';
         var donationsArray = [];
-        var result;
-        var string = donations.substring(1, donations.length - 1);
+        string = donations.substring(1, donations.length - 1);
         while (result = reg.exec(string)) {
             donationsArray.push(result[1]);
         }
@@ -355,7 +354,7 @@ function buildOrganDropdown(infowindow) {
  */
 function reloadInfoWindow(patient) {
     if (patient.isDead()) {
-        let matchedMarkers = markers.filter(function(marker) {
+        var matchedMarkers = markers.filter(function(marker) {
             return marker.nhi === patient.getNhiNumber();
         });
         if (matchedMarkers.length > 0) {
@@ -391,7 +390,7 @@ function mapInfoWindowToPatient(infoWindow, patient) {
             hasExistingInfoWindow = true;
             break;
         }
-    };
+    }
     if (hasExistingInfoWindow) {
         infoWindows.splice(i, 1, { "iwindow" : infoWindow, "patient" : patient, "nhi" : patient.getNhiNumber()}); //hacks -> cannot use patient obj so need nhi
                                                                                                                   //java -> js references out of whack when updating
