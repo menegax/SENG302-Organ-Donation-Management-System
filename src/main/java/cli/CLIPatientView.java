@@ -1,4 +1,7 @@
 package cli;
+
+import static utility.UserActionHistory.userActions;
+
 import data_access.factories.DAOFactory;
 import data_access.interfaces.IPatientDataAccess;
 import picocli.CommandLine.Command;
@@ -8,8 +11,6 @@ import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 
 import java.util.logging.Level;
-
-import static utility.UserActionHistory.userActions;
 
 @SuppressWarnings("unused")
 @Command(name = "view", description = "used to view patient attributes")
@@ -21,7 +22,7 @@ public class CLIPatientView implements Runnable {
     @Option(names = {"-n", "--nhi"}, description = "Search patient by the NHI number of the patient.")
     private String searchNhi;
 
-    @Option(names = {"-a", "--all"}, description = "View all patients")
+    @Option(names = {"-a", "--all"}, description = "View all globalPatients")
     private boolean searchAll;
 
     private IPatientDataService patientDataService = new PatientDataService();
@@ -33,9 +34,9 @@ public class CLIPatientView implements Runnable {
         }
         if (searchAll) {
             if (patientDataAccess.getPatients().size() == 0) {
-                userActions.log(Level.INFO, "No patient in the database", "attempted to view all patients");
+                userActions.log(Level.INFO, "No patient in the database", "attempted to view all globalPatients");
             } else {
-                userActions.log(Level.WARNING, patientDataAccess.getPatients().toString(), "attempted to view all patients");
+                userActions.log(Level.WARNING, patientDataAccess.getPatients().toString(), "attempted to view all globalPatients");
             }
         }
         if (searchNhi == null && !searchAll) {

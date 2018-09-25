@@ -9,7 +9,7 @@ import java.util.Set;
 public interface IUserDataAccess {
 
     /**
-     * Adds a user to the local database. It is added to the appropriate set (patients, clinician, administrators)
+     * Adds a user to the local database. It is added to the appropriate set (globalPatients, clinician, administrators)
      * based on the type of the user
      *
      * @param user The user to add
@@ -17,7 +17,7 @@ public interface IUserDataAccess {
     void addUser(User user);
 
     /**
-     * Deletes the given user from its associated set in the database (patients, clinicians, administrators)
+     * Deletes the given user from its associated set in the database (globalPatients, clinicians, administrators)
      * and adds the user to the deleted users set
      *
      * @param user The user to delete

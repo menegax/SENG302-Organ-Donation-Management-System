@@ -1,5 +1,7 @@
 package data_access.localDAO;
 
+import static utility.GlobalEnums.NONE_ID;
+
 import data_access.factories.LocalDatabaseFactory;
 import data_access.interfaces.IPatientDataAccess;
 import model.Patient;
@@ -8,10 +10,13 @@ import utility.GlobalEnums;
 import utility.GlobalEnums.FilterOption;
 import utility.Searcher;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
-
-import static utility.GlobalEnums.NONE_ID;
 
 
 public class PatientLocalDAO implements IPatientDataAccess {
@@ -63,7 +68,7 @@ public class PatientLocalDAO implements IPatientDataAccess {
 
     @Override
     public Map<Integer, List<Patient>> searchPatients(String searchTerm, Map<FilterOption, String> filters, int numResults) {
-        //Collect all patients and filter them out by filters
+        //Collect all globalPatients and filter them out by filters
         Set<Patient> matchedPatients = new HashSet<>();
         for (Patient p : localDB.getPatients()) {
             if (matchesFilter(p, filters)) {
@@ -76,7 +81,7 @@ public class PatientLocalDAO implements IPatientDataAccess {
         resultsMap.put(1, new ArrayList<>());
         resultsMap.put(2, new ArrayList<>());
         resultsMap.put(3, new ArrayList<>());
-        //Loop through filtered patients and put them in the appropriate list based on which field matches
+        //Loop through filtered globalPatients and put them in the appropriate list based on which field matches
         if (!searchTerm.equals("")) {
             for (Patient p : matchedPatients) {
                 Set<String> mNames = p.getMiddleNames().stream().filter(s -> s.toLowerCase().startsWith(searchTerm.toLowerCase())).collect(Collectors.toSet());

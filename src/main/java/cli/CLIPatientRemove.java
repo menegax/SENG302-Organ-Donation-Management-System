@@ -10,7 +10,7 @@ import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 
 @SuppressWarnings("unused")
-@Command(name = "remove", description = "used to remove existing patients")
+@Command(name = "remove", description = "used to remove existing globalPatients")
 class CLIPatientRemove implements Runnable {
 
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message.")

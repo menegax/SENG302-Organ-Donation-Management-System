@@ -10,17 +10,17 @@ import java.util.Set;
 public interface IPatientDataAccess {
 
     /**
-     * Saves the given set of patients to the local or external database
+     * Saves the given set of globalPatients to the local or external database
      *
      * @param patient The set of patient objects to save
      */
     void savePatients(Set<Patient> patient);
 
     /**
-     * Adds a list of patients to the local or external database
+     * Adds a list of globalPatients to the local or external database
      * and adds them using a batch operation
      *
-     * @param patient The list of patients to add
+     * @param patient The list of globalPatients to add
      * @return The success status of the add
      */
     boolean addPatientsBatch(List<Patient> patient);
@@ -28,14 +28,14 @@ public interface IPatientDataAccess {
     /**
      * Returns all patient objects
      *
-     * @return The set of patients
+     * @return The set of globalPatients
      */
     Set<Patient> getPatients();
 
     /**
-     * Gets the number of patients present in the local or external database
+     * Gets the number of globalPatients present in the local or external database
      *
-     * @return The number of patients
+     * @return The number of globalPatients
      */
     int getPatientCount();
 
@@ -56,7 +56,7 @@ public interface IPatientDataAccess {
     boolean deletePatient(Patient patient);
 
     /**
-     * Searches patients using the given search term.
+     * Searches globalPatients using the given search term.
      * Patients match if their username matches the search term directly,
      * or if any of the names, or the full name, is within 2 changes of the search term
      * <p>
@@ -66,7 +66,7 @@ public interface IPatientDataAccess {
      * @param searchTerm The search term to match on
      * @param filters    The filters map to filter results on
      * @param numResults The max number of results to fetch
-     * @return A Map containing the matching patients
+     * @return A Map containing the matching globalPatients
      */
     Map<Integer, List<Patient>> searchPatients(String searchTerm, Map<GlobalEnums.FilterOption, String> filters, int numResults);
 
@@ -79,7 +79,7 @@ public interface IPatientDataAccess {
 
 
     /**
-     * Gets all the dead patients from the remote database
+     * Gets all the dead globalPatients from the remote database
      */
     List<Patient> getDeadDonors();
 

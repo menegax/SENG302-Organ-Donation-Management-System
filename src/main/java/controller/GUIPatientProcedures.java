@@ -1,16 +1,19 @@
 package controller;
 
+import static java.util.logging.Level.INFO;
+import static utility.UserActionHistory.userActions;
+
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Point2D;
 import javafx.scene.Parent;
-import javafx.scene.control.*;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.Button;
+import javafx.scene.control.Control;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.Pane;
 import model.Administrator;
 import model.Clinician;
@@ -26,9 +29,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.logging.Level;
-
-import static java.util.logging.Level.INFO;
-import static utility.UserActionHistory.userActions;
 
 /**
  * Controller class for the Patient procedures screen
@@ -93,7 +93,7 @@ public class GUIPatientProcedures extends UndoableController implements IWindowO
         if (userControl.getLoggedInUser() instanceof Patient) {
             this.patientClone = (Patient) this.target.deepClone();
             setupTables();
-            //Disable any add, edit, or delete functionality for patients
+            //Disable any add, edit, or delete functionality for globalPatients
             addProcedureButton.setVisible(false);
             editProcedureButton.setVisible(false);
             deleteProcedureButton.setVisible(false);

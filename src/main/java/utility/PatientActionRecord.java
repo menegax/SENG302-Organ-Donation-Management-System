@@ -1,8 +1,5 @@
 package utility;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.logging.Level;
@@ -21,7 +18,7 @@ public class PatientActionRecord implements Serializable {
      *
      * @param timestamp - Timestamp of the log
      * @param level - severity of the log
-     * @param action - action completed/attempted by the patients
+     * @param action - action completed/attempted by the globalPatients
      * @param message - message to display in log
      */
     public PatientActionRecord(Timestamp timestamp, Level level, String action, String message){
@@ -34,7 +31,7 @@ public class PatientActionRecord implements Serializable {
 
     /**
      * gets action
-     * @return action completed/attempted by the patients
+     * @return action completed/attempted by the globalPatients
      */
     public String getAction() {
         return action;

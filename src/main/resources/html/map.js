@@ -1,4 +1,4 @@
-var map, geocoder, patients, mapBridge, successCount;
+var map, geocoder, globalPatients, mapBridge, successCount;
 var markers = [];
 var infoWindows = [];
 var failedPatientArray = [];
@@ -46,10 +46,10 @@ function init() {
                 marker.setMap(null);
             });
             markers = [];
-            patients = mapBridge.getAvailableOrgans();
+            globalPatients = mapBridge.getAvailableOrgans();
             successCount = 0;
             markerSetId++;
-            addMarkers(patients.size(), markerSetId);
+            addMarkers(globalPatients.size(), markerSetId);
         });
     });
 
@@ -57,12 +57,11 @@ function init() {
         document.getElementById('filterAreaBtn').addEventListener('click', function () {
             console.log("Filter area button clicked!");
             filterByAreaListener = google.maps.event.addListener(map, 'click', function(e) {
-                console.log(filterStart);
                 if (filterStart === undefined) {
                     filterStart = e.latLng;
                 } else {
                     filterEnd = e.latLng;
-                    filterArea();
+                    filterArea({start: filterStart, end: filterEnd});
                     google.maps.event.removeListener(filterByAreaListener);
                 }
             });
@@ -70,9 +69,75 @@ function init() {
     });
 }
 
-function filterArea() {
+/**
+ * Gets globalPatients who are within the area and resets the markers on the map to be them
+ */
+function filterArea(area) {
+    console.log("Filtering by area using coordinates " + area.start + " " + area.end);
+    // mapBridge.filterArea(area);
 
+    var patientsFilteredByArea = filterPatientsByArea(globalPatients, area);
+    console.log("bingo!");
+    setPatients(patientsFilteredByArea) // todo maybe change to setPatientsJS?
+}
 
+/**
+ * Finds the globalPatients that are within an area
+ * @param _patients the globalPatients to filter
+ * @param area is the area to test
+ * @returns {ArrayConstructor} the globalPatients within the area
+ */
+function filterPatientsByArea(_patients, area) {
+
+    var patientsFilteredByArea = [];
+
+    console.log("globalPatients to be filtered: " + _patients);
+
+    _patients.forEach(function (patient) {
+        console.log("yiggidy");
+        console.log("patient being filtered: " + patient);
+        if (isPatientInArea(patient, area)) {
+            patientsFilteredByArea.add(patient);
+            console.log("Patient " + patient.getNhiNumber() + " is within bounds.");
+        }
+        console.log("Patient " + patient.getNhiNumber() + " is outside bounds.");
+    });
+    console.log("yaw");
+    return patientsFilteredByArea;
+}
+
+/**
+ * Finds out if a patient is within a given area
+ * @param patient the patient to test
+ * @param area the area bounds
+ * @returns {boolean} if the patient is inside or outside the area
+ */
+function isPatientInArea(patient, area) {
+
+    var minLng, minLat, maxLng, maxLat;
+    var current = patient.getCurrentLocation();
+
+    minLng = min(area.start.lng, area.end.lng);
+    minLat = min(area.start.lat, area.end.lat);
+    maxLng = max(area.start.lng, area.end.lng);
+    maxLat = max(area.start.lat, area.end.lat);
+
+    console.log("Finding if patient is in area: " + minLng + " " + minLat + " " + maxLng + " " + maxLat);
+
+    if (current.lng < minLng) {
+        return false;
+    }
+    else if (current.lat < minLat) {
+        return false;
+    }
+    else if (current.lng > maxLng) {
+        return false;
+    }
+    else if (current.lat > maxLat) {
+        return false;
+    }
+
+    return true;
 }
 
 /**
@@ -194,7 +259,7 @@ function attachInfoWindow(patient, marker) {
 }
 
 /**
- * Gets the dead patients html content for the info window
+ * Gets the dead globalPatients html content for the info window
  * @param patient - patient to attach to info window
  * @returns {string}
  */
@@ -212,7 +277,7 @@ function getDeadPatientInfoContent(patient) {
 }
 
 /**
- * Gets the alive patients html content for the info window
+ * Gets the alive globalPatients html content for the info window
  * @param patient - patient to attach to info window
  * @returns {string}
  */
@@ -270,17 +335,20 @@ function getOrganOptions(patient) {
 }
 
 /**
- * Sets the patients for the map and adds the markers to the map
+ * Sets the globalPatients for the map and adds the markers to the map
  * @param _patients
  */
 function setPatients(_patients) {
-    patients = _patients;
+    globalPatients = _patients;
     hideNotification();
     clearMarkers();
     successCount = 0;
     infoWindows = [];
     markerSetId++;
-    addMarkers(patients.size(), markerSetId);
+    console.log("Bango!");
+    addMarkers(globalPatients.size(), markerSetId);
+    console.log("Bongo!");
+
 }
 
 /**
@@ -290,13 +358,13 @@ function setPatients(_patients) {
  */
 function addMarkers(i, id) {
     if (i < 1) {
-        showNotification(successCount, patients.size());
+        showNotification(successCount, globalPatients.size());
         return;
     }
     if (id !== markerSetId) {
         return; //break task
     }
-    addMarker(patients.get(i-1));
+    addMarker(globalPatients.get(i-1));
     setTimeout(function() {
         addMarkers(--i, id);
     }, 700);
@@ -321,9 +389,9 @@ function hideNotification() {
 }
 
 /**
- * Shows number of successfully loaded patients
- * @param numSuccess successfully loaded patients
- * @param numTotal total patients to load
+ * Shows number of successfully loaded globalPatients
+ * @param numSuccess successfully loaded globalPatients
+ * @param numTotal total globalPatients to load
  */
 function showNotification(numSuccess, numTotal) {
     var modalContent = "";
@@ -351,7 +419,7 @@ function showNotification(numSuccess, numTotal) {
         $('#marker-notification').html('<span>' + modalMessage + '</span><span class="marker-notification-close" onclick="hideNotification()"> &times;</span>');
     } else {
         $('#marker-notification').html('<span>' + modalMessage + '</span>' +
-            '    <a href="#" data-toggle="modal" data-target="#failedPatients">View failed patients</a>\n' +
+            '    <a href="#" data-toggle="modal" data-target="#failedPatients">View failed globalPatients</a>\n' +
             '    <span class="marker-notification-close" onclick="hideNotification()"> &times;</span>');
         $('#failed-patient-table').html(modalContent);
     }
@@ -387,7 +455,7 @@ function buildOrganDropdown(infowindow) {
 }
 
 /**
- * Intended to be able to reload patients info window,
+ * Intended to be able to reload globalPatients info window,
  * to be called from JAVA
  * @param patient - patient whose info window is to be updated
  */

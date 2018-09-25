@@ -1,41 +1,38 @@
 package controller;
 
-import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
-
-import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.zip.DataFormatException;
-
-import javafx.scene.Parent;
-import javafx.scene.layout.Pane;
-
-import javafx.event.ActionEvent;
-import javafx.scene.control.*;
-import org.apache.commons.lang3.StringUtils;
-import org.controlsfx.control.RangeSlider;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.geometry.Point2D;
+import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import model.Patient;
+import org.apache.commons.lang3.StringUtils;
+import org.controlsfx.control.RangeSlider;
 import service.ClinicianDataService;
 import service.PatientDataService;
 import service.TextWatcher;
-import service.UserDataService;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
 import utility.GlobalEnums.BirthGender;
@@ -45,6 +42,16 @@ import utility.GlobalEnums.Region;
 import utility.GlobalEnums.UndoableScreen;
 import utility.TouchComboBoxSkin;
 import utility.undoRedo.StatesHistoryScreen;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
 
 public class GUIClinicianSearchPatients extends UndoableController implements IWindowObserver {
 
@@ -120,7 +127,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
 
 
     /**
-     * Initialises the data within the table to all patients
+     * Initialises the data within the table to all globalPatients
      */
     public void loadController() {
         displayY.setText("Display all " + count + " profiles");
@@ -212,7 +219,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
     /**
      * Sets the table columns to pull the correct data from the patient objects
      *
-     * @return a filtered list of patients
+     * @return a filtered list of globalPatients
      */
     private void setupTableColumnsAndData() {
         // initialize columns
@@ -312,7 +319,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
 
 
     /**
-     * Displays only the first X profiles to the search patients table if more than X results from search
+     * Displays only the first X profiles to the search globalPatients table if more than X results from search
      */
     @FXML
     private void displayAllResults() {
@@ -523,8 +530,8 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
     }
 
     /**
-     * View patients from table on the map
-     * Sets the patients list in the JavaScript to custom set
+     * View globalPatients from table on the map
+     * Sets the globalPatients list in the JavaScript to custom set
      * Opens the map and loads
      */
     @FXML
@@ -545,8 +552,8 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
     }
 
     /**
-     * Populates the map with the provided collection of patients
-     * @param patients the patients to populate the map with
+     * Populates the map with the provided collection of globalPatients
+     * @param patients the globalPatients to populate the map with
      */
     private void populateMap(Collection<Patient> patients) {
         screenControl.setIsCustomSetMap(true);

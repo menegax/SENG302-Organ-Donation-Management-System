@@ -30,7 +30,7 @@ public interface IClinicianDataService {
     Clinician getClinician(int staffId);
 
     /**
-     * Gets the number of patients
+     * Gets the number of globalPatients
      * @return - int of patient count
      */
     int getPatientCount();
@@ -42,11 +42,11 @@ public interface IClinicianDataService {
     int nextStaffId();
 
     /**
-     * Search patients in the db and local storage
+     * Search globalPatients in the db and local storage
      * @param searchTerm - search query
      * @param filters - filters applied to search query
      * @param numResults - number of results to return
-     * @return - list of patients
+     * @return - list of globalPatients
      */
     List<Patient> searchPatients(String searchTerm, Map<GlobalEnums.FilterOption, String> filters, int numResults);
 

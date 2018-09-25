@@ -7,7 +7,6 @@ import model.Patient;
 import model.PatientOrgan;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
-import javafx.geometry.Point2D;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -36,9 +35,14 @@ public class MapBridge {
         controller.setTarget(patient);
     }
 
+    public void filterArea(Object area) {
+
+    }
+
     /**
      * Collects the patient list from available organs list
      */
+    @SuppressWarnings("unused")
     public List getAvailableOrgans() {
         List<PatientOrgan> masterData = new ArrayList<PatientOrgan>();
         List<Patient> deadPatients = patientDataService.getDeadDonors();
