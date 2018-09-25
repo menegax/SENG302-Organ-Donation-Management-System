@@ -22,6 +22,7 @@ function init() {
     google.maps.event.addListenerOnce(map, 'idle', function () {
         setMapDragEnd();
         document.getElementById('availableOrgansView').addEventListener('click', function () {
+            map.setCenter({lat: -40.59225, lng: 173.51012});
             validCount = 0;
             failedPatientArray = [];
             markers.forEach(function (marker) {
