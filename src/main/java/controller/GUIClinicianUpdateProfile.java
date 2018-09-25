@@ -52,7 +52,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
     private TextField suburbTxt;
 
     @FXML
-    private ChoiceBox regionDD;
+    private ComboBox regionDD;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
