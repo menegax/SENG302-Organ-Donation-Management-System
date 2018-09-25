@@ -141,12 +141,14 @@ class ScreenControlTouch extends ScreenControl {
             	setMapPanePosition(pane);
                 mapController = (GUIMap) controller;
                 mapController.loadMap();
-                pane.toBack();
                 pane.visibleProperty().addListener(((observable, oldValue, newValue) -> {
                     if (!newValue) {
                         setMapOpen(false);
                     }
                 }));
+            }
+            if(rootPane != null) {
+                rootPane.toFront();
             }
             systemLogger.log(INFO, "Showing new touch stage scene");
             return controller;
