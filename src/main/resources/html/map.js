@@ -334,10 +334,8 @@ function buildOrganDropdown(infowindow) {
                 var reg = /(\w+)=\w+,?/g;
                 var donationsArray = [];
                 var result;
-                if (patient.getDonations().size() > 0) {
-                    while (result = reg.exec(patient2.getDonations().toString().slice(1, -1))) {
-                        donationsArray.push(result[1]);
-                    }
+                while (result = reg.exec(patient2.getDonations().toString().slice(1, -1))) {
+                    donationsArray.push(result[1]);
                 }
                 for (var i = 0; i< donationsArray.length; i++) {
                     $('#dropdown').append($('<option>', {
@@ -388,7 +386,7 @@ function mapInfoWindowToPatient(infoWindow, patient) {
     var hasExistingInfoWindow = false;
     var i;
     for (i = 0; i < infoWindows.length; i++) {
-        if (infoWindows[i]["patient"].getNhiNumber() === patient.getNhiNumber()) {
+        if (infoWindows[i]["nhi"] === patient.getNhiNumber()) {
             hasExistingInfoWindow = true;
             break;
         }
