@@ -8,13 +8,14 @@ import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import model.Patient;
 import model.Procedure;
 import service.PatientDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
-import utility.TouchPaneController;
-import utility.TouchscreenCapable;
+import utility.MultiTouchHandler;
+import utility.TouchDatePickerSkin;
 import utility.undoRedo.IAction;
 import utility.undoRedo.SingleAction;
 
@@ -29,7 +30,7 @@ import static utility.UserActionHistory.userActions;
 /**
  * Form to add and edit patient procedures only accessible by a clinician
  */
-public class GUIPatientProcedureForm extends TargetedController implements TouchscreenCapable {
+public class GUIPatientProcedureForm extends TargetedController {
 
     @FXML
     public Button doneButton;
@@ -59,7 +60,7 @@ public class GUIPatientProcedureForm extends TargetedController implements Touch
     private ScreenControl screenControl = ScreenControl.getScreenControl();
     private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
     private PatientDataService patientDataService = new PatientDataService();
-    private TouchPaneController procedureTouchPane;
+    private MultiTouchHandler touchHandler;
 
     /**
      * Initial setup. Sets up undo/redo, Populates the affected organs dropdown
@@ -73,11 +74,11 @@ public class GUIPatientProcedureForm extends TargetedController implements Touch
             }
         }
         if(screenControl.isTouch()) {
-            procedureTouchPane = new TouchPaneController(procedureUpdatePane);
-            procedureUpdatePane.setOnZoom(this::zoomWindow);
-            procedureUpdatePane.setOnRotate(this::rotateWindow);
-            procedureUpdatePane.setOnScroll(this::scrollWindow);
+            touchHandler = new MultiTouchHandler();
+            touchHandler.initialiseHandler(procedureUpdatePane);
         }
+        TouchDatePickerSkin dateOfProcedureSkin = new TouchDatePickerSkin(dateInput, procedureUpdatePane);
+        dateInput.setSkin(dateOfProcedureSkin);
     }
 
     /**
@@ -239,23 +240,6 @@ public class GUIPatientProcedureForm extends TargetedController implements Touch
      */
     public void goBackToProcedures() {
         screenControl.closeWindow(procedureUpdatePane);
-    }
-
-    @Override
-    public void zoomWindow(ZoomEvent zoomEvent) {
-        procedureTouchPane.zoomPane(zoomEvent);
-    }
-
-    @Override
-    public void rotateWindow(RotateEvent rotateEvent) {
-        procedureTouchPane.rotatePane(rotateEvent);
-    }
-
-    @Override
-    public void scrollWindow(ScrollEvent scrollEvent) {
-        if(scrollEvent.isDirect()) {
-            procedureTouchPane.scrollPane(scrollEvent);
-        }
     }
 
 }

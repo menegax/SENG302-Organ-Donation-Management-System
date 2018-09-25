@@ -7,7 +7,12 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
+import javafx.scene.layout.GridPane;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
@@ -21,6 +26,7 @@ import service.interfaces.IClinicianDataService;
 import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 import utility.undoRedo.StatesHistoryScreen;
+import javafx.geometry.Point2D;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,6 +53,9 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
 
     @FXML
     private TextField searchEntry;
+
+    @FXML
+    private GridPane pane;
 
     private ObservableList<User> masterData = FXCollections.observableArrayList();
 
@@ -117,7 +126,8 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
             User selected = userDataTable.getSelectionModel()
                     .getSelectedItem();
             if (click.getClickCount() == 2 && selected != null && selected != userControl.getLoggedInUser()) {
-                GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected);
+                Parent parent = screenControl.getTouchParent(pane);
+                GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected, parent);
                 controller.setTarget(selected);
                 //Save user to local db
                 if (selected instanceof Patient) {

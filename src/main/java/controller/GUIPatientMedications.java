@@ -319,8 +319,10 @@ public class GUIPatientMedications extends UndoableController {
         after.getCurrentMedications()
                 .forEach((med) -> current.add(String.valueOf(med)));
         currentListProperty.set(FXCollections.observableArrayList(current));
-        currentMedications.itemsProperty()
-                .bind(currentListProperty);
+        if (current.size() == 0) {
+            currentListProperty.set(FXCollections.observableArrayList(""));
+        }
+        currentMedications.itemsProperty().bind(currentListProperty);
     }
 
 
@@ -334,6 +336,9 @@ public class GUIPatientMedications extends UndoableController {
         after.getMedicationHistory()
                 .forEach((med) -> history.add(String.valueOf(med)));
         historyListProperty.set(FXCollections.observableArrayList(history));
+        if (history.size() == 0) {
+            historyListProperty.set(FXCollections.observableArrayList(""));
+        }
         pastMedications.itemsProperty()
                 .bind(historyListProperty);
     }
@@ -397,24 +402,25 @@ public class GUIPatientMedications extends UndoableController {
      * Deletes a specified medication
      */
     private void performDelete(String medication) {
-        if (history.contains(medication)) {
-            after.getMedicationHistory()
-                    .remove(history.indexOf(medication));
-            userActions.log(Level.INFO,
-                    "Deleted medication: " + medication,
-                    new String[] { "Attempted to delete medication: " + medication, ((Patient) target).getNhiNumber() });
-            viewPastMedications();
-        }
-        else if (current.contains(medication)) {
-            after.getCurrentMedications()
-                    .remove(current.indexOf(medication));
-            userActions.log(Level.INFO,
-                    "Deleted medication: " + medication,
-                    new String[] { "Attempted to delete medication: " + medication, ((Patient) target).getNhiNumber() });
+        if (!medication.equals("")) {
+            if (history.contains(medication)) {
+                after.getMedicationHistory()
+                        .remove(history.indexOf(medication));
+                userActions.log(Level.INFO,
+                        "Deleted medication: " + medication,
+                        new String[]{"Attempted to delete medication: " + medication, ((Patient) target).getNhiNumber()});
+                viewPastMedications();
+            } else if (current.contains(medication)) {
+                after.getCurrentMedications()
+                        .remove(current.indexOf(medication));
+                userActions.log(Level.INFO,
+                        "Deleted medication: " + medication,
+                        new String[]{"Attempted to delete medication: " + medication, ((Patient) target).getNhiNumber()});
 
-            viewCurrentMedications();
+                viewCurrentMedications();
+            }
+            statesHistoryScreen.addAction(new SingleAction(target, after));
         }
-        statesHistoryScreen.addAction(new SingleAction(target, after));
     }
 
 
@@ -515,43 +521,42 @@ public class GUIPatientMedications extends UndoableController {
      * @param medication The medication to fetch the ingredients for
      */
     private void loadMedicationIngredients(String medication) {
-        APIHelper helper = new APIHelper();
-        ArrayList<String> newIngredients = new ArrayList<>();
-        Boolean hasIngredients = false;
+        if (!medication.equals("")) {
+            APIHelper helper = new APIHelper();
+            ArrayList<String> newIngredients = new ArrayList<>();
+            Boolean hasIngredients = false;
 
-        if (!ingredients.contains("Ingredients for '" + medication + "': ")) {
-            newIngredients.add("Ingredients for '" + medication + "': ");
-            try {
-                if (medication.length() == 1) {
-                    getDrugSuggestions(medication);
-                }
-                else {
-                    getDrugSuggestions(Collections.max(new ArrayList<>(Arrays.asList(medication.split(" ")))));
+            if (!ingredients.contains("Ingredients for '" + medication + "': ")) {
+                newIngredients.add("Ingredients for '" + medication + "': ");
+                try {
+                    if (medication.length() == 1) {
+                        getDrugSuggestions(medication);
+                    } else {
+                        getDrugSuggestions(Collections.max(new ArrayList<>(Arrays.asList(medication.split(" ")))));
+                    }
+
+                    if (suggestions.get("suggestions")
+                            .toString()
+                            .contains(medication)) {
+                        JsonArray response = helper.getMapiDrugIngredients(medication);
+                        response.forEach((element) -> newIngredients.add(element.getAsString()));
+                        hasIngredients = true;
+                    }
+                } catch (IOException e) {
+                    hasIngredients = false;
                 }
 
-                if (suggestions.get("suggestions")
-                        .toString()
-                        .contains(medication)) {
-                    JsonArray response = helper.getMapiDrugIngredients(medication);
-                    response.forEach((element) -> newIngredients.add(element.getAsString()));
-                    hasIngredients = true;
+                if (!hasIngredients) {
+                    newIngredients.add("There are no recorded ingredients for '" + medication + "'");
                 }
+                newIngredients.add("");
+                ingredients.addAll(0, newIngredients);
+            } else {
+                int index = ingredients.indexOf("Ingredients for '" + medication + "': ");
+                moveToTopInformationList(index);
             }
-            catch (IOException e) {
-                hasIngredients = false;
-            }
-
-            if (!hasIngredients) {
-                newIngredients.add("There are no recorded ingredients for '" + medication + "'");
-            }
-            newIngredients.add("");
-            ingredients.addAll(0, newIngredients);
+            displayIngredients(ingredients);
         }
-        else {
-            int index = ingredients.indexOf("Ingredients for '" + medication + "': ");
-            moveToTopInformationList(index);
-        }
-        displayIngredients(ingredients);
     }
 
 
@@ -631,7 +636,7 @@ public class GUIPatientMedications extends UndoableController {
      * Clears the information being currently displayed on the medicine information ListView on activation
      */
     private void refreshReview() {
-        ingredients = new ArrayList<>();
+        ingredients = new ArrayList<String>(){{add("");}};
         displayIngredients(ingredients);
     }
 }

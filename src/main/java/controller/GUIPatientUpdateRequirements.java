@@ -5,6 +5,9 @@ import static utility.UserActionHistory.userActions;
 
 import data_access.factories.DAOFactory;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
@@ -296,8 +299,9 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
      * @param organ organ being validated for reason of deregistration
      */
     private void openReasonPopup(GlobalEnums.Organ organ) {
+        Parent parent = screenControl.getTouchParent(patientRequirementsPane);
         GUIRequiredOrganDeregistrationReason controller =
-                (GUIRequiredOrganDeregistrationReason) screenControl.show("/scene/deregistrationReason.fxml", false, this, target);
+                (GUIRequiredOrganDeregistrationReason) screenControl.show("/scene/deregistrationReason.fxml", false, this, target, parent);
         controller.setOrgan(organ);
         controller.setTarget(after);
     }

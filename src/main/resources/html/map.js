@@ -4,15 +4,25 @@ var infoWindows = [];
 var failedPatientArray = [];
 var markerSetId = 0;
 
+var originalZoom;
+
 function init() {
     geocoder = new google.maps.Geocoder();
     map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: -40.59225, lng: 173.51012}, zoom: 6, disableDefaultUI: true, scaleControl: true, gestureHandling: 'cooperative'
+        center: {lat: -40.59225, lng: 173.51012},
+        zoom: 6,
+        disableDefaultUI: true,
+        scaleControl: true,
+        zoomControl: false,
+        heading:90,
+        tilt:45,
+        gestureHandling: 'cooperative'
     });
 
     google.maps.event.addListenerOnce(map, 'idle', function () {
         setMapDragEnd();
         document.getElementById('availableOrgansView').addEventListener('click', function () {
+            map.setCenter({lat: -40.59225, lng: 173.51012});
             validCount = 0;
             failedPatientArray = [];
             markers.forEach(function (marker) {
@@ -32,7 +42,7 @@ function init() {
  */
 function setMapDragEnd() {
     // Bounds for the World
-    var allowedBounds = new google.maps.LatLngBounds(new google.maps.LatLng(-84.220892, -177.871399), new google.maps.LatLng(84.889374, 179.872535));
+    var allowedBounds = new google.maps.LatLngBounds(new google.maps.LatLng(-56.831005, 140.304953), new google.maps.LatLng(-22.977599, -165.689951));
 
     // Listen for the dragend event
     google.maps.event.addListener(map, 'dragend', function () {
@@ -141,7 +151,7 @@ function attachInfoWindow(patient, marker) {
             else {
                 iw["iwindow"].open(map, marker);
             }
-        })
+        });
     });
 }
 
@@ -190,13 +200,12 @@ function openPatientProfile(patientNhi) {
  */
 function getOrganOptions(patient) {
     var donations = patient.getDonations().toString();
-    var donationStr;
+    var donationStr, reg, string, result;
     if (donations !== '{}') {
-        var reg = /(\w+)=\w+,?/g;
+        reg = /(\w+)=\w+,?/g;
         donationStr = '<b>Donations:</b><br>';
         var donationsArray = [];
-        var result;
-        var string = donations.substring(1, donations.length - 1);
+        string = donations.substring(1, donations.length - 1);
         while (result = reg.exec(string)) {
             donationsArray.push(result[1]);
         }
@@ -381,11 +390,19 @@ function mapInfoWindowToPatient(infoWindow, patient) {
             hasExistingInfoWindow = true;
             break;
         }
-    };
+    }
     if (hasExistingInfoWindow) {
         infoWindows.splice(i, 1, { "iwindow" : infoWindow, "nhi" : patient.getNhiNumber()}); //hacks -> cannot use patient obj so need nhi
                                                                                                                   //java -> js references out of whack when updating
     } else {
         infoWindows.push({ "iwindow" : infoWindow, "nhi" : patient.getNhiNumber()}); //
     }
+}
+
+function setJankaZoom(newZoom) {
+    map.setZoom(newZoom * originalZoom);
+}
+
+function setJankaOriginal() {
+    originalZoom = map.getZoom();
 }

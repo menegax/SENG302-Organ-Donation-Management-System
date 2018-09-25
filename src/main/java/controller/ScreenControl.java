@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.scene.Parent;
 import javafx.scene.control.TabPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -8,6 +9,7 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import model.User;
 import utility.undoRedo.UndoableWrapper;
+import javafx.geometry.*;
 
 import java.util.*;
 
@@ -33,6 +35,8 @@ public abstract class ScreenControl {
 
     private KeyCodeCombination closeWindow;
 
+    private KeyCodeCombination refresh;
+
     private static boolean isTouch;
 
     private Boolean isSaved = true;
@@ -47,13 +51,15 @@ public abstract class ScreenControl {
 
     protected GUIMap mapController;
 
+    protected String LOGINFXML = "/scene/login.fxml";
+
     protected String MAPFXML = "/scene/map.fxml";
 
     abstract void setUpNewLogin();
     abstract void removeUnsavedAsterisks();
     abstract void addUnsavedAsterisks();
     abstract boolean closeWindow(Pane pane);
-    abstract public Object show(String fxml, Boolean undoable, IWindowObserver parentController, User targetUser);
+    abstract public Object show(String fxml, Boolean undoable, IWindowObserver parentController, User targetUser, Parent parent);
 
     ScreenControl() {
         setUpKeyCodeCombinations();
@@ -151,6 +157,7 @@ public abstract class ScreenControl {
             undo = new KeyCodeCombination(KeyCode.Z, KeyCombination.META_DOWN);
             redo = new KeyCodeCombination(KeyCode.Z, KeyCombination.SHIFT_DOWN, KeyCombination.META_DOWN);
             closeWindow = new KeyCodeCombination(KeyCode.W, KeyCombination.META_DOWN);
+            refresh = new KeyCodeCombination(KeyCode.R, KeyCombination.META_DOWN);
         }
         else { // Windows or Linux
             logOut = new KeyCodeCombination(KeyCode.Q, KeyCombination.ALT_DOWN, KeyCombination.CONTROL_DOWN);
@@ -159,6 +166,7 @@ public abstract class ScreenControl {
             undo = new KeyCodeCombination(KeyCode.Z, KeyCombination.CONTROL_DOWN);
             redo = new KeyCodeCombination(KeyCode.Y, KeyCombination.CONTROL_DOWN);
             closeWindow = new KeyCodeCombination(KeyCode.W, KeyCombination.CONTROL_DOWN);
+            refresh = new KeyCodeCombination(KeyCode.R, KeyCombination.CONTROL_DOWN);
         }
     }
 
@@ -184,6 +192,7 @@ public abstract class ScreenControl {
 
     public KeyCodeCombination getCloseWindow() { return closeWindow; }
 
+    public KeyCodeCombination getRefresh() { return refresh; }
 
     KeyCodeCombination getLogOut() {
         return logOut;
@@ -221,6 +230,17 @@ public abstract class ScreenControl {
 
     public void setIsCustomSetMap(Boolean customSet) { isCustomSetMap = customSet; }
 
+    public abstract void centerPanes();
+
     public GUIMap getMapController() { return mapController; }
+
+    /**
+     * Gets the touch enabled pane of an outer pane of an fxml
+     * @param outerPane the most outer pane of an fxml tab
+     * @return the GUIHome pane of that tab
+     */
+    public Parent getTouchParent(Pane outerPane) {
+        return outerPane.getParent().getParent().getParent();
+    }
 }
 
