@@ -4,6 +4,9 @@ var infoWindows = [];
 var failedPatientArray = [];
 var markerSetId = 0;
 var filterByAreaListener, filterStart, filterEnd;
+var patientsFilteredByArea;
+var interruptMarkers = false;
+
 var iconBase = '../image/markers/';
 var originalZoom;
 
@@ -96,6 +99,7 @@ function init() {
  * Gets globalPatients who are within the area and resets the markers on the map to be them
  */
 function filterArea(area) {
+    interruptMarkers = true
     markers.forEach(function (marker) {
         if (!isPatientInArea(marker, area)) {
             marker.setMap(null);
@@ -155,17 +159,29 @@ function isPatientInArea(marker, area) {
 
     console.log("Finding if patient is in area: " + area.start.lng() + " " + area.start.lat() + " " + area.end.lng() + " " + area.end.lat());
 
-    if (current.lng() < minLng) {
-        return false;
-    }
-    else if (current.lat() < minLat) {
-        return false;
-    }
-    else if (current.lng() > maxLng) {
-        return false;
-    }
-    else if (current.lat() > maxLat) {
-        return false;
+    if ((minLng < 0 && maxLng < 0) || (minLng > 0 && maxLng > 0)) { // not crossing lng border from -179 to 179
+        if (current.lng() < minLng) {
+            return false;
+        }
+        else if (current.lat() < minLat) {
+            return false;
+        }
+        else if (current.lng() > maxLng) {
+            return false;
+        }
+        else if (current.lat() > maxLat) {
+            return false;
+        }
+    } else {
+        if (current.lng() > minLng && current.lng() < maxLng) {
+            return false;
+        }
+        else if (current.lat() < minLat) {
+            return false;
+        }
+        else if (current.lat() > maxLat) {
+            return false;
+        }
     }
 
     return true;
@@ -211,22 +227,24 @@ function setMapDragEnd() {
  * @param patient
  */
 function addMarker(patient) {
-    console.log("Adding marker to map for patient " + patient.getNhiNumber());
-    var latLong = patient.getCurrentLocation();
-    if (latLong !== null) {
-        successCount++;
-        var marker = makeMarker(patient, latLong); //set up markers
-        attachInfoWindow(patient, marker);
-        markers.push(marker);
-    }
-    else {
-        var index = failedPatientArray.indexOf(patient);
-        if (index !== -1) {
-            failedPatientArray[index] = patient;
-        }else {
-            failedPatientArray.push(patient);
+    if (!interruptMarkers) {
+        console.log("Adding marker to map for patient " + patient.getNhiNumber());
+        var latLong = patient.getCurrentLocation();
+        if (latLong !== null) {
+            successCount++;
+            var marker = makeMarker(patient, latLong); //set up markers
+            attachInfoWindow(patient, marker);
+            markers.push(marker);
         }
-        console.log('Geocoding failed because: ' + status);
+        else {
+            var index = failedPatientArray.indexOf(patient);
+            if (index !== -1) {
+                failedPatientArray[index] = patient;
+            }else {
+                failedPatientArray.push(patient);
+            }
+            console.log('Geocoding failed because: ' + status);
+        }
     }
 }
 
@@ -374,8 +392,8 @@ function setPatients(_patients) {
     successCount = 0;
     infoWindows = [];
     markerSetId++;
+    interruptMarkers = false;
     addMarkers(globalPatients.size(), markerSetId);
-
 }
 
 /**
