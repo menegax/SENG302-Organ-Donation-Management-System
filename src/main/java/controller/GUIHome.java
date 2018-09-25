@@ -1,13 +1,5 @@
 package controller;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINER;
-import static java.util.logging.Level.INFO;
-import static java.util.logging.Level.SEVERE;
-import static javafx.scene.control.Alert.AlertType.ERROR;
-import static utility.SystemLogger.systemLogger;
-import static utility.UserActionHistory.userActions;
-
 import de.codecentric.centerdevice.MenuToolkit;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -17,15 +9,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
+import javafx.scene.control.*;
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
@@ -41,20 +25,18 @@ import service.ClinicianDataService;
 import service.PatientDataService;
 import service.UserDataService;
 import service.interfaces.IAdministratorDataService;
-import utility.CachedThreadPool;
-import utility.ImportObservable;
-import utility.Searcher;
-import utility.StatusObservable;
-import utility.SystemLogger;
-import utility.TouchPaneController;
-import utility.TouchscreenCapable;
+import utility.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
+
+import static java.util.logging.Level.*;
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static utility.SystemLogger.systemLogger;
+import static utility.UserActionHistory.userActions;
 
 public class GUIHome extends TargetedController implements Observer, TouchscreenCapable, IWindowObserver {
 
@@ -680,12 +662,6 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
      * Opens new map instance if a map is not visible
      */
     void openMap() {
-
-        if (!screenControl.getMapOpen()) {
-            GUIMap controller = (GUIMap) screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
-            screenControl.setMapOpen(true);
-            controller.setPatients(new ArrayList<>());
-        }
         if(screenControl.isTouch()) {
             homePane.toFront();
         }
