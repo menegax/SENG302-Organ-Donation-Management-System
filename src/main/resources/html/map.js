@@ -198,12 +198,13 @@ function createMarkerRadii(radius, color, organ) {
  * @param organ - String format of organ to set currentOrgan to
  */
 function setCurrentOrgan(organ) {
-    currentOrgan = organ;
-    if (currentOrgan !== undefined) {
-        mapBridge.loadCircle(currentMarker.nhi, currentOrgan);
-    } else {
+    if (organ === undefined) {
+        currentOrgan = undefined;
         clearCircles();
+        return;
     }
+    currentOrgan = organ.trim();
+    mapBridge.loadCircle(currentMarker.nhi, currentOrgan);
 }
 
 /**
