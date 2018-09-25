@@ -41,8 +41,13 @@ function init() {
         document.getElementById('filterAreaBtn').addEventListener('click', function () {
             console.log("Filter area button clicked!");
             map.setOptions({gestureHandling: 'none'});
+            mapBridge.setFilterByArea(true);
         });
     });
+}
+
+function filterArea(start, end) {
+    map.setOptions({gestureHandling: 'cooperative'});
 }
 
 /**
