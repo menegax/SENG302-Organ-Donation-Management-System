@@ -8,15 +8,10 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import model.Patient;
 import netscape.javascript.JSObject;
-import org.jetbrains.annotations.NotNull;
-import service.ClinicianDataService;
 import utility.MapBridge;
 import utility.SystemLogger;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -50,6 +45,8 @@ public class GUIMap {
      * @param patients a collection of patients to show on the map
      */
     public void setPatients(Collection<Patient> patients) {
+        this.patients.clear();
+        this.patients = patients;
         if (jsBridge != null) {
             jsBridge.call("setPatients", patients);
         }
@@ -78,6 +75,7 @@ public class GUIMap {
                         mapBridge = new MapBridge();
                         jsBridge.setMember("mapBridge", mapBridge);
                         jsBridge.call("init");
+                        jsBridge.call("setPatients", patients);
                     }
                 });
         webEngine.load(Objects.requireNonNull(getClass().getClassLoader()
