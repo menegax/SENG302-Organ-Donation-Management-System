@@ -6,13 +6,9 @@ import static utility.SystemLogger.systemLogger;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import service.UserDataService;
-import utility.GlobalEnums;
 import utility.Searcher;
 import utility.SystemLogger;
 import utility.UserActionHistory;
-import javafx.geometry.Point2D;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCode;
 
 import java.util.UUID;
 
@@ -27,7 +23,7 @@ public class Main extends Application {
         ScreenControl screenControl = ScreenControl.getScreenControl();
         screenControl.show("/scene/login.fxml", false, null, null, null);
 
-        Searcher.getSearcher().createFullIndex(); // index patients for search, needs to be after importing or adding any patients
+        Searcher.getSearcher().createFullIndex(); // index globalPatients for search, needs to be after importing or adding any globalPatients
         systemLogger.log(INFO, "Finished the start method for the app. Beginning app...");
         new UserDataService().prepareApplication();
     }

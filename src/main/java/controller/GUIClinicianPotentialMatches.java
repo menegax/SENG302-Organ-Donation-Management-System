@@ -1,5 +1,10 @@
 package controller;
 
+import static java.lang.Math.abs;
+import static java.time.temporal.ChronoUnit.DAYS;
+import static utility.SystemLogger.systemLogger;
+import static utility.UserActionHistory.userActions;
+
 import com.google.maps.model.LatLng;
 import data_access.localDAO.PatientLocalDAO;
 import javafx.beans.property.ObjectProperty;
@@ -33,12 +38,12 @@ import service.OrganWaitlist;
 import service.PatientDataService;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
-import utility.MultiTouchHandler;
-import utility.*;
 import utility.GlobalEnums.BirthGender;
 import utility.GlobalEnums.FilterOption;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
+import utility.MultiTouchHandler;
+import utility.TouchComboBoxSkin;
 import utility.undoRedo.IAction;
 import utility.undoRedo.MultiAction;
 
@@ -51,11 +56,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-
-import static java.lang.Math.abs;
-import static java.time.temporal.ChronoUnit.DAYS;
-import static utility.SystemLogger.systemLogger;
-import static utility.UserActionHistory.userActions;
 
 public class GUIClinicianPotentialMatches extends UndoableController implements IWindowObserver {
 
@@ -323,7 +323,7 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
     private boolean checkMatch(OrganWaitlist.OrganRequest request) {
         boolean match = true;
         Patient potentialReceiver = patientDataService.getPatientByNhi(request.getReceiverNhi());
-        //Do not match against patients that have no address or region
+        //Do not match against globalPatients that have no address or region
         if (potentialReceiver.getRegion() == null || (potentialReceiver.getStreetNumber() == null && potentialReceiver.getStreetName() == null)) {
             return false;
         }
@@ -782,7 +782,7 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
     }
 
     /**
-     * Assigns the target patients donating organ to the selected receiver. Also removed organ from waitlist
+     * Assigns the target globalPatients donating organ to the selected receiver. Also removed organ from waitlist
      */
     public void assignOrganToPatient(){
         OrganWaitlist.OrganRequest selectedRequest = potentialMatchesTable.getSelectionModel().getSelectedItem();
@@ -810,8 +810,8 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
     private UserControl userControl = UserControl.getUserControl();
 
     /**
-     * View patients from table on the map
-     * Sets the patients list in the JavaScript to custom set
+     * View globalPatients from table on the map
+     * Sets the globalPatients list in the JavaScript to custom set
      * Opens the map and loads
      */
     @FXML
@@ -833,8 +833,8 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
     }
 
     /**
-     * Populates the map with the provided collection of patients
-     * @param patients the patients to populate the map with
+     * Populates the map with the provided collection of globalPatients
+     * @param patients the globalPatients to populate the map with
      */
     private void populateMap(Collection<Patient> patients) {
         screenControl.setIsCustomSetMap(true);

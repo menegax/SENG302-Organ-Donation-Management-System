@@ -1,5 +1,12 @@
 package utility;
 
+import static utility.GlobalEnums.BirthGender;
+import static utility.GlobalEnums.FilterOption;
+import static utility.GlobalEnums.NONE_ID;
+import static utility.GlobalEnums.Organ;
+import static utility.GlobalEnums.Region;
+import static utility.GlobalEnums.UserTypes;
+import static utility.SystemLogger.systemLogger;
 
 import data_access.localDAO.LocalDB;
 import model.Administrator;
@@ -11,7 +18,11 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
-import org.apache.lucene.index.*;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
@@ -19,11 +30,13 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.RAMDirectory;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
-
-import static utility.GlobalEnums.*;
-import static utility.SystemLogger.systemLogger;
 
 public class Searcher {
 
@@ -120,7 +133,7 @@ public class Searcher {
     }
 
     /**
-     * Creates a full index of all patients currently loaded into the app.
+     * Creates a full index of all globalPatients currently loaded into the app.
      */
     public void createFullIndex() {
         Set<Patient> patients = database.getPatients();
@@ -168,7 +181,7 @@ public class Searcher {
     }
 
     /**
-     * Add indices of patients via the index writer.
+     * Add indices of globalPatients via the index writer.
      *
      * @param patient patient to be indexed.
      */
@@ -207,12 +220,12 @@ public class Searcher {
     }
 
     /**
-     * Removes all indices of all patients via the index writer.
+     * Removes all indices of all globalPatients via the index writer.
      */
     public void clearIndex() {
         try {
             indexWriter.deleteAll();
-            systemLogger.log(Level.INFO, "Successfully cleared patient search index", "Attempted to delete all patients search indices");
+            systemLogger.log(Level.INFO, "Successfully cleared patient search index", "Attempted to delete all globalPatients search indices");
         } catch (IOException e) {
             systemLogger.log(Level.SEVERE, "Unable to clear patient index", "Attempted to clear patient index");
         }

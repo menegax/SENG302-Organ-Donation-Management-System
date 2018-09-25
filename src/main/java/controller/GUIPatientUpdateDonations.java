@@ -1,5 +1,8 @@
 package controller;
 
+import static java.util.logging.Level.INFO;
+import static utility.UserActionHistory.userActions;
+
 import data_access.factories.DAOFactory;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -22,9 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
-
-import static java.util.logging.Level.INFO;
-import static utility.UserActionHistory.userActions;
 
 public class GUIPatientUpdateDonations extends UndoableController {
 
@@ -195,7 +195,7 @@ public class GUIPatientUpdateDonations extends UndoableController {
                 }
             }
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The following organs are already promised " +
-                    "to other patients: " + alertMessage + "Please undo these changes if this was an error.", ButtonType.OK);
+                    "to other globalPatients: " + alertMessage + "Please undo these changes if this was an error.", ButtonType.OK);
             alert.show();
             if (receiver != null) {
                 action = new MultiAction((Patient) target, after, receiver, receiverAfter);

@@ -1,5 +1,6 @@
 package utility;
 
+import com.google.maps.model.LatLng;
 import controller.GUIHome;
 import controller.GUIMap;
 import controller.ScreenControl;
@@ -8,7 +9,6 @@ import model.Patient;
 import model.PatientOrgan;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
-import javafx.geometry.Point2D;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -116,6 +116,8 @@ public class MapBridge {
     /**
      * Collects the patient list from available organs list
      */
+    @SuppressWarnings("unused")
+    public List getAvailableOrgans() {
     public void getAvailableOrgans() {
         List<PatientOrgan> masterData = new ArrayList<PatientOrgan>();
         List<Patient> deadPatients = patientDataService.getDeadDonors();

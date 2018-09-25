@@ -2,8 +2,6 @@ package controller;
 
 import data_access.factories.DAOFactory;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -31,7 +29,7 @@ import static java.util.logging.Level.FINEST;
 import static utility.UserActionHistory.userActions;
 
 /**
- * This class is the controller for editing a patients required organs only accessible by the clinician
+ * This class is the controller for editing a globalPatients required organs only accessible by the clinician
  */
 public class GUIPatientUpdateRequirements extends UndoableController implements IWindowObserver {
 
@@ -125,7 +123,7 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
 
 
     /**
-     * Load the patients details
+     * Load the globalPatients details
      *
      * @param nhi of the current patient being viewed
      */

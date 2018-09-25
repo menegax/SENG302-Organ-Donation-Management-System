@@ -4,8 +4,6 @@ import com.sun.javafx.webkit.WebConsoleListener;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
-import javafx.scene.input.TouchEvent;
-import javafx.scene.input.TouchPoint;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import model.Patient;
@@ -43,8 +41,8 @@ public class GUIMap {
 
 
     /**
-     * Loads the patients provided onto the map
-     * @param patients a collection of patients to show on the map
+     * Loads the globalPatients provided onto the map
+     * @param patients a collection of globalPatients to show on the map
      */
     public void setPatients(Collection<Patient> patients) {
         this.patients.clear();

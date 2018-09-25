@@ -1,5 +1,7 @@
 package cli;
 
+import static utility.UserActionHistory.userActions;
+
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import utility.parsing.ParseCSV;
@@ -8,8 +10,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.logging.Level;
-
-import static utility.UserActionHistory.userActions;
 
 @SuppressWarnings("unused")
 @Command(name = "import", description = "Reads and loads patient data into the application")
@@ -27,12 +27,12 @@ public class CLIImport implements Runnable {
                 Reader reader = new FileReader(fileName);
                 ParseCSV parseCSV = new ParseCSV();
                 parseCSV.parse(reader);
-                userActions.log(Level.INFO, "Successfully imported", "Attempted to import patients");
+                userActions.log(Level.INFO, "Successfully imported", "Attempted to import globalPatients");
             } catch (FileNotFoundException e) {
-                userActions.log(Level.SEVERE, "File doesn't exist", "Attempted to import patients");
+                userActions.log(Level.SEVERE, "File doesn't exist", "Attempted to import globalPatients");
             }
         } else {
-            userActions.log(Level.SEVERE, "Unsupported file type", "Attempted to import patients");
+            userActions.log(Level.SEVERE, "Unsupported file type", "Attempted to import globalPatients");
         }
     }
 

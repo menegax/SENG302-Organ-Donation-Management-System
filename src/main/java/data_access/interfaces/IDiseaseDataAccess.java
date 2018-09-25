@@ -9,7 +9,7 @@ public interface IDiseaseDataAccess {
     /**
      * Updates the given disease for the patient with the given nhi
      *
-     * @param nhi     The patients nhi
+     * @param nhi     The globalPatients nhi
      * @param disease The disease that is being updated
      * @return The success code of the update
      */

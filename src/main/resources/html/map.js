@@ -1,10 +1,12 @@
-var map, geocoder, patients, mapBridge, successCount;
+var map, geocoder, globalPatients, mapBridge, successCount;
 var circles = [];
 var markers = [];
 var infoWindows = [];
 var failedPatientArray = [];
 var markerSetId = 0;
 var filterByAreaListener, filterStart, filterEnd;
+var patientsFilteredByArea;
+var interruptMarkers = false;
 var donations = [];
 var currentMarker;
 var currentOrgan = undefined;
@@ -46,34 +48,134 @@ function init() {
         styles: styleHidePoi
     });
 
+    // view available organs button
     google.maps.event.addListenerOnce(map, 'idle', function () {
         setMapDragEnd();
         document.getElementById('availableOrgansView').addEventListener('click', function () {
             map.setCenter({lat: -40.59225, lng: 173.51012});
-            mapBridge.getAvailableOrgans();
+            validCount = 0;
+            failedPatientArray = [];
+            markers.forEach(function (marker) {
+                marker.setMap(null);
+            });
+            markers = [];
+            globalPatients = mapBridge.getAvailableOrgans();
+            successCount = 0;
+            markerSetId++;
+            addMarkers(globalPatients.size(), markerSetId);
         });
     });
 
+    // filter area button
     google.maps.event.addListenerOnce(map, 'idle', function () {
         document.getElementById('filterAreaBtn').addEventListener('click', function () {
             clearRectangle();
             console.log("Filter area button clicked!");
             filterByAreaListener = google.maps.event.addListener(map, 'click', function(e) {
+                console.log(filterStart);
                 if (filterStart === undefined) {
                     filterStart = e.latLng;
                 } else {
                     filterEnd = e.latLng;
-                    filterArea();
+                    filterArea({start: filterStart, end: filterEnd});
+                    google.maps.event.removeListener(filterByAreaListener);
+                    filterAreaRectangle();
                 }
             });
+        });
+    });
+
+    // clear filter area button
+    google.maps.event.addListenerOnce(map, 'idle', function () {
+        document.getElementById('clearFilterAreaBtn').addEventListener('click', function () {
+            console.log("Clear filter area button clicked!");
+            clearFilterArea();
         });
     });
 }
 
 /**
+ * Gets globalPatients who are within the area and resets the markers on the map to be them
+ */
+function filterArea(area) {
+    interruptMarkers = true
+    markers.forEach(function (marker) {
+        if (!isPatientInArea(marker, area)) {
+            marker.setMap(null);
+        }
+    });
+}
+
+/**
+ * Reconnects every marker back to the map
+ */
+function clearFilterArea() {
+    markers.forEach(function (marker) {
+            marker.setMap(map);
+    });
+}
+
+/**
+ * Finds out if a patient is within a given area
+ * @param patient the patient to test
+ * @param area the area bounds
+ * @returns {boolean} if the patient is inside or outside the area
+ */
+function isPatientInArea(marker, area) {
+
+    var minLng, minLat, maxLng, maxLat;
+    var current = marker.position;
+
+    if (area.start.lng() > area.end.lng()) {
+        maxLng = area.start.lng();
+        minLng = area.end.lng();
+    } else {
+        maxLng = area.end.lng();
+        minLng = area.start.lng();
+    }
+
+    if (area.start.lat() > area.end.lat()) {
+        maxLat = area.start.lat();
+        minLat = area.end.lat();
+    } else {
+        maxLat = area.end.lat();
+        minLat = area.start.lat();
+    }
+
+    console.log("Finding if patient is in area: " + area.start.lng() + " " + area.start.lat() + " " + area.end.lng() + " " + area.end.lat());
+
+    if ((minLng < 0 && maxLng < 0) || (minLng > 0 && maxLng > 0)) { // not crossing lng border from -179 to 179
+        if (current.lng() < minLng) {
+            return false;
+        }
+        else if (current.lat() < minLat) {
+            return false;
+        }
+        else if (current.lng() > maxLng) {
+            return false;
+        }
+        else if (current.lat() > maxLat) {
+            return false;
+        }
+    } else {
+        if (current.lng() > minLng && current.lng() < maxLng) {
+            return false;
+        }
+        else if (current.lat() < minLat) {
+            return false;
+        }
+        else if (current.lat() > maxLat) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
  * Create the filtered area of the search
  */
-function filterArea() {
+function filterAreaRectangle() {
     var left;
     var right;
     var north, south, east, west;
@@ -197,22 +299,24 @@ function setMapDragEnd() {
  * @param patient
  */
 function addMarker(patient) {
-    console.log("Adding marker to map for patient " + patient.getNhiNumber());
-    var latLong = patient.getCurrentLocation();
-    if (latLong !== null) {
-        successCount++;
-        var marker = makeMarker(patient, latLong); //set up markers
-        attachInfoWindow(patient, marker);
-        markers.push(marker);
-    }
-    else {
-        var index = failedPatientArray.indexOf(patient);
-        if (index !== -1) {
-            failedPatientArray[index] = patient;
-        }else {
-            failedPatientArray.push(patient);
+    if (!interruptMarkers) {
+        console.log("Adding marker to map for patient " + patient.getNhiNumber());
+        var latLong = patient.getCurrentLocation();
+        if (latLong !== null) {
+            successCount++;
+            var marker = makeMarker(patient, latLong); //set up markers
+            attachInfoWindow(patient, marker);
+            markers.push(marker);
         }
-        console.log('Geocoding failed because: ' + status);
+        else {
+            var index = failedPatientArray.indexOf(patient);
+            if (index !== -1) {
+                failedPatientArray[index] = patient;
+            }else {
+                failedPatientArray.push(patient);
+            }
+            console.log('Geocoding failed because: ' + status);
+        }
     }
 }
 
@@ -278,7 +382,7 @@ function attachInfoWindow(patient, marker) {
 }
 
 /**
- * Gets the dead patients html content for the info window
+ * Gets the dead globalPatients html content for the info window
  * @param patient - patient to attach to info window
  * @returns {string}
  */
@@ -296,7 +400,7 @@ function getDeadPatientInfoContent(patient) {
 }
 
 /**
- * Gets the alive patients html content for the info window
+ * Gets the alive globalPatients html content for the info window
  * @param patient - patient to attach to info window
  * @returns {string}
  */
@@ -405,18 +509,19 @@ function getOrganOptions(patient) {
 }
 
 /**
- * Sets the patients for the map and adds the markers to the map
+ * Sets the globalPatients for the map and adds the markers to the map
  * @param _patients
  */
 function setPatients(_patients) {
-    patients = _patients;
+    globalPatients = _patients;
     hideNotification();
     clearMarkers();
     clearCircles();
     successCount = 0;
     infoWindows = [];
     markerSetId++;
-    addMarkers(patients.size(), markerSetId);
+    interruptMarkers = false;
+    addMarkers(globalPatients.size(), markerSetId);
 }
 
 /**
@@ -426,13 +531,13 @@ function setPatients(_patients) {
  */
 function addMarkers(i, id) {
     if (i < 1) {
-        showNotification(successCount, patients.size());
+        showNotification(successCount, globalPatients.size());
         return;
     }
     if (id !== markerSetId) {
         return; //break task
     }
-    addMarker(patients.get(i-1));
+    addMarker(globalPatients.get(i-1));
     setTimeout(function() {
         addMarkers(--i, id);
     }, 700);
@@ -481,9 +586,9 @@ function hideNotification() {
 }
 
 /**
- * Shows number of successfully loaded patients
- * @param numSuccess successfully loaded patients
- * @param numTotal total patients to load
+ * Shows number of successfully loaded globalPatients
+ * @param numSuccess successfully loaded globalPatients
+ * @param numTotal total globalPatients to load
  */
 function showNotification(numSuccess, numTotal) {
     var modalContent = "";
@@ -511,7 +616,7 @@ function showNotification(numSuccess, numTotal) {
         $('#marker-notification').html('<span>' + modalMessage + '</span><span class="marker-notification-close" onclick="hideNotification()"> &times;</span>');
     } else {
         $('#marker-notification').html('<span>' + modalMessage + '</span>' +
-            '    <a href="#" data-toggle="modal" data-target="#failedPatients" style="color: yellow">View failed patients</a>\n' +
+            '    <a href="#" data-toggle="modal" data-target="#failedPatients">View failed globalPatients</a>\n' +
             '    <span class="marker-notification-close" onclick="hideNotification()"> &times;</span>');
         $('#failed-patient-table').html(modalContent);
     }
@@ -534,7 +639,7 @@ function buildOrganDropdown(infowindow) {
 }
 
 /**
- * Intended to be able to reload patients info window,
+ * Intended to be able to reload globalPatients info window,
  * to be called from JAVA
  * @param patient - patient whose info window is to be updated
  */
