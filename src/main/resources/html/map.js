@@ -6,6 +6,8 @@ var markerSetId = 0;
 
 var originalZoom;
 
+var isViewingPotentialMatches = false;
+
 function init() {
     geocoder = new google.maps.Geocoder();
     map = new google.maps.Map(document.getElementById('map'), {
@@ -70,6 +72,14 @@ function setMapDragEnd() {
 
         map.setCenter(new google.maps.LatLng(y, x));
     });
+}
+
+/**
+ * Starts viewing potential matches
+ */
+function viewPotentialMatches() {
+    isViewingPotentialMatches = true;
+    isViewingPotentialMatches = false;
 }
 
 /**
@@ -170,7 +180,7 @@ function getDeadPatientInfoContent(patient) {
         + '<label>Birth Gender: ' + patient.getBirthGender() + '</label><br>'
         + '<label style="padding-top: 5px;">Organ to Assign</label>'
         + '<select id="dropdown" style="margin-left: 5%; float: right; height: 25px"></select>'
-        + '<input type="button" onclick="assignOrgan()" class="btn btn-sm btn-block btn-primary mt-3 float-left" value="Assign Organ" style="margin-top: 20px"/>';
+        + '<input type="button" onclick="viewPotentialMatches()" class="btn btn-sm btn-block btn-primary mt-3 float-left" value="Assign Organ" style="margin-top: 20px"/>';
 }
 
 /**
