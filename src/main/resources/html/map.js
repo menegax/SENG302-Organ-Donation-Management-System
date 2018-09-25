@@ -35,6 +35,13 @@ function init() {
             addMarkers(patients.size(), markerSetId);
         });
     });
+
+    google.maps.event.addListenerOnce(map, 'idle', function () {
+        document.getElementById('filterAreaBtn').addEventListener('click', function () {
+            //todo insert functionality here
+            console.log("filter map button clicked!");
+        });
+    });
 }
 
 /**
