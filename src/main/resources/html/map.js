@@ -5,6 +5,7 @@ var failedPatientArray = [];
 var markerSetId = 0;
 var filterByAreaListener, filterStart, filterEnd;
 var patientsFilteredByArea;
+var interruptMarkers = false;
 
 var originalZoom;
 
@@ -74,6 +75,7 @@ function init() {
  * Gets globalPatients who are within the area and resets the markers on the map to be them
  */
 function filterArea(area) {
+    interruptMarkers = true
     markers.forEach(function (marker) {
         if (!isPatientInArea(marker, area)) {
             marker.setMap(null);
@@ -166,22 +168,24 @@ function setMapDragEnd() {
  * @param patient
  */
 function addMarker(patient) {
-    console.log("Adding marker to map for patient " + patient.getNhiNumber());
-    var latLong = patient.getCurrentLocation();
-    if (latLong !== null) {
-        successCount++;
-        var marker = makeMarker(patient, latLong); //set up markers
-        attachInfoWindow(patient, marker);
-        markers.push(marker);
-    }
-    else {
-        var index = failedPatientArray.indexOf(patient);
-        if (index !== -1) {
-            failedPatientArray[index] = patient;
-        }else {
-            failedPatientArray.push(patient);
+    if (!interruptMarkers) {
+        console.log("Adding marker to map for patient " + patient.getNhiNumber());
+        var latLong = patient.getCurrentLocation();
+        if (latLong !== null) {
+            successCount++;
+            var marker = makeMarker(patient, latLong); //set up markers
+            attachInfoWindow(patient, marker);
+            markers.push(marker);
         }
-        console.log('Geocoding failed because: ' + status);
+        else {
+            var index = failedPatientArray.indexOf(patient);
+            if (index !== -1) {
+                failedPatientArray[index] = patient;
+            }else {
+                failedPatientArray.push(patient);
+            }
+            console.log('Geocoding failed because: ' + status);
+        }
     }
 }
 
@@ -331,8 +335,8 @@ function setPatients(_patients) {
     successCount = 0;
     infoWindows = [];
     markerSetId++;
+    interruptMarkers = false;
     addMarkers(globalPatients.size(), markerSetId);
-
 }
 
 /**
