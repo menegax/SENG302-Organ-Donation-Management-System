@@ -23,19 +23,18 @@ public class TouchComboBoxSkin extends ComboBoxListViewSkin {
 
     private Boolean doHide = false;
 
-    private Boolean doShow = false;
-
     public TouchComboBoxSkin(ComboBox comboBox, Pane pane) {
         super(comboBox);
+        ((MTComboBoxListViewSkin) comboBox.getSkin()).getPopupContent().setVisible(false);
         if (screenControl.isTouch()) {
             getPopup().setAutoHide(false);
             comboBox.setOnTouchPressed(event -> {
-                doShow = true;
                 show();
+                getPopupContent().setVisible(true);
             });
             comboBox.setOnMouseClicked(event -> {
-                doShow = true;
                 show();
+                getPopupContent().setVisible(true);
             });
             addTouchSkin(pane);
             comboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -53,17 +52,6 @@ public class TouchComboBoxSkin extends ComboBoxListViewSkin {
         if (doHide) {
             getPopupContent().setVisible(false);
             doHide = false;
-        }
-    }
-
-    /**
-     * Only hides if we specifically want it to hide through doHide
-     */
-    @Override
-    public void show() {
-        if (doShow) {
-            getPopupContent().setVisible(true);
-            doShow = false;
         }
     }
 
