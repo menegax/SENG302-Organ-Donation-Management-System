@@ -82,6 +82,17 @@ function filterArea(area) {
 }
 
 /**
+ * Reconnects every marker back to the map
+ */
+function clearFilterArea() {
+    markers.forEach(function (marker) {
+        if (!isPatientInArea(marker, area)) {
+            marker.setMap(map);
+        }
+    });
+}
+
+/**
  * Finds out if a patient is within a given area
  * @param patient the patient to test
  * @param area the area bounds
