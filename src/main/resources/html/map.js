@@ -30,7 +30,6 @@ function init() {
         });
     });
 }
-
 /**
  * Sets the viewable area of the map
  */
@@ -139,6 +138,7 @@ function attachInfoWindow(patient, marker) {
     }
     mapInfoWindowToPatient(infoWindow, patient);
     marker.addListener('click', function () { // when clicking on the marker, all other markers' info windows close
+        currentMarker = marker;
         infoWindows.forEach(function (iw) {
             if (iw["iwindow"] !== infoWindow) {
                 iw["iwindow"].close();
@@ -209,7 +209,12 @@ function createMarkerRadii(radius, color, organ) {
  */
 function setCurrentOrgan(organ) {
     currentOrgan = organ;
-    mapBridge.loadCircle(currentMarker.nhi, currentOrgan);
+    if (currentOrgan !== undefined) {
+        console.log(currentMarker);
+        mapBridge.loadCircle(currentMarker.nhi, currentOrgan);
+    } else {
+        clearCircles();
+    }
 }
 
 /**
@@ -399,6 +404,14 @@ function buildOrganDropdown(infowindow) {
                         text: donationsArray[i]
                     }));
                 }
+                $('#dropdown').change(function() {
+                    var selected = $('#dropdown :selected').text();
+                    if (selected.toLowerCase() !== 'none') {
+                        setCurrentOrgan(selected);
+                    } else {
+                        setCurrentOrgan(undefined);
+                    }
+                });
             }
         });
     }, false);
