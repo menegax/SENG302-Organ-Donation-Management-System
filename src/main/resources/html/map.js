@@ -17,16 +17,7 @@ function init() {
     google.maps.event.addListenerOnce(map, 'idle', function () {
         setMapDragEnd();
         document.getElementById('availableOrgansView').addEventListener('click', function () {
-            validCount = 0;
-            failedPatientArray = [];
-            markers.forEach(function (marker) {
-                marker.setMap(null);
-            });
-            markers = [];
-            patients = mapBridge.getAvailableOrgans();
-            successCount = 0;
-            markerSetId++;
-            addMarkers(patients.size(), markerSetId);
+            setPatients(mapBridge.getAvailableOrgans());
         });
     });
 }
