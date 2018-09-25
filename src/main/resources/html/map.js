@@ -13,10 +13,11 @@ function init() {
         zoom: 6,
         disableDefaultUI: true,
         scaleControl: true,
-        zoomControl: false,
+        zoomControl: true,
         heading:90,
         tilt:45,
         clickableIcons: false,
+        mapTypeId: 'roadmap',
         gestureHandling: 'cooperative'
     });
 
