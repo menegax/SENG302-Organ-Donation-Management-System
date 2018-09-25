@@ -37,6 +37,7 @@ function init() {
         styles: styleHidePoi
     });
 
+    // view available organs button
     google.maps.event.addListenerOnce(map, 'idle', function () {
         setMapDragEnd();
         document.getElementById('availableOrgansView').addEventListener('click', function () {
@@ -54,6 +55,7 @@ function init() {
         });
     });
 
+    // filter area button
     google.maps.event.addListenerOnce(map, 'idle', function () {
         document.getElementById('filterAreaBtn').addEventListener('click', function () {
             console.log("Filter area button clicked!");
@@ -66,6 +68,14 @@ function init() {
                     google.maps.event.removeListener(filterByAreaListener);
                 }
             });
+        });
+    });
+
+    // clear filter area button
+    google.maps.event.addListenerOnce(map, 'idle', function () {
+        document.getElementById('clearFilterAreaBtn').addEventListener('click', function () {
+            console.log("Clear filter area button clicked!");
+            clearFilterArea();
         });
     });
 }
@@ -86,9 +96,7 @@ function filterArea(area) {
  */
 function clearFilterArea() {
     markers.forEach(function (marker) {
-        if (!isPatientInArea(marker, area)) {
             marker.setMap(map);
-        }
     });
 }
 
@@ -104,19 +112,19 @@ function isPatientInArea(marker, area) {
     var current = marker.position;
 
     if (area.start.lng() > area.end.lng()) {
-        maxLng = area.start.lng()
-        minLng = area.end.lng()
+        maxLng = area.start.lng();
+        minLng = area.end.lng();
     } else {
-        maxLng = area.end.lng()
-        minLng = area.start.lng()
+        maxLng = area.end.lng();
+        minLng = area.start.lng();
     }
 
     if (area.start.lat() > area.end.lat()) {
-        maxLat = area.start.lat()
-        minLat = area.end.lat()
+        maxLat = area.start.lat();
+        minLat = area.end.lat();
     } else {
-        maxLat = area.end.lat()
-        minLat = area.start.lat()
+        maxLat = area.end.lat();
+        minLat = area.start.lat();
     }
 
     console.log("Finding if patient is in area: " + area.start.lng() + " " + area.start.lat() + " " + area.end.lng() + " " + area.end.lat());
