@@ -145,6 +145,13 @@ function attachInfoWindow(patient, marker) {
             else {
                 iw["iwindow"].open(map, marker);
             }
+            matchedOrganLines.forEach(function (line) {
+                if (line.recipientNhi === marker.nhi || line.donorNhi === marker.nhi) {
+                    line.setMap(map);
+                } else {
+                    line.setMap(null);
+                }
+            });
         })
     });
 }
@@ -183,7 +190,7 @@ function getAlivePatientInfoContent(patient) {
 /**
  * Triggered via java if there is a match to create a line
  */
-function createMatchedOrganArrow(donorLoc, recipientLoc, recipientNhi, progressColor, organ) {
+function createMatchedOrganArrow(donorLoc, recipientLoc, recipientNhi, donorNhi, progressColor, organ) {
 
     if (!markers.some(function(marker) {
         return marker.nhi === recipientNhi;
@@ -211,6 +218,7 @@ function createMatchedOrganArrow(donorLoc, recipientLoc, recipientNhi, progressC
         strokeOpacity: 1.0,
         strokeWeight: 2,
         recipientNhi: recipientNhi,
+        donorNhi: donorNhi,
         organ: organ
     });
     matchedOrganLines.push(matchedOrgan);
@@ -222,7 +230,7 @@ function createMatchedOrganArrow(donorLoc, recipientLoc, recipientNhi, progressC
 function updateMatchedOrganLine(color, nhi, organ) {
     matchedOrganLines.forEach(function (line) {
        if (line.recipientNhi === nhi && line.organ === organ) {
-           line.setOptions({map: map, strokeColor: color});
+           line.setOptions({strokeColor: color});
        }
     });
 

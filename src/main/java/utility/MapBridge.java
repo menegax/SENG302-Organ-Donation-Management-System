@@ -105,6 +105,7 @@ public class MapBridge {
                             .call("createMatchedOrganArrow",
                                     patient.getCurrentLocation(),
                                     recipient.getCurrentLocation(),
+                                    patientNhi,
                                     recipient.getNhiNumber(),
                                     targetPatientOrgan.getProgressTask()
                                             .getColor(),
