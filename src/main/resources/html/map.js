@@ -8,6 +8,11 @@ var filterByAreaListener, filterStart, filterEnd;
 var donations = [];
 var currentMarker;
 var currentOrgan = undefined;
+var NORTHBOUND = -33;
+var SOUTHBOUND = -48;
+var EASTBOUND = 180;
+var WESTBOUND = 165;
+var rectangle = [];
 var dropDownDonations = [];
 
 var originalZoom;
@@ -51,24 +56,105 @@ function init() {
 
     google.maps.event.addListenerOnce(map, 'idle', function () {
         document.getElementById('filterAreaBtn').addEventListener('click', function () {
+            clearRectangle();
             console.log("Filter area button clicked!");
             filterByAreaListener = google.maps.event.addListener(map, 'click', function(e) {
-                console.log(filterStart);
                 if (filterStart === undefined) {
                     filterStart = e.latLng;
                 } else {
                     filterEnd = e.latLng;
                     filterArea();
-                    google.maps.event.removeListener(filterByAreaListener);
                 }
             });
         });
     });
 }
 
+/**
+ * Create the filtered area of the search
+ */
 function filterArea() {
+    var left;
+    var right;
+    var north, south, east, west;
+    if (filterStart.lng() < WESTBOUND) {
+        if (filterStart.lng() < 0) {
+            filterStart = new google.maps.LatLng({lat: filterStart.lat(), lng: EASTBOUND})
+        } else {
+            filterStart = new google.maps.LatLng({lat: filterStart.lat(), lng: WESTBOUND})
+        }
+    }
+    if (filterEnd.lng() < WESTBOUND) {
+        if (filterEnd.lng() < 0) {
+            filterEnd = new google.maps.LatLng({lat: filterEnd.lat(), lng: EASTBOUND});
+        } else {
+            filterEnd = new google.maps.LatLng({lat: filterEnd.lat(), lng: WESTBOUND});
+        }
+    }
+    if (filterStart.lat() > NORTHBOUND) {
+        filterStart = new google.maps.LatLng({lat: NORTHBOUND, lng: filterStart.lng()});
+    } else if (filterStart.lat() < SOUTHBOUND) {
+        filterStart = new google.maps.LatLng({lat: SOUTHBOUND, lng: filterStart.lng()});
+    }
+    if (filterEnd.lat() > NORTHBOUND) {
+        filterEnd = new google.maps.LatLng({lat: NORTHBOUND, lng: filterEnd.lng()});
+    } else if (filterEnd.lat() < SOUTHBOUND) {
+        filterEnd = new google.maps.LatLng({lat: SOUTHBOUND, lng: filterEnd.lng()});
+    }
+    console.log("Start: " + filterStart.lat() + ", " + filterStart.lng());
+    console.log("End: " + filterEnd.lat() + ", " + filterEnd.lng());
+    if(filterStart.lng() > filterEnd.lng()) {
+        right = filterStart;
+        left = filterEnd;
+        if (filterStart.lat() > filterEnd.lat()) {
+            // filterStart: top right & filterEnd: bottom left
+            north = parseFloat(filterStart.lat());
+            south = parseFloat(filterEnd.lat());
+            east = parseFloat(filterStart.lng());
+            west = parseFloat(filterEnd.lng());
+        } else {
+            // filterStart: bottom right & filterEnd: top left
+            north = parseFloat(filterEnd.lat());
+            south = parseFloat(filterStart.lat());
+            east = parseFloat(filterStart.lng());
+            west = parseFloat(filterEnd.lng());
+        }
+    } else {
+        right = filterEnd;
+        left = filterStart;
+        if (filterStart.lat() > filterEnd.lat()) {
+            // filterStart: top left & filterEnd: bottom right
+            north = parseFloat(filterStart.lat());
+            south = parseFloat(filterEnd.lat());
+            east = parseFloat(filterEnd.lng());
+            west = parseFloat(filterStart.lng());
+        } else {
+            // filterStart: bottom left & filterEnd: top right
+            north = parseFloat(filterEnd.lat());
+            south = parseFloat(filterStart.lat());
+            east = parseFloat(filterEnd.lng());
+            west = parseFloat(filterStart.lng());
+        }
+    }
 
+    var bounds = {
+        north: north,
+        south: south,
+        east: east,
+        west: west
+    };
 
+    console.log(bounds);
+
+    // Define a rectangle and set its editable property to true.
+    var filterBound = new google.maps.Rectangle({
+        map: map,
+        bounds: bounds
+    });
+    rectangle.push(filterBound);
+    filterStart = undefined;
+    filterEnd = undefined;
+    google.maps.event.removeListener(filterByAreaListener);
 }
 
 /**
@@ -373,6 +459,18 @@ function clearCircles() {
         });
     }
     circles = [];
+}
+
+/**
+ * clear the rectangle filter area on map
+ */
+function clearRectangle() {
+    if (rectangle.length > 0) {
+        rectangle[0].setMap(null);
+    }
+    rectangle = [];
+    filterStart = undefined;
+    filterEnd = undefined;
 }
 
 /**
