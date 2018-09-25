@@ -7,11 +7,6 @@ var markerSetId = 0;
 var donations = [];
 var currentMarker;
 var currentOrgan = undefined;
-var currentInfoWindow;
-var editedInfos = [];
-var createdOpenPatient = [];
-var currentPatient;
-var currentTickOfOrganButtons;
 
 function init() {
     geocoder = new google.maps.Geocoder();
@@ -184,24 +179,6 @@ function getAlivePatientInfoContent(patient) {
         + patient.getAddressString() + '<br><br>' + organOptions.donating + '<br><br>' + organOptions.receiving
         + '</span><br><input type="button" onclick="openPatientProfile(\'' + patient.getNhiNumber()
         + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>';
-}
-
-/**
- * Create organ buttons for every organ that the patient has.
- * Triggered via Java, in MapBridge
- */
-function createOrganButtons(organ, numberOfOrgans) {
-    if (!(editedInfos.includes(currentInfoWindow))){
-        currentInfoWindow.setOptions({
-            content: currentInfoWindow.content
-            + `<input type="button" onclick="setCurrentOrgan('${organ}')"
-                class="btn btn-sm btn-primary mt-3" style="margin: auto" value=${organ}> `
-        });
-        currentTickOfOrganButtons += 1;
-        if (numberOfOrgans === currentTickOfOrganButtons) {
-            editedInfos.push(currentInfoWindow);
-        }
-    }
 }
 
 
