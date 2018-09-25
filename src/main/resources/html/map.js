@@ -7,6 +7,7 @@ var markerSetId = 0;
 var donations = [];
 var currentMarker;
 var currentOrgan = undefined;
+var dropDownDonations = [];
 
 var originalZoom;
 
@@ -389,29 +390,7 @@ function buildOrganDropdown(infowindow) {
             if (iw["iwindow"] === infowindow) {
                 var patient2 = mapBridge.getPatientByNhi(iw["nhi"]);
                 $('#dropdown').html('<option>None</option>');
-                var reg = /([\w\s]+)=\w+,?/g;
-                var donationsArray = [];
-                var result;
-                while (result = reg.exec(patient2.getDonations().toString().slice(1, -1))) {
-                    donationsArray.push(result[1]);
-                }
-                for (var i = 0; i< donationsArray.length; i++) {
-                    $('#dropdown').append($('<option>', {
-                        value: donationsArray[i],
-                        text: donationsArray[i]
-                    }));
-                }
-                $('#dropdown').change(function() {
-                    var selected = $('#dropdown :selected').text();
-                    if (selected.toLowerCase() !== 'none') {
-                        setCurrentOrgan(selected);
-                    } else {
-                        setCurrentOrgan(undefined);
-                    }
-                });
-                if (currentOrgan !== undefined) {
-                    $('#dropdown').val(currentOrgan);
-                }
+                mapBridge.getPatientActiveDonations(iw["nhi"]);
             }
         });
     }, false);
@@ -476,4 +455,28 @@ function setJankaZoom(newZoom) {
 
 function setJankaOriginal() {
     originalZoom = map.getZoom();
+}
+
+function loadActiveDonations(patientOrgans) {
+    var donations = [];
+    for (var i = 0; i<patientOrgans.size(); i++) {
+        donations.push(patientOrgans.get(i).getOrgan());
+    }
+    for (var i = 0; i< donations.length; i++) {
+        $('#dropdown').append($('<option>', {
+            value: donations[i],
+            text: donations[i]
+        }));
+    }
+    $('#dropdown').change(function() {
+        var selected = $('#dropdown :selected').text();
+        if (selected.toLowerCase() !== 'none') {
+            setCurrentOrgan(selected);
+        } else {
+            setCurrentOrgan(undefined);
+        }
+    });
+    if (currentOrgan !== undefined) {
+        $('#dropdown').val(currentOrgan);
+    }
 }

@@ -93,6 +93,26 @@ public class MapBridge {
         });
     }
 
+    public void getPatientActiveDonations(String nhi) {
+        List<PatientOrgan> masterData = new ArrayList<>();
+        List<Patient> deadPatients = patientDataService.getDeadDonors();
+        for (Patient patient : deadPatients) {
+            if (patient.getDeathDate() != null && patient.getNhiNumber().equals(nhi)) {
+                for (GlobalEnums.Organ organ : patient.getDonations().keySet()) {
+                    if (patient.getDonations().get(organ) == null) {
+                        PatientOrgan patientOrgan = new PatientOrgan(patient, organ);
+                        if (!masterData.contains(patientOrgan)) {
+                            if (patientOrgan.timeRemaining() < 0) {
+                                masterData.add(patientOrgan);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        GUIMap.getJSBridge().call("loadActiveDonations", masterData);
+    }
+
     /**
      * Collects the patient list from available organs list
      */
