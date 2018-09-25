@@ -200,7 +200,6 @@ function createMarkerRadii(radius, color, organ) {
 function setCurrentOrgan(organ) {
     currentOrgan = organ;
     if (currentOrgan !== undefined) {
-        console.log(currentMarker);
         mapBridge.loadCircle(currentMarker.nhi, currentOrgan);
     } else {
         clearCircles();
@@ -246,7 +245,6 @@ function getOrganOptions(patient) {
         while (result = reg.exec(string)) {
             donationsArray.push(result[1]);
         }
-        console.log(donationsArray);
         donationStr += donationsArray.join(", ");
     }
     else {
@@ -383,7 +381,6 @@ function buildOrganDropdown(infowindow) {
                 var reg = /([\w\s]+)=\w+,?/g;
                 var donationsArray = [];
                 var result;
-                console.log(patient2);
                 while (result = reg.exec(patient2.getDonations().toString().slice(1, -1))) {
                     donationsArray.push(result[1]);
                 }
@@ -413,7 +410,7 @@ function buildOrganDropdown(infowindow) {
  */
 function reloadInfoWindow(patient) {
     if (patient.isDead()) {
-        let matchedMarkers = markers.filter(function(marker) {
+        var matchedMarkers = markers.filter(function(marker) {
             return marker.nhi === patient.getNhiNumber();
         });
         if (matchedMarkers.length > 0) {
