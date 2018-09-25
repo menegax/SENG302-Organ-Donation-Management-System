@@ -9,17 +9,31 @@ var originalZoom;
 
 function init() {
     geocoder = new google.maps.Geocoder();
+
+    var styleHidePoi =[
+        {
+            featureType: "poi",
+            elementType: "labels",
+            stylers: [
+                { visibility: "off" }
+            ]
+        }
+    ];
+
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: -40.59225, lng: 173.51012},
         zoom: 6,
+        minZoom: 6, //zooming out, lower, the further you can zoom out
+        maxZoom: 12,
         disableDefaultUI: true,
         scaleControl: true,
         zoomControl: true,
-        heading:90,
-        tilt:45,
+        heading: 90,
+        tilt: 45,
         clickableIcons: false,
         mapTypeId: 'roadmap',
-        gestureHandling: 'cooperative'
+        gestureHandling: 'cooperative',
+        styles: styleHidePoi
     });
 
     google.maps.event.addListenerOnce(map, 'idle', function () {
@@ -192,7 +206,7 @@ function getDeadPatientInfoContent(patient) {
         + '<label>Blood Group: ' + patient.getBloodGroup() + '</label><br>'
         + '<label>Age: ' + patient.getAge() + '</label><br>'
         + '<label>Birth Gender: ' + patient.getBirthGender() + '</label><br>'
-        + '<label style="padding-top: 5px;">Organ to Assign</label>'
+        + '<label style="padding-top: 5px;">Organ to Assign:</label>'
         + '<select id="dropdown" style="margin-left: 5%; float: right; height: 25px"></select>'
         + '<input type="button" onclick="assignOrgan()" class="btn btn-sm btn-block btn-primary mt-3 float-left" value="Assign Organ" style="margin-top: 20px"/>';
 }
