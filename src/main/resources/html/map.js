@@ -93,7 +93,7 @@ function makeMarker(patient, results) {
             position: finalLoc,
             title: name,
             animation: google.maps.Animation.DROP,
-            label: 'D',
+            // label: 'D',
             nhi: patient.getNhiNumber(),
             icon: '../image/markers/blue.png'
         });
@@ -104,7 +104,7 @@ function makeMarker(patient, results) {
             position: finalLoc,
             title: name,
             animation: google.maps.Animation.DROP,
-            label: 'A',
+            // label: 'A',
             nhi: patient.getNhiNumber(),
             icon: '../image/markers/green.png'
         });
@@ -338,7 +338,7 @@ function hideNotification() {
  */
 function showNotification(numSuccess, numTotal) {
     var modalContent = "";
-    var modalMessage = 'Successfully loaded ' + numSuccess + ' out of ' + numTotal + ' patient locations';
+    var modalMessage = 'Successfully loaded ' + numSuccess + ' out of ' + numTotal + ' patient locations.';
     $('#marker-notification-msg').html();
     $('#marker-notification').show();
     setTimeout(function() {
@@ -377,7 +377,7 @@ function buildOrganDropdown(infowindow) {
     google.maps.event.addListener(infowindow, "domready", function() {
         infoWindows.forEach(function(iw) {
             if (iw["iwindow"] === infowindow) {
-                var patient2 = iw["patient"];
+                var patient2 = mapBridge.getPatientByNhi(iw["nhi"]);
                 $('#dropdown').html('<option value="organs">None</option>');
                 var reg = /([\w\s]+)=\w+,?/g;
                 var donationsArray = [];
@@ -422,7 +422,6 @@ function reloadInfoWindow(patient) {
     }
     for (var i =0; i<infoWindows.length; i++) {
         if (infoWindows[i]["nhi"] === patient.getNhiNumber()) {
-            infoWindows[i]["patient"] = patient;
             if (patient.isDead()) {
                 infoWindows[i]["iwindow"].setContent(getDeadPatientInfoContent(patient));
                 buildOrganDropdown(infoWindows[i]["iwindow"]);
@@ -443,15 +442,15 @@ function mapInfoWindowToPatient(infoWindow, patient) {
     var hasExistingInfoWindow = false;
     var i;
     for (i = 0; i < infoWindows.length; i++) {
-        if (infoWindows[i]["patient"].getNhiNumber() === patient.getNhiNumber()) {
+        if (infoWindows[i]["nhi"] === patient.getNhiNumber()) {
             hasExistingInfoWindow = true;
             break;
         }
     };
     if (hasExistingInfoWindow) {
-        infoWindows.splice(i, 1, { "iwindow" : infoWindow, "patient" : patient, "nhi" : patient.getNhiNumber()}); //hacks -> cannot use patient obj so need nhi
+        infoWindows.splice(i, 1, { "iwindow" : infoWindow, "nhi" : patient.getNhiNumber()}); //hacks -> cannot use patient obj so need nhi
                                                                                                                   //java -> js references out of whack when updating
     } else {
-        infoWindows.push({ "iwindow" : infoWindow, "patient" : patient, "nhi" : patient.getNhiNumber()}); //
+        infoWindows.push({ "iwindow" : infoWindow, "nhi" : patient.getNhiNumber()}); //
     }
 }

@@ -10,6 +10,10 @@ import service.PatientDataService;
 import service.interfaces.IPatientDataService;
 
 import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 
 /**
@@ -129,6 +133,10 @@ public class MapBridge {
         } else {
             SystemLogger.systemLogger.log(Level.WARNING, "GUIMAP not instantiated - soz for hacky", this);
         }
+    }
+
+    public Patient getPatientByNhi(String nhi) {
+        return patientDataService.getPatientByNhi(nhi);
     }
 
     /**

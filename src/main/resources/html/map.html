@@ -24,6 +24,7 @@
             margin: 0;
             padding: 0;
         }
+
         #floating-panel {
             position: absolute;
             top: 7px;
@@ -42,9 +43,9 @@
             left: 50%;
             transform: translateX(-50%);
 
-            border: 2px solid orange;
+            border: 2px solid #007BFF;
             border-radius: 5px;
-            background: #FFAA00AA;
+            background: #007BFF;
             padding: 3px 10px;
             color: white;
         }
@@ -60,7 +61,7 @@
         }
 
         /*Fix font rendering on macOS*/
-        .gm-style-mtc > div, .gm-style > div, .gm-style-cc > div, .gm-style, .gm-err-message, .gm-err-title {font-family:sans-serif !important;}
+        * {font-family:sans-serif !important;}
     </style>
 </head>
 <body>

@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane fx:id="procedureUpdatePane" prefHeight="318.0" prefWidth="529.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientProcedureForm">
+<GridPane fx:id="procedureUpdatePane" prefHeight="318.0" prefWidth="529.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientProcedureForm">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="17.600024414062503" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="260.7999755859375" />
@@ -61,8 +61,8 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="closePane" mnemonicParsing="false" onAction="#goBackToProcedures" prefHeight="27.0" prefWidth="90.0" text="Cancel" GridPane.halignment="CENTER" GridPane.valignment="TOP" />
             <Button fx:id="doneButton" mnemonicParsing="false" onAction="#onSubmit" prefHeight="25.0" prefWidth="90.0" styleClass="customButton" stylesheets="@../css/guiStyle.css" text="Done" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="TOP" />
+            <Button fx:id="closePane" mnemonicParsing="false" onAction="#goBackToProcedures" prefHeight="27.0" prefWidth="90.0" text="Cancel" GridPane.halignment="CENTER" GridPane.valignment="TOP" />
          </children>
       </GridPane>
    </children>
