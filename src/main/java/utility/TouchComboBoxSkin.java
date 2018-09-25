@@ -15,9 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class TouchComboBoxSkin extends ComboBoxListViewSkin {
-
-    private static Map<Pane, List<TouchComboBoxSkin>> touchSkins = new HashMap<>();
+public class TouchComboBoxSkin extends MTComboBoxListViewSkin implements ITouchSkin{
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -29,12 +27,10 @@ public class TouchComboBoxSkin extends ComboBoxListViewSkin {
         if (screenControl.isTouch()) {
             getPopup().setAutoHide(false);
             comboBox.setOnTouchPressed(event -> {
-                show();
-                getPopupContent().setVisible(true);
+                showDropDown();
             });
             comboBox.setOnMouseClicked(event -> {
-                show();
-                getPopupContent().setVisible(true);
+                showDropDown();
             });
             addTouchSkin(pane);
             comboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -55,33 +51,40 @@ public class TouchComboBoxSkin extends ComboBoxListViewSkin {
         }
     }
 
+    public void showDropDown() {
+        show();
+        getPopupContent().setVisible(true);
+        Node owner = getSkinnable();
+        double offsetY = (getSkinnable()).prefHeight(-1.0D);
+        double angle = Util.getRotationDegreesLocalToScene(owner);
+        getPopupContent().getTransforms().setAll(new Rotate(angle));
+        Rotate rotate = new Rotate(angle);
+        Point2D transformedPoint = rotate.transform(0.0D, offsetY);
+        double popupTopLeftX = owner.getLocalToSceneTransform().getTx();
+        double popupTopLeftY = owner.getLocalToSceneTransform().getTy();
+        double anchorX = popupTopLeftX + transformedPoint.getX() + Util.getOffsetX(owner);
+        double anchorY = popupTopLeftY + transformedPoint.getY() + Util.getOffsetY(owner);
+        getPopup().setAnchorX(anchorX);
+        getPopup().setAnchorY(anchorY);
+    }
+
     /**
      * Adds this touchSkin to the static map for the provided pane
      * @param pane the pane that should close the comboBox when touched
      */
     private void addTouchSkin(Pane pane) {
-        if (touchSkins.get(pane) == null) {
-            List<TouchComboBoxSkin> touchComboBoxSkins = new ArrayList<>();
+        if (TouchSkinsHandler.touchSkins.get(pane) == null) {
+            List<ITouchSkin> touchComboBoxSkins = new ArrayList<>();
             touchComboBoxSkins.add(this);
-            touchSkins.put(pane, touchComboBoxSkins);
+            TouchSkinsHandler.touchSkins.put(pane, touchComboBoxSkins);
             pane.setOnTouchPressed(event -> {
-                notifyTouchSkins(pane);
+                TouchSkinsHandler.notifyTouchSkins(pane);
             });
             pane.setOnMouseClicked(event -> {
-                notifyTouchSkins(pane);
+                TouchSkinsHandler.notifyTouchSkins(pane);
             });
         } else {
-            touchSkins.get(pane).add(this);
-        }
-    }
-
-    /**
-     * Notifies the touchSkins associated with the pane that the pane was pressed
-     * @param pane the pane which was pressed
-     */
-    private static void notifyTouchSkins(Pane pane) {
-        for (TouchComboBoxSkin touchComboBoxSkin : touchSkins.get(pane)) {
-            touchComboBoxSkin.panePressed();
+            TouchSkinsHandler.touchSkins.get(pane).add(this);
         }
     }
 
@@ -89,7 +92,7 @@ public class TouchComboBoxSkin extends ComboBoxListViewSkin {
      * Called when the touch pane that this comboBox skin is on is pressed
      * Hides the comboBox
      */
-    private void panePressed() {
+    public void panePressed() {
         if (getPopupContent().isVisible()) {
             doHide = true;
             hide();
