@@ -42,7 +42,7 @@ public class GUIMap {
 
     private Collection<Patient> patients = new ArrayList<>();
 
-    private boolean filterByArea = true;
+    private boolean filterByArea = false;
 
     private TouchPoint filterStart;
 
@@ -124,13 +124,11 @@ public class GUIMap {
                     if (filterByArea) {
                         if (filterStart == null) {
                             filterStart = event.getTouchPoint();
-                        } else if (event.getEventType() != TouchEvent.TOUCH_RELEASED) {
-                            filterEnd = event.getTouchPoint();
                         } else {
                             filterEnd = event.getTouchPoint();
                             jsBridge.call("filterArea", filterStart, filterEnd);
+                            filterByArea = false;
                         }
-                        event.consume();
                     }
                 }
             }
@@ -146,4 +144,7 @@ public class GUIMap {
         WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> SystemLogger.systemLogger.log(Level.FINE, message));
     }
 
+    public void setFilterByArea(boolean filterByArea) {
+        this.filterByArea = filterByArea;
+    }
 }
