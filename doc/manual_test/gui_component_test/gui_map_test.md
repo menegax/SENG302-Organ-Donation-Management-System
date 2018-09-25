@@ -285,4 +285,29 @@ Test 16: Pass
 Test 17: Pass 
 Test 18: Pass
 
+### 25/09/18 - Kyle & Hayden
+
+Test 1: Pass
+Test 2: Pass
+Test 3: Pass
+Test 4: Pass
+Test 5: Pass
+Test 6: Pass
+Test 7: Pass
+Test 8: Pass
+Test 9: Pass
+Test 10: Pass
+Test 11: Pass
+Test 12: Pass
+Test 13: Pass
+Test 14: Pass
+Test 15: Pass
+Test 16: Pass
+Test 17: Pass
+Test 18: Pass
+Test 19: Pass
+Test 20: Pass
+Test 21: Pass
+Test 22: Pass
+
 **ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**
