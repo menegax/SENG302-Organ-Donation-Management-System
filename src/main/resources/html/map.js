@@ -17,16 +17,7 @@ function init() {
     google.maps.event.addListenerOnce(map, 'idle', function () {
         setMapDragEnd();
         document.getElementById('availableOrgansView').addEventListener('click', function () {
-            validCount = 0;
-            failedPatientArray = [];
-            markers.forEach(function (marker) {
-                marker.setMap(null);
-            });
-            markers = [];
-            patients = mapBridge.getAvailableOrgans();
-            successCount = 0;
-            markerSetId++;
-            addMarkers(patients.size(), markerSetId);
+            setPatients(mapBridge.getAvailableOrgans());
         });
     });
 }
@@ -389,6 +380,7 @@ function buildOrganDropdown(infowindow) {
         infoWindows.forEach(function(iw) {
             if (iw["iwindow"] === infowindow) {
                 var patient2 = iw["patient"];
+                console.log(patient2);
                 $('#dropdown').html('');
                 $('#dropdown').html('<option value="organs">None</option>');
                 var reg = /([\w\s]+)=\w+,?/g;
