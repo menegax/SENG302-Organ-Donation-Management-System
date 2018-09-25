@@ -449,14 +449,27 @@ function mapInfoWindowToPatient(infoWindow, patient) {
     }
 }
 
+
+/**
+ * Sets the zoom on the map
+ * @param newZoom - new zoom to set
+ */
 function setJankaZoom(newZoom) {
     map.setZoom(newZoom * originalZoom);
 }
 
+/**
+ * Sets the original zoom
+ */
 function setJankaOriginal() {
     originalZoom = map.getZoom();
 }
 
+
+/**
+ * Loads active organs and populates the dropdown in the DOM
+ * @param patientOrgans - organs that are active
+ */
 function loadActiveDonations(patientOrgans) {
     var donations = [];
     for (var i = 0; i<patientOrgans.size(); i++) {
