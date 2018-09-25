@@ -6,6 +6,8 @@ var markerSetId = 0;
 
 var originalZoom;
 
+var isViewingPotentialMatches = false;
+
 function init() {
     geocoder = new google.maps.Geocoder();
     map = new google.maps.Map(document.getElementById('map'), {
@@ -173,7 +175,12 @@ function getDeadPatientInfoContent(patient) {
         + '<input type="button" onclick="viewPotentialMatches(patient.getNhiNumber())" class="btn btn-sm btn-block btn-primary mt-3 float-left" value="View Potential Matches" style="margin-top: 20px"/>';
 }
 
-function viewPotentialMatches() {
+/**
+ * Starts populating the map with potential matches
+ */
+function viewPotentialMatches(patientNhi) {
+    isViewingPotentialMatches = true;
+    isViewingPotentialMatches = false;
     mapBridge.getPotentialMatches();
 }
 
