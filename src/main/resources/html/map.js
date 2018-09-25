@@ -68,6 +68,7 @@ function setUpFilterClearAreaButton() {
         document.getElementById('clearFilterAreaBtn').addEventListener('click', function () {
             console.log("Clear filter area button clicked!");
             clearFilterArea();
+            clearRectangle();
         });
     });
 }
@@ -79,6 +80,7 @@ function setUpFilterAreaButton() {
     // filter area button
     google.maps.event.addListenerOnce(map, 'idle', function () {
         document.getElementById('filterAreaBtn').addEventListener('click', function () {
+            clearRectangle();
             console.log("Filter area button clicked!");
             filterByAreaListener = google.maps.event.addListener(map, 'click', function (e) {
                 if (filterStart === undefined) {
@@ -88,6 +90,7 @@ function setUpFilterAreaButton() {
                     filterEnd = e.latLng;
                     filterArea({start: filterStart, end: filterEnd});
                     google.maps.event.removeListener(filterByAreaListener);
+                    filterAreaRectangle();
                 }
             });
         });
