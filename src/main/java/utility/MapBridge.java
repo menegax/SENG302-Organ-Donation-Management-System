@@ -77,4 +77,8 @@ public class MapBridge {
     public Patient getPatientByNhi(String nhi) {
         return patientDataService.getPatientByNhi(nhi);
     }
+
+    public void getPotentialMatches(String patientNhi) {
+
+    }
 }

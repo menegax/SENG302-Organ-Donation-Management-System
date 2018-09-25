@@ -188,12 +188,14 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
         loadRegionDistances();
         clinicianDataService = new ClinicianDataService();
         organWaitList = clinicianDataService.getOrganWaitList();
-        requests = new ArrayList<>();
-        for (OrganWaitlist.OrganRequest request: organWaitList) {
-            if(checkMatch(request)) {
-                allRequests.add(request);
-            }
-        }
+//        requests = new ArrayList<>();
+//        for (OrganWaitlist.OrganRequest request: organWaitList) {
+//            if(checkMatch(request)) {
+//                allRequests.add(request);
+//            }
+//        }
+        PotentialMatchFinder potentialMatchFinder = new PotentialMatchFinder();
+        allRequests = potentialMatchFinder.matchOrgan(targetPatientOrgan);
         setLabels();
         populateTable();
         setupDoubleClickToPatientEdit();
@@ -442,8 +444,8 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
         setCellValues();
 
         // wrap ObservableList in a FilteredList
-        observableList = FXCollections.observableList(requests);
-        FilteredList<OrganWaitlist.OrganRequest> filteredRequests = new FilteredList<>(observableList);
+//        observableList = FXCollections.observableList(requests);
+        FilteredList<OrganWaitlist.OrganRequest> filteredRequests = new FilteredList<>(allRequests);
         filterRequests();
 
         // wrap the FilteredList in a SortedList.
@@ -543,7 +545,7 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
                 organRequests.add(organRequest);
             }
         }
-        observableList.setAll(organRequests);
+        allRequests.setAll(organRequests);
         potentialMatchesTable.refresh();
     }
 
@@ -559,7 +561,7 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
                 }
             }
         }
-        observableList.removeAll(toFar);
+        allRequests.removeAll(toFar);
     }
 
     /**
@@ -817,7 +819,7 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
     @FXML
     public void viewOnMap() {
         List<Patient> patients = new ArrayList<>();
-        for (OrganWaitlist.OrganRequest anObservableList : observableList) {
+        for (OrganWaitlist.OrganRequest anObservableList : allRequests) {
             patients.add(patientDataService.getPatientByNhi(anObservableList.getReceiverNhi()));
         }
         patients.add((Patient) target);
