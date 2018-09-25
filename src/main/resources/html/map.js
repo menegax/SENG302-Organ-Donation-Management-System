@@ -198,9 +198,9 @@ function createMarkerRadii(radius, color, organ) {
  * @param organ - String format of organ to set currentOrgan to
  */
 function setCurrentOrgan(organ) {
+    clearCircles();
     if (organ === undefined) {
         currentOrgan = undefined;
-        clearCircles();
         return;
     }
     currentOrgan = organ.trim();
@@ -378,7 +378,7 @@ function buildOrganDropdown(infowindow) {
         infoWindows.forEach(function(iw) {
             if (iw["iwindow"] === infowindow) {
                 var patient2 = mapBridge.getPatientByNhi(iw["nhi"]);
-                $('#dropdown').html('<option value="organs">None</option>');
+                $('#dropdown').html('<option>None</option>');
                 var reg = /([\w\s]+)=\w+,?/g;
                 var donationsArray = [];
                 var result;
@@ -387,7 +387,7 @@ function buildOrganDropdown(infowindow) {
                 }
                 for (var i = 0; i< donationsArray.length; i++) {
                     $('#dropdown').append($('<option>', {
-                        value: i + 1,
+                        value: donationsArray[i],
                         text: donationsArray[i]
                     }));
                 }
@@ -399,6 +399,9 @@ function buildOrganDropdown(infowindow) {
                         setCurrentOrgan(undefined);
                     }
                 });
+                if (currentOrgan !== undefined) {
+                    $('#dropdown').val(currentOrgan);
+                }
             }
         });
     }, false);
