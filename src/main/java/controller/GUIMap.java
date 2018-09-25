@@ -96,19 +96,22 @@ public class GUIMap {
         webViewMap1.setOnTouchMoved((event -> {
             double ZOOMFACTOR = 0.3;
             if (screenControl.isTouch()) {
-                if (event.getTouchCount() == 1) {
-                    Point2D touchOne = new Point2D(event.getTouchPoints().get(0).getX(), event.getTouchPoints().get(0).getY());
-
-                }
                 if (event.getTouchCount() == 2) {
-                    Point2D touchOne = new Point2D(event.getTouchPoints().get(0).getX(), event.getTouchPoints().get(0).getY());
-                    Point2D touchTwo = new Point2D(event.getTouchPoints().get(1).getX(), event.getTouchPoints().get(1).getY());
-                    if(originalDistance == null) {
-                        originalDistance = Math.sqrt(Math.pow(touchOne.getX() - touchTwo.getX(), 2) + Math.pow(touchOne.getY() - touchTwo.getY(), 2));
-                        jsBridge.call("setJankaOriginal");
+                    if(event.getTouchPoints().get(0).getTarget().equals(webViewMap1) &&
+                            event.getTouchPoints().get(1).getTarget().equals(webViewMap1)) {
+                        Point2D touchOne = new Point2D(event.getTouchPoints().get(0).getX(),
+                                event.getTouchPoints().get(0).getY());
+                        Point2D touchTwo = new Point2D(event.getTouchPoints().get(1).getX(),
+                                event.getTouchPoints().get(1).getY());
+                        if (originalDistance == null) {
+                            originalDistance = Math.sqrt(Math.pow(touchOne.getX() - touchTwo.getX(), 2) +
+                                    Math.pow(touchOne.getY() - touchTwo.getY(), 2));
+                            jsBridge.call("setJankaOriginal");
+                        }
+                        double currentDistance = Math.sqrt(Math.pow(touchOne.getX() - touchTwo.getX(), 2) +
+                                Math.pow(touchOne.getY() - touchTwo.getY(), 2));
+                        jsBridge.call("setJankaZoom", Math.pow(currentDistance / originalDistance, ZOOMFACTOR));
                     }
-                    double currentDistance = Math.sqrt(Math.pow(touchOne.getX() - touchTwo.getX(), 2) + Math.pow(touchOne.getY() - touchTwo.getY(), 2));
-                    jsBridge.call("setJankaZoom", Math.pow(currentDistance/ originalDistance, ZOOMFACTOR));
                 }
             }
         }));
