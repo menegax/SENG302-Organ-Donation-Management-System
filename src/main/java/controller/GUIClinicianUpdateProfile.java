@@ -83,7 +83,9 @@ public class GUIClinicianUpdateProfile extends UndoableController {
                 .addListener((observable, oldValue, newValue) -> setValid(regionDD));
         loadProfile(((Clinician) target).getStaffID());
         setUpStateHistory();
-        new TouchComboBoxSkin(regionDD, (Pane) screenControl.getTouchParent(clinicianUpdateProfile));
+        if (screenControl.isTouch()) {
+            new TouchComboBoxSkin(regionDD, (Pane) screenControl.getTouchParent(clinicianUpdateProfile));
+        }
     }
 
 
