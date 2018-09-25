@@ -147,9 +147,6 @@ class ScreenControlTouch extends ScreenControl {
                     }
                 }));
             }
-            if(rootPane != null) {
-                rootPane.toFront();
-            }
             systemLogger.log(INFO, "Showing new touch stage scene");
             return controller;
         } catch (IOException e) {

@@ -127,6 +127,7 @@ public class GUILogin implements IWindowObserver {
                 Administrator administrator = administratorDataService.getAdministratorByUsername(nhiLogin.getText().toUpperCase());
                 administratorDataService.save(administrator);
                 userControl.addLoggedInUserToCache(administratorDataService.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
+                openMap();
             }
             GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, userControl.getLoggedInUser(), loginPane);
             controller.setTarget(userControl.getLoggedInUser());
