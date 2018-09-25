@@ -131,17 +131,29 @@ function isPatientInArea(marker, area) {
 
     console.log("Finding if patient is in area: " + area.start.lng() + " " + area.start.lat() + " " + area.end.lng() + " " + area.end.lat());
 
-    if (current.lng() < minLng) {
-        return false;
-    }
-    else if (current.lat() < minLat) {
-        return false;
-    }
-    else if (current.lng() > maxLng) {
-        return false;
-    }
-    else if (current.lat() > maxLat) {
-        return false;
+    if ((minLng < 0 && maxLng < 0) || (minLng > 0 && maxLng > 0)) { // not crossing lng border from -179 to 179
+        if (current.lng() < minLng) {
+            return false;
+        }
+        else if (current.lat() < minLat) {
+            return false;
+        }
+        else if (current.lng() > maxLng) {
+            return false;
+        }
+        else if (current.lat() > maxLat) {
+            return false;
+        }
+    } else {
+        if (current.lng() > minLng && current.lng() < maxLng) {
+            return false;
+        }
+        else if (current.lat() < minLat) {
+            return false;
+        }
+        else if (current.lat() > maxLat) {
+            return false;
+        }
     }
 
     return true;
