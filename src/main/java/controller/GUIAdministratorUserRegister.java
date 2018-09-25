@@ -19,6 +19,7 @@ import service.ClinicianDataService;
 import service.PatientDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
+import utility.TouchComboBoxSkin;
 import utility.TouchDatePickerSkin;
 import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
@@ -106,6 +107,7 @@ public class GUIAdministratorUserRegister extends UndoableController {
         });
         TouchDatePickerSkin dateOfBirthSkin = new TouchDatePickerSkin(birthRegister, (Pane) screenControl.getTouchParent(userRegisterPane));
         birthRegister.setSkin(dateOfBirthSkin);
+        new TouchComboBoxSkin(regionRegister, (Pane) screenControl.getTouchParent(userRegisterPane));
     }
 
     /**
