@@ -1,15 +1,12 @@
-var map, geocoder, globalPatients, mapBridge, successCount;
+var map, globalPatients, mapBridge, successCount;
 var markers = [];
 var infoWindows = [];
 var failedPatientArray = [];
 var markerSetId = 0;
 var filterByAreaListener, filterStart, filterEnd;
-var patientsFilteredByArea;
 var interruptMarkers = false;
-
-var iconBase = '../image/markers/';
 var originalZoom;
-
+var iconBase = '../image/markers/';
 var icons = {
     deceased: {
         name: 'Deceased',
@@ -21,19 +18,7 @@ var icons = {
     }
 };
 
-function init() {
-    geocoder = new google.maps.Geocoder();
-
-    var styleHidePoi =[
-        {
-            featureType: "poi",
-            elementType: "labels",
-            stylers: [
-                { visibility: "off" }
-            ]
-        }
-    ];
-
+function setUpMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: -40.59225, lng: 173.51012},
         zoom: 6,
@@ -47,11 +32,60 @@ function init() {
         clickableIcons: false,
         mapTypeId: 'roadmap',
         gestureHandling: 'cooperative',
-        styles: styleHidePoi
+        styles: getMapCustomStyle()
     });
+}
 
+/**
+ * Initialize method
+ */
+function init() {
+    setUpMap();
     setUpLegend(icons);
+    setUpViewAvailableOrgansButton();
+    setUpFilterAreaButton();
+    setUpFilterClearAreaButton();
+}
 
+/**
+ * Sets up the filter and clear area button with a listener
+ */
+function setUpFilterClearAreaButton() {
+    // clear filter area button
+    google.maps.event.addListenerOnce(map, 'idle', function () {
+        document.getElementById('clearFilterAreaBtn').addEventListener('click', function () {
+            console.log("Clear filter area button clicked!");
+            clearFilterArea();
+        });
+    });
+}
+
+/**
+ * Sets up the filter  area button with a listener
+ */
+function setUpFilterAreaButton() {
+    // filter area button
+    google.maps.event.addListenerOnce(map, 'idle', function () {
+        document.getElementById('filterAreaBtn').addEventListener('click', function () {
+            console.log("Filter area button clicked!");
+            filterByAreaListener = google.maps.event.addListener(map, 'click', function (e) {
+                if (filterStart === undefined) {
+                    filterStart = e.latLng;
+                }
+                else {
+                    filterEnd = e.latLng;
+                    filterArea({start: filterStart, end: filterEnd});
+                    google.maps.event.removeListener(filterByAreaListener);
+                }
+            });
+        });
+    });
+}
+
+/**
+ * Sets up the view available organs button with a listener
+ */
+function setUpViewAvailableOrgansButton() {
     // view available organs button
     google.maps.event.addListenerOnce(map, 'idle', function () {
         setMapDragEnd();
@@ -69,30 +103,6 @@ function init() {
             addMarkers(globalPatients.size(), markerSetId);
         });
     });
-
-    // filter area button
-    google.maps.event.addListenerOnce(map, 'idle', function () {
-        document.getElementById('filterAreaBtn').addEventListener('click', function () {
-            console.log("Filter area button clicked!");
-            filterByAreaListener = google.maps.event.addListener(map, 'click', function(e) {
-                if (filterStart === undefined) {
-                    filterStart = e.latLng;
-                } else {
-                    filterEnd = e.latLng;
-                    filterArea({start: filterStart, end: filterEnd});
-                    google.maps.event.removeListener(filterByAreaListener);
-                }
-            });
-        });
-    });
-
-    // clear filter area button
-    google.maps.event.addListenerOnce(map, 'idle', function () {
-        document.getElementById('clearFilterAreaBtn').addEventListener('click', function () {
-            console.log("Clear filter area button clicked!");
-            clearFilterArea();
-        });
-    });
 }
 
 /**
@@ -107,7 +117,10 @@ function filterArea(area) {
     });
 }
 
-function setUpLegend(icons) {
+/**
+ * Sets up the map legend
+ */
+function setUpLegend() {
     var legend = document.getElementById('legend');
     for (var key in icons) {
         var type = icons[key];
@@ -132,7 +145,7 @@ function clearFilterArea() {
 
 /**
  * Finds out if a patient is within a given area
- * @param patient the patient to test
+ * @param marker the marker to test
  * @param area the area bounds
  * @returns {boolean} if the patient is inside or outside the area
  */
@@ -233,7 +246,7 @@ function addMarker(patient) {
         if (latLong !== null) {
             successCount++;
             var marker = makeMarker(patient, latLong); //set up markers
-            attachInfoWindow(patient, marker);
+            makeAndAttachInfoWindow(patient, marker);
             markers.push(marker);
         }
         else {
@@ -248,12 +261,18 @@ function addMarker(patient) {
     }
 }
 
-function makeMarker(patient, results) {
+/**
+ * Pseudo factory which retrieves the correctly formatted marker depending on patient attributes
+ * @param patient the patient to base the marker styling from
+ * @param location the location of
+ * @returns {google.maps.Marker} the created marker
+ */
+function makeMarker(patient, location) {
     var name = patient.getNameConcatenated();
 
     var randx = Math.random() * 0.02 - 0.01;
     var randy = Math.random() * 0.02 - 0.01;
-    var finalLoc = new google.maps.LatLng(results.lat + randx, results.lng + randy);
+    var finalLoc = new google.maps.LatLng(location.lat + randx, location.lng + randy); //todo can remove randomizer? replace `finalLoc` with `results`?
 
     if (patient.isDead()) {
         return new google.maps.Marker({
@@ -278,7 +297,12 @@ function makeMarker(patient, results) {
 
 }
 
-function attachInfoWindow(patient, marker) {
+/**
+ * Creates and attaches the appropriate info window to the marker based off the patient attributes
+ * @param patient the patient to base the info window off
+ * @param marker the marker to attach the info window to
+ */
+function makeAndAttachInfoWindow(patient, marker) {
     var infoWindow;
     if (patient.isDead()) {
         infoWindow = new google.maps.InfoWindow({
@@ -383,10 +407,10 @@ function getOrganOptions(patient) {
 
 /**
  * Sets the globalPatients for the map and adds the markers to the map
- * @param _patients
+ * @param newPatients
  */
-function setPatients(_patients) {
-    globalPatients = _patients;
+function setPatients(newPatients) {
+    globalPatients = newPatients;
     hideNotification();
     clearMarkers();
     successCount = 0;
@@ -527,7 +551,6 @@ function reloadInfoWindow(patient) {
     }
 }
 
-
 /**
  * Maps patient to its information window in global jsonarray
  * @param infoWindow - info window to map patient to
@@ -548,6 +571,17 @@ function mapInfoWindowToPatient(infoWindow, patient) {
     } else {
         infoWindows.push({ "iwindow" : infoWindow, "nhi" : patient.getNhiNumber()}); //
     }
+}
+
+/**
+ * Gets the styling to set for the custom Google map style param
+ * @returns {*[]} a list of styles
+ */
+function getMapCustomStyle() {
+    var styleHidePoi = [{
+        featureType: "poi", elementType: "labels", stylers: [{visibility: "off"}]
+    }];
+    return styleHidePoi;
 }
 
 function setJankaZoom(newZoom) {
