@@ -4,6 +4,7 @@ var infoWindows = [];
 var failedPatientArray = [];
 var markerSetId = 0;
 var filterByAreaListener, filterStart, filterEnd;
+var patientsFilteredByArea;
 
 var originalZoom;
 
@@ -73,37 +74,11 @@ function init() {
  * Gets globalPatients who are within the area and resets the markers on the map to be them
  */
 function filterArea(area) {
-    console.log("Filtering by area using coordinates " + area.start + " " + area.end);
-    // mapBridge.filterArea(area);
-
-    var patientsFilteredByArea = filterPatientsByArea(globalPatients, area);
-    console.log("bingo!");
-    setPatients(patientsFilteredByArea) // todo maybe change to setPatientsJS?
-}
-
-/**
- * Finds the globalPatients that are within an area
- * @param _patients the globalPatients to filter
- * @param area is the area to test
- * @returns {ArrayConstructor} the globalPatients within the area
- */
-function filterPatientsByArea(_patients, area) {
-
-    var patientsFilteredByArea = [];
-
-    console.log("globalPatients to be filtered: " + _patients);
-
-    _patients.forEach(function (patient) {
-        console.log("yiggidy");
-        console.log("patient being filtered: " + patient);
-        if (isPatientInArea(patient, area)) {
-            patientsFilteredByArea.add(patient);
-            console.log("Patient " + patient.getNhiNumber() + " is within bounds.");
+    markers.forEach(function (marker) {
+        if (!isPatientInArea(marker, area)) {
+            marker.setMap(null);
         }
-        console.log("Patient " + patient.getNhiNumber() + " is outside bounds.");
     });
-    console.log("yaw");
-    return patientsFilteredByArea;
 }
 
 /**
@@ -112,28 +87,39 @@ function filterPatientsByArea(_patients, area) {
  * @param area the area bounds
  * @returns {boolean} if the patient is inside or outside the area
  */
-function isPatientInArea(patient, area) {
+function isPatientInArea(marker, area) {
 
     var minLng, minLat, maxLng, maxLat;
-    var current = patient.getCurrentLocation();
+    var current = marker.position;
 
-    minLng = min(area.start.lng, area.end.lng);
-    minLat = min(area.start.lat, area.end.lat);
-    maxLng = max(area.start.lng, area.end.lng);
-    maxLat = max(area.start.lat, area.end.lat);
+    if (area.start.lng() > area.end.lng()) {
+        maxLng = area.start.lng()
+        minLng = area.end.lng()
+    } else {
+        maxLng = area.end.lng()
+        minLng = area.start.lng()
+    }
 
-    console.log("Finding if patient is in area: " + minLng + " " + minLat + " " + maxLng + " " + maxLat);
+    if (area.start.lat() > area.end.lat()) {
+        maxLat = area.start.lat()
+        minLat = area.end.lat()
+    } else {
+        maxLat = area.end.lat()
+        minLat = area.start.lat()
+    }
 
-    if (current.lng < minLng) {
+    console.log("Finding if patient is in area: " + area.start.lng() + " " + area.start.lat() + " " + area.end.lng() + " " + area.end.lat());
+
+    if (current.lng() < minLng) {
         return false;
     }
-    else if (current.lat < minLat) {
+    else if (current.lat() < minLat) {
         return false;
     }
-    else if (current.lng > maxLng) {
+    else if (current.lng() > maxLng) {
         return false;
     }
-    else if (current.lat > maxLat) {
+    else if (current.lat() > maxLat) {
         return false;
     }
 
@@ -345,9 +331,7 @@ function setPatients(_patients) {
     successCount = 0;
     infoWindows = [];
     markerSetId++;
-    console.log("Bango!");
     addMarkers(globalPatients.size(), markerSetId);
-    console.log("Bongo!");
 
 }
 
