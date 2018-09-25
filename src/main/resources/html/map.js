@@ -4,9 +4,19 @@ var infoWindows = [];
 var failedPatientArray = [];
 var markerSetId = 0;
 var filterByAreaListener, filterStart, filterEnd;
-var patientsFilteredByArea;
-
+var iconBase = '../image/markers/';
 var originalZoom;
+
+var icons = {
+    deceased: {
+        name: 'Deceased',
+        icon: iconBase + 'blue.png'
+    },
+    alive: {
+        name: 'Alive',
+        icon: iconBase + 'green.png'
+    }
+};
 
 function init() {
     geocoder = new google.maps.Geocoder();
@@ -36,6 +46,8 @@ function init() {
         gestureHandling: 'cooperative',
         styles: styleHidePoi
     });
+
+    setUpLegend(icons);
 
     // view available organs button
     google.maps.event.addListenerOnce(map, 'idle', function () {
@@ -89,6 +101,20 @@ function filterArea(area) {
             marker.setMap(null);
         }
     });
+}
+
+function setUpLegend(icons) {
+    var legend = document.getElementById('legend');
+    for (var key in icons) {
+        var type = icons[key];
+        var name = type.name;
+        var icon = type.icon;
+        var div = document.createElement('div');
+        div.innerHTML = '<img src="' + icon + '"> ' + name;
+        legend.appendChild(div);
+    }
+
+    map.controls[google.maps.ControlPosition.RIGHT_TOP].push(legend);
 }
 
 /**
@@ -217,9 +243,8 @@ function makeMarker(patient, results) {
             position: finalLoc,
             title: name,
             animation: google.maps.Animation.DROP,
-            // label: 'D',
             nhi: patient.getNhiNumber(),
-            icon: '../image/markers/blue.png'
+            icon: icons.deceased
         });
     }
     else if (!patient.isDead()) {
@@ -228,9 +253,8 @@ function makeMarker(patient, results) {
             position: finalLoc,
             title: name,
             animation: google.maps.Animation.DROP,
-            // label: 'A',
             nhi: patient.getNhiNumber(),
-            icon: '../image/markers/green.png'
+            icon: icons.alive
         });
     }
 
