@@ -100,7 +100,7 @@ public class MapBridge {
      * Collects the patient list from available organs list
      * @return the list of patients that have available organs
      */
-    public List getAvailableOrgans() {
+    public void getAvailableOrgans() {
         List<PatientOrgan> masterData = new ArrayList<PatientOrgan>();
         List<Patient> deadPatients = patientDataService.getDeadDonors();
         for (Patient patient : deadPatients) {
@@ -123,7 +123,7 @@ public class MapBridge {
             uniqueSetOfPatients.add(masterData.get(i).getPatient());
         }
         List<Patient> patients = new ArrayList<Patient>(uniqueSetOfPatients);
-        return patients;
+        GUIMap.getJSBridge().call("setPatients",patients);
     }
 
 

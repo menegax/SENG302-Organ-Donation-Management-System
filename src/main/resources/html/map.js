@@ -17,7 +17,7 @@ function init() {
     google.maps.event.addListenerOnce(map, 'idle', function () {
         setMapDragEnd();
         document.getElementById('availableOrgansView').addEventListener('click', function () {
-            setPatients(mapBridge.getAvailableOrgans());
+            mapBridge.getAvailableOrgans();
         });
     });
 }
