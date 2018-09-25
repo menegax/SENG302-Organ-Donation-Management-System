@@ -30,7 +30,6 @@ function init() {
         });
     });
 }
-
 /**
  * Sets the viewable area of the map
  */
@@ -139,6 +138,7 @@ function attachInfoWindow(patient, marker) {
     }
     mapInfoWindowToPatient(infoWindow, patient);
     marker.addListener('click', function () { // when clicking on the marker, all other markers' info windows close
+        currentMarker = marker;
         infoWindows.forEach(function (iw) {
             if (iw["iwindow"] !== infoWindow) {
                 iw["iwindow"].close();
@@ -209,7 +209,12 @@ function createMarkerRadii(radius, color, organ) {
  */
 function setCurrentOrgan(organ) {
     currentOrgan = organ;
-    mapBridge.loadCircle(currentMarker.nhi, currentOrgan);
+    if (currentOrgan !== undefined) {
+        console.log(currentMarker);
+        mapBridge.loadCircle(currentMarker.nhi, currentOrgan);
+    } else {
+        clearCircles();
+    }
 }
 
 /**
@@ -242,16 +247,16 @@ function openPatientProfile(patientNhi) {
  */
 function getOrganOptions(patient) {
     var donations = patient.getDonations().toString();
-    var donationStr;
+    var donationStr, string, result;
+    var reg = /([\w\s]+)=\w+,?/g;
     if (donations !== '{}') {
-        var reg = /(\w+)=\w+,?/g;
         donationStr = '<b>Donations:</b><br>';
         var donationsArray = [];
-        var result;
-        var string = donations.substring(1, donations.length - 1);
+        string = donations.substring(1, donations.length - 1);
         while (result = reg.exec(string)) {
             donationsArray.push(result[1]);
         }
+        console.log(donationsArray);
         donationStr += donationsArray.join(", ");
     }
     else {
@@ -259,7 +264,6 @@ function getOrganOptions(patient) {
     }
     var required = patient.getRequiredOrgans().toString();
     if (required !== '{}') {
-        reg = /(\w+)=\w+,?/g;
         reqsArray = [];
         requiredStr = '<b>Required:</b><br>';
         string = required.substring(1, required.length - 1);
@@ -387,7 +391,7 @@ function buildOrganDropdown(infowindow) {
                 var patient2 = iw["patient"];
                 $('#dropdown').html('');
                 $('#dropdown').html('<option value="organs">None</option>');
-                var reg = /(\w+)=\w+,?/g;
+                var reg = /([\w\s]+)=\w+,?/g;
                 var donationsArray = [];
                 var result;
                 while (result = reg.exec(patient2.getDonations().toString().slice(1, -1))) {
@@ -399,6 +403,14 @@ function buildOrganDropdown(infowindow) {
                         text: donationsArray[i]
                     }));
                 }
+                $('#dropdown').change(function() {
+                    var selected = $('#dropdown :selected').text();
+                    if (selected.toLowerCase() !== 'none') {
+                        setCurrentOrgan(selected);
+                    } else {
+                        setCurrentOrgan(undefined);
+                    }
+                });
             }
         });
     }, false);
