@@ -81,7 +81,6 @@ public class GUIMap {
                         mapBridge = new MapBridge();
                         jsBridge.setMember("mapBridge", mapBridge);
                         jsBridge.call("init");
-                        jsBridge.call("setPatients", patients);
                     }
                 });
         webEngine.load(Objects.requireNonNull(getClass().getClassLoader()

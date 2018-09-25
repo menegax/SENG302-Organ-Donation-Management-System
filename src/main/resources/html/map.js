@@ -72,7 +72,6 @@ function setMapDragEnd() {
 function addMarker(patient) {
     console.log("Adding marker to map for patient " + patient.getNhiNumber());
     var latLong = patient.getCurrentLocation();
-    console.log(latLong);
     if (latLong !== null) {
         successCount++;
         var marker = makeMarker(patient, latLong); //set up markers
@@ -369,7 +368,7 @@ function showNotification(numSuccess, numTotal) {
            '<td style=\"font-size: 15px; padding-top: 18px\">' + address + '</td>\n' +
            '</tr>';
     });
-    if (failedPatientArray.length ===  0){
+    if (failedPatientArray.length ===  0){ //no failed patients -> success
         $('#marker-notification').html('<span>' + modalMessage + '</span><span class="marker-notification-close" onclick="hideNotification()"> &times;</span>');
     } else {
         $('#marker-notification').html('<span>' + modalMessage + '</span>' +
@@ -389,11 +388,11 @@ function buildOrganDropdown(infowindow) {
         infoWindows.forEach(function(iw) {
             if (iw["iwindow"] === infowindow) {
                 var patient2 = iw["patient"];
-                $('#dropdown').html('');
                 $('#dropdown').html('<option value="organs">None</option>');
                 var reg = /([\w\s]+)=\w+,?/g;
                 var donationsArray = [];
                 var result;
+                console.log(patient2);
                 while (result = reg.exec(patient2.getDonations().toString().slice(1, -1))) {
                     donationsArray.push(result[1]);
                 }
