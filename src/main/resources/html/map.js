@@ -140,6 +140,7 @@ function attachInfoWindow(patient, marker) {
     mapInfoWindowToPatient(infoWindow, patient);
     marker.addListener('click', function () { // when clicking on the marker, all other markers' info windows close
         currentMarker = marker;
+        currentOrgan = undefined;
         infoWindows.forEach(function (iw) {
             if (iw["iwindow"] !== infoWindow) {
                 iw["iwindow"].close();
@@ -388,7 +389,6 @@ function buildOrganDropdown(infowindow) {
     google.maps.event.addListener(infowindow, "domready", function() {
         infoWindows.forEach(function(iw) {
             if (iw["iwindow"] === infowindow) {
-                var patient2 = mapBridge.getPatientByNhi(iw["nhi"]);
                 $('#dropdown').html('<option>None</option>');
                 mapBridge.getPatientActiveDonations(iw["nhi"]);
             }
