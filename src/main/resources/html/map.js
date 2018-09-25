@@ -362,7 +362,7 @@ function showNotification(numSuccess, numTotal) {
         $('#marker-notification').html('<span>' + modalMessage + '</span><span class="marker-notification-close" onclick="hideNotification()"> &times;</span>');
     } else {
         $('#marker-notification').html('<span>' + modalMessage + '</span>' +
-            '    <a href="#" data-toggle="modal" data-target="#failedPatients">View failed patients</a>\n' +
+            '    <a href="#" data-toggle="modal" data-target="#failedPatients" style="color: yellow">View failed patients</a>\n' +
             '    <span class="marker-notification-close" onclick="hideNotification()"> &times;</span>');
         $('#failed-patient-table').html(modalContent);
     }

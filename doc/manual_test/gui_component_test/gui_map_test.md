@@ -151,7 +151,7 @@
 
 ### Test 18 - Marker Colors for Alive/Dead Patients
 1. Log in as a clinician
-2. (Given that there are patients in the database) View the map
+2. (Given that there are patients in the database) Go to Search Patient and click view on map
 3. Expected: markers are colored differently depending on if the patient is alive or dead
 
 
