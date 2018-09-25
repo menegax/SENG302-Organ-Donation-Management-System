@@ -4,6 +4,7 @@ import static utility.UserActionHistory.userActions;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -23,8 +24,7 @@ import service.AdministratorDataService;
 import service.ClinicianDataService;
 import service.PatientDataService;
 import service.interfaces.IClinicianDataService;
-import utility.TouchPaneController;
-import utility.TouchscreenCapable;
+import utility.MultiTouchHandler;
 
 import java.io.IOException;
 import java.io.InvalidObjectException;
@@ -36,7 +36,7 @@ import java.util.logging.Level;
 import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
 
-public class GUILogin implements TouchscreenCapable, IWindowObserver {
+public class GUILogin implements IWindowObserver {
 
     @FXML
     public GridPane loginPane;
@@ -58,9 +58,6 @@ public class GUILogin implements TouchscreenCapable, IWindowObserver {
     @FXML
     private RadioButton administrator;
 
-
-    private TouchPaneController loginTouchPane;
-
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private PatientDataService patientDataService = new PatientDataService();
@@ -68,6 +65,8 @@ public class GUILogin implements TouchscreenCapable, IWindowObserver {
     private AdministratorDataService administratorDataService = new AdministratorDataService();
 
     private UserControl userControl = UserControl.getUserControl();
+
+    private MultiTouchHandler touchHandler;
 
     /**
      * Initializes the login window by adding key binding for login on enter and an event filter on the login field
@@ -81,10 +80,8 @@ public class GUILogin implements TouchscreenCapable, IWindowObserver {
             }
         });
         if(screenControl.isTouch()) {
-            loginTouchPane = new TouchPaneController(loginPane);
-            loginPane.setOnZoom(this::zoomWindow);
-            loginPane.setOnRotate(this::rotateWindow);
-            loginPane.setOnScroll(this::scrollWindow);
+            touchHandler = new MultiTouchHandler();
+            touchHandler.initialiseHandler(loginPane);
         }
 
     }
@@ -94,7 +91,8 @@ public class GUILogin implements TouchscreenCapable, IWindowObserver {
      */
     @FXML
     public void goToRegister() {
-        screenControl.show("/scene/userRegister.fxml", false, null, null);
+        Parent parent = screenControl.getTouchParent(loginPane);
+        screenControl.show("/scene/userRegister.fxml", false, null, null, parent);
     }
 
     /**
@@ -129,8 +127,9 @@ public class GUILogin implements TouchscreenCapable, IWindowObserver {
                 Administrator administrator = administratorDataService.getAdministratorByUsername(nhiLogin.getText().toUpperCase());
                 administratorDataService.save(administrator);
                 userControl.addLoggedInUserToCache(administratorDataService.getAdministratorByUsername(nhiLogin.getText().toUpperCase()));
+                openMap();
             }
-            GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, userControl.getLoggedInUser());
+            GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, userControl.getLoggedInUser(), loginPane);
             controller.setTarget(userControl.getLoggedInUser());
             if(!screenControl.isTouch()) {
                 Stage stage = (Stage) loginPane.getScene().getWindow();
@@ -150,7 +149,7 @@ public class GUILogin implements TouchscreenCapable, IWindowObserver {
     }
 
     private void openMap() {
-        screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
+        screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser(), null);
         screenControl.setMapOpen(true);
     }
 
@@ -190,23 +189,6 @@ public class GUILogin implements TouchscreenCapable, IWindowObserver {
         } else {
             nhiLogin.setPromptText("Username");
             password.setDisable(false);
-        }
-    }
-
-    @Override
-    public void zoomWindow(ZoomEvent zoomEvent) {
-        loginTouchPane.zoomPane(zoomEvent);
-    }
-
-    @Override
-    public void rotateWindow(RotateEvent rotateEvent) {
-        loginTouchPane.rotatePane(rotateEvent);
-    }
-
-    @Override
-    public void scrollWindow(ScrollEvent scrollEvent) {
-        if(scrollEvent.isDirect()) {
-            loginTouchPane.scrollPane(scrollEvent);
         }
     }
 

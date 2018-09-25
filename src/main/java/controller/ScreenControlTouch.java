@@ -1,42 +1,52 @@
 package controller;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.scene.text.Font;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TabPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
-import javafx.stage.Stage;
-import model.User;
-import org.tuiofx.internal.base.TuioFXCanvas;
-import service.UserDataService;
-import utility.undoRedo.UndoableWrapper;
-
-import java.io.IOException;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.stream.Collectors;
-
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
+import javafx.event.Event;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ListView;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.TableView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import model.User;
+import org.tuiofx.internal.base.TuioFXCanvas;
+import service.UserDataService;
+import utility.TouchComboBoxSkin;
+import utility.undoRedo.UndoableWrapper;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+
 class ScreenControlTouch extends ScreenControl {
 
-    private Stage touchStage;
+	/* Defines the size of the initial pane */
+    private final double INITIAL_PANE_SIZE = 0.85;
+	
+	private Stage touchStage;
+	
+	private Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
 
     private Region rootPane;
 
-    private Pane touchPane = new Pane();
+    private Pane touchPane = null;
 
     private static ScreenControlTouch screenControlTouch;
 
@@ -45,6 +55,8 @@ class ScreenControlTouch extends ScreenControl {
     private boolean isLoginShowing;
 
     private Map<String, Integer> fontMap = new HashMap<>();
+    
+    private boolean fullScreen;
 
     private ScreenControlTouch() {
         isLoginShowing = true;
@@ -59,6 +71,8 @@ class ScreenControlTouch extends ScreenControl {
         fontMap.put("paneTitle", 24);
         fontMap.put("userNameDisplay", 24);
         fontMap.put("nameTxt", 24);
+        fontMap.put("title", 28);
+        fontMap.put("TEXT", 14);
     }
 
     public static ScreenControlTouch getScreenControl() {
@@ -73,9 +87,11 @@ class ScreenControlTouch extends ScreenControl {
      * @param fxml the fxml to display
      * @param undoable if the pane to be displayed is undoable or not
      * @param parentController controller to notify when pane shown closes
+     * @param targetUser The targeted user for the pane
+     * @param parent The parent to orientate this fxml to
      * @return the controller created for this fxml
      */
-    public Object show(String fxml, Boolean undoable, IWindowObserver parentController, User targetUser) {
+    public Object show(String fxml, Boolean undoable, IWindowObserver parentController, User targetUser, Parent parent) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxml));
             Region pane = fxmlLoader.load();
@@ -92,13 +108,17 @@ class ScreenControlTouch extends ScreenControl {
             }
             pane.getProperties().put("focusArea", "true");
             pane.setStyle("-fx-background-color: #2c2f34; -fx-border-color: #f5f5f5;");
+            setPanePosition(pane, parent);
+            addCanvas(pane.getScene());
             List<Node> panes;
             if(isLoginShowing) {
                 panes = new ArrayList<>();
-                rootPane = pane;
                 setLoginShowing(false);
             } else {
                 panes = new ArrayList<>(touchPane.getChildren());
+            }
+            if(rootPane == null && !fxml.equals(MAPFXML) && !fxml.equals(LOGINFXML)) {
+                rootPane = pane;
             }
             panes.add(pane);
             Region root = new FXMLLoader(getClass().getResource("/scene/touchScene.fxml")).load();
@@ -106,6 +126,9 @@ class ScreenControlTouch extends ScreenControl {
             touchPane.getChildren().addAll(panes);
             Scene newScene = new Scene(touchPane);
             touchStage.setScene(newScene);
+            if (fullScreen) {
+            	ensureFullScreen();
+            }
             addCanvas(newScene);
             pane.visibleProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue && parentController != null) {
@@ -115,6 +138,7 @@ class ScreenControlTouch extends ScreenControl {
             resizeFonts(touchPane);
             if (fxml.equals(MAPFXML)) {
                 // Cast should always be safe
+            	setMapPanePosition(pane);
                 mapController = (GUIMap) controller;
                 mapController.loadMap();
                 pane.visibleProperty().addListener(((observable, oldValue, newValue) -> {
@@ -133,25 +157,92 @@ class ScreenControlTouch extends ScreenControl {
     }
 
     /**
+     * Ensures the application remains in full screen mode.
+     */
+    private void ensureFullScreen() {
+    	touchStage.setFullScreenExitHint("");
+        touchStage.setFullScreen(true);
+    }
+    
+    /**
+     * Sets the position, rotation and size of the map pane.
+     * @param pane The map pane
+     */
+    private void setMapPanePosition(Region pane) {
+    	pane.setPrefWidth(touchStage.getWidth());
+    	pane.setPrefHeight(touchStage.getHeight());
+    	pane.setTranslateX(0);
+    	pane.setTranslateY(0);
+        pane.setLayoutX(0);
+        pane.setLayoutY(0);
+        pane.setScaleX(1);
+        pane.setScaleY(1);
+    }
+    
+    /**
+     * Sets the position, rotation and size of a pane.
+     * @param pane The pane to format.
+     * @param parent Parent that created the pane.
+     */
+    private void setPanePosition(Region pane, Parent parent) {
+        if (parent != null) {
+            double centerParentX = ((Pane)parent).getPrefWidth()/2;
+            double centerParentY = ((Pane)parent).getPrefHeight()/2;
+            double centerChildX = pane.getPrefWidth() / 2;
+            double centerChildY = pane.getPrefHeight() / 2;
+            pane.setTranslateX(parent.getTranslateX() + centerParentX - centerChildX);
+            pane.setTranslateY(parent.getTranslateY() + centerParentY - centerChildY);
+            pane.setLayoutX(parent.getLayoutX());
+            pane.setLayoutY(parent.getLayoutY());
+            pane.setRotate(parent.getRotate());
+            pane.setScaleX(parent.getScaleX());
+            pane.setScaleY(parent.getScaleY());
+        } else {
+        	setInitialPaneSize(pane);
+        }
+    }
+    
+    /**
+     * Sets the correct location and size for the initial log in pane
+     * @param pane The pane to set location and size for
+     */
+    private void setInitialPaneSize(Region pane) {
+    	pane.setTranslateX((touchStage.getWidth() - pane.getPrefWidth()) / 2);
+    	pane.setTranslateY((touchStage.getHeight() - pane.getPrefWidth()) / 2);
+    	pane.setScaleX(INITIAL_PANE_SIZE);
+    	pane.setScaleY(INITIAL_PANE_SIZE);
+    }
+    
+    /**
      * Creates a login pane
      */
-    void setUpNewLogin() {
+    public void setUpNewLogin() {
         try {
             new UserDataService().prepareApplication();
-            Parent root = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
+            Region root = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
+            rootPane = null;
             touchPane = new Pane();
-            touchPane.getChildren().addAll(new Pane(root));
-            Scene newScene = new Scene(touchPane);
+            touchPane.getChildren().addAll(new Pane(root));           
+            Scene newScene = new Scene(touchPane);        
             addCanvas(newScene);
             touchStage.setScene(newScene);
+            if (fullScreen) {
+            	ensureFullScreen();
+            }
             setLoginShowing(true);
-            setFonts();
+            setCSS();
+            setInitialPaneSize(root);
+            
         } catch (IOException e) {
             systemLogger.log(SEVERE, "Failed to recreate login scene in touch application");
 
         }
     }
 
+    /**
+     * Sets a new touch stage
+     * @param touchStage The new touch stage
+     */
     void setTouchStage(Stage touchStage) {
         this.touchStage = touchStage;
     }
@@ -178,6 +269,10 @@ class ScreenControlTouch extends ScreenControl {
         }
     }
 
+    /**
+     * Sets the login showing flag
+     * @param showing The new value
+     */
     void setLoginShowing(boolean showing) {
         this.isLoginShowing = showing;
     }
@@ -208,8 +303,12 @@ class ScreenControlTouch extends ScreenControl {
         return false;
     }
 
+    /**
+     * Adds a new tuiofx canvas for the given scene
+     * @param scene The scene to add a canvas for
+     */
     private void addCanvas(Scene scene) {
-        if(!(scene.getRoot() instanceof TuioFXCanvas)) {
+        if(scene != null && !(scene.getRoot() instanceof TuioFXCanvas)) {
             TuioFXCanvas tuioFXCanvas = new TuioFXCanvas();
             Region oldRoot = (Region) scene.getRoot();
             tuioFXCanvas.getChildren().addAll(oldRoot);
@@ -233,8 +332,23 @@ class ScreenControlTouch extends ScreenControl {
                     for (Tab tab : ((TabPane) child).getTabs()) {
                         resizeFonts((Pane) tab.getContent());
                     }
+                } else if (child.getId() != null && child.getId().equals("EXIT")) {
+                    child.setStyle("-fx-font-size: 15px; "
+                            + "-fx-test-fill: white; "
+                            + "-fx-font-weight: bold; "
+                            + "-fx-background-color: "
+                            + "#e62e00 "
+                            + "linear-gradient(#ffe6e6, #ffcccc),"
+                            + "linear-gradient(#ff9999 0%, #ff8080 49%, #ff6666 50%, #ff4d4d 100%);");
+                } else if (child.getStyleClass().toString().equals("TEXT")) {
+                    child.setStyle("-fx-fill: white; -fx-font-size: 10px");
+                } else if (child instanceof ListView || child instanceof TableView) {
+                    child.setStyle("-fx-font-size: 10px; -fx-border-color: white;" +
+                            "-fx-border-width: 1.5;");
                 } else if (child.getId() == null || (!fontMap.containsKey(child.getId()))) {
                     child.setStyle("-fx-font-size: 10px;");
+                } else if (child.getStyleClass().toString().equals("label title")) {
+                    child.setStyle("-fx-text-fill: white; -fx-font-size: 28px; ");
                 } else {
                     child.setStyle("-fx-font-size: " + String.valueOf(fontMap.get(child.getId())) + "px;");
                 }
@@ -242,12 +356,29 @@ class ScreenControlTouch extends ScreenControl {
         }
     }
 
+
     /**
      * Called when switching tabs with GuiHome
      * Resizes the fonts shown
      */
-    public void setFonts() {
+    public void setCSS() {
         resizeFonts(touchPane);
+    }
+    
+    public void setFullScreen(boolean fullScreen) {
+    	this.fullScreen = fullScreen;
+    }
+
+    /**
+     * Centers all of the panes in the touchpane
+     */
+    public void centerPanes() {
+        for(Node pane : touchPane.getChildren()) {
+            if(pane instanceof Pane) {
+                pane.setTranslateX(0);
+                pane.setTranslateY(0);
+            }
+        }
     }
 
 }

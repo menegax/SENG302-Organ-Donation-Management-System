@@ -1,5 +1,15 @@
 package controller;
 
+import TUIO.TuioCursor;
+import TUIO.TuioTime;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.FINER;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static utility.SystemLogger.systemLogger;
+import static utility.UserActionHistory.userActions;
+
 import de.codecentric.centerdevice.MenuToolkit;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -8,24 +18,35 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.input.RotateEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
 import model.User;
+import org.tuiofx.internal.gesture.TuioJFXEvent;
+import org.tuiofx.internal.gesture.TuioTouchPoint;
 import service.AdministratorDataService;
 import service.ClinicianDataService;
 import service.PatientDataService;
 import service.UserDataService;
 import service.interfaces.IAdministratorDataService;
 import utility.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import utility.CachedThreadPool;
+import utility.ImportObservable;
+import utility.Searcher;
+import utility.StatusObservable;
+import utility.SystemLogger;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,11 +60,15 @@ import static javafx.scene.control.Alert.AlertType.ERROR;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
-public class GUIHome extends TargetedController implements Observer, TouchscreenCapable, IWindowObserver {
+
+public class GUIHome extends TargetedController implements Observer, IWindowObserver {
 
 
     @FXML
     public BorderPane homePane;
+
+    @FXML
+    public BorderPane topMenu;
 
     @FXML
     private TabPane horizontalTabPane;
@@ -62,8 +87,6 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
 
     private boolean loaded = false;
 
-    private TouchPaneController homePaneTouchController;
-
     @FXML
     private ProgressBar importProgress;
 
@@ -77,6 +100,7 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
     private IAdministratorDataService administratorDataService = new AdministratorDataService();
 
     private Stage homeStage;
+    private MultiTouchHandler touchHandler;
 
     private  enum TabName {
         PROFILE("Profile"), UPDATE("Update"), DONATIONS("Donations"), CONTACTDETAILS("Contact Details"),
@@ -101,29 +125,32 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
     @FXML
     public void loadController() {
         if (!loaded) {  // stops listeners from being added twice
-        StatusObservable statusObservable = StatusObservable.getInstance();
-        Observer statusObserver = (o, arg) -> statusLbl.setText(arg.toString());
-        statusObservable.addObserver(statusObserver);
-        ImportObservable importObservable = ImportObservable.getInstance();
-        Observer importObserver = (o, arg) -> {
-            double progress = Double.valueOf(arg.toString());
-            if (progress < 1.0) {
-                importProgress.setProgress(progress);
-                importProgress.setVisible(true);
-                importLbl.setVisible(true);
-            } else {
-                importProgress.setVisible(false);
-                importLbl.setVisible(false);
-            }
-        };
-        importObservable.addObserver(importObserver);
-        homePane.getProperties().put("focusArea", "true");
-                if (screenControl.isTouch() ) {
-            addPaneListener();
+	        StatusObservable statusObservable = StatusObservable.getInstance();
+	        Observer statusObserver = (o, arg) -> statusLbl.setText(arg.toString());
+	        statusObservable.addObserver(statusObserver);
+	        ImportObservable importObservable = ImportObservable.getInstance();
+	        Observer importObserver = (o, arg) -> {
+	            double progress = Double.valueOf(arg.toString());
+	            if (progress < 1.0) {
+	                importProgress.setProgress(progress);
+	                importProgress.setVisible(true);
+	                importLbl.setVisible(true);
+	            } else {
+	                importProgress.setVisible(false);
+	                importLbl.setVisible(false);
+	            }
+	        };
+	        importObservable.addObserver(importObserver);
+	        homePane.getProperties().put("focusArea", "true");
+            if (screenControl.isTouch() ) {
+            	addPaneListener();
             } else {
                 addStageListener();
             }
             loaded = true;
+            if (screenControl.isTouch()) {
+            	((ScreenControlTouch) screenControl).setCSS();
+            }
         }
     }
 
@@ -169,19 +196,8 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
                 }
             }
             if(screenControl.isTouch()) {
-                homePane.addEventHandler(Event.ANY, new EventHandler<Event>() {
-                    @Override
-                    public void handle(Event event) {
-                    }
-                });
-                homePaneTouchController = new TouchPaneController(homePane);
-
-                homePane.setOnTouchPressed(event -> {
-                    homePane.toFront();
-                });
-                homePane.setOnZoom(this::zoomWindow);
-                homePane.setOnRotate(this::rotateWindow);
-                homePane.setOnScroll(this::scrollWindow);
+                touchHandler = new MultiTouchHandler();
+                touchHandler.initialiseHandler(homePane);
             }
         } catch (IOException e) {
             new Alert(ERROR, "Unable to loadController home").show();
@@ -239,8 +255,7 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
                         }
                     });
         } else {
-            homeStage = (Stage) homePane.getScene()
-                    .getWindow();
+            homeStage = (Stage) homePane.getScene().getWindow();
             // Methods to call after initialize
             setUpMenuBar(homeStage);
             screenControl.addTab(homeStage, horizontalTabPane);
@@ -329,7 +344,6 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
             updatedUser = administratorDataService.getAdministratorByUsername(((Administrator) user).getUsername());
             administratorDataService.save((Administrator) updatedUser);
         }
-
         updatedUser.addPropertyChangeListener(e -> userNameDisplay.setText(updatedUser.getNameConcatenated()));
         userNameDisplay.setText(updatedUser.getNameConcatenated());
     }
@@ -350,7 +364,7 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
                     CachedThreadPool.getCachedThreadPool().getThreadService().shutdown(); //hot fix for now
                     targetedController.setTarget(target);
                     if (screenControl.isTouch()) {
-                        ((ScreenControlTouch) screenControl).setFonts();
+                        ((ScreenControlTouch) screenControl).setCSS();
                     }
                 } catch (IOException e) {
                     systemLogger.log(SEVERE, "Failed to create tab", e);
@@ -540,15 +554,23 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
             menu2.getItems().addAll(subMenuImport);
         }
         menu2.getItems().addAll(menu2Item1);
-        MenuItem menu2item4 = new MenuItem("Close window");
+
         if(!screenControl.isTouch()) {
+        	MenuItem menu2item4 = new MenuItem("Close window");
             menu2item4.setAccelerator(screenControl.getCloseWindow());
+            menu2item4.setOnAction(event -> {
+                if(!(screenControl.closeWindow(homePane))) {
+                    setStatusLbl("Root window can not be closed. Please log out to exit.");
+                }
+            });
+
+            menu2.getItems().addAll(menu2item4);
         }
-        menu2item4.setOnAction(event -> {
-            if(!(screenControl.closeWindow(homePane))) {
-                setStatusLbl("Root window can not be closed. Please log out to exit.");
-            }
-        });
+        MenuItem menu2item4 = new MenuItem("Refresh");
+        menu2item4.setOnAction(event -> refresh());
+        if(!screenControl.isTouch()) {
+        	menu2item4.setAccelerator(screenControl.getRefresh());
+        }
         menu2.getItems().addAll(menu2item4);
         MenuItem logOut = new MenuItem("Log out");
         if(!screenControl.isTouch()) {
@@ -586,33 +608,38 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
         bar.getMenus().addAll(menu2, menu3);
 
         //WINDOW
+        menu4 = new Menu("Window");
         if (isUserClinicianOrAdmin()) {
-            menu4 = new Menu("Window");
             MenuItem menu4Item1 = new MenuItem("Open Map");
             menu4Item1.setOnAction(event -> {
                 screenControl.setIsCustomSetMap(false);
                 openMap();
             });
-            menu4.getItems()
-                    .addAll(menu4Item1);
+            menu4.getItems().addAll(menu4Item1);
             if(screenControl.isTouch()) {
-                MenuItem menu4item2 = new MenuItem("Open Keyboard");
-                menu4item2.setOnAction(event -> openKeyboard());
-                menu4.getItems().addAll(menu4item2);
+                MenuItem menu4itemCentre = new MenuItem("Re-center Panes");
+                menu4itemCentre.setOnAction(event -> screenControl.centerPanes());
+                menu4.getItems().addAll(menu4itemCentre);
             }
-            bar.getMenus().addAll(menu4);
         }
+        bar.getMenus().addAll(menu4);
 
-        boolean headless = System.getProperty("java.awt.headless") != null && System.getProperty("java.awt.headless")
-                .equals("true");
+        Button closeButton = new Button("X");
+        closeButton.setOnAction(event -> {
+            if(!(screenControl.closeWindow(homePane))) {
+                setStatusLbl("Root window can not be closed. Please log out to exit.");
+            }
+        });
+        closeButton.setId("EXIT");
+
+        boolean headless = System.getProperty("java.awt.headless") != null && System.getProperty("java.awt.headless").equals("true");
         // Use the menu bar for primary stage
         if (!headless) { // make sure it isn't testing
             if (screenControl.isMacOs()) {
                 // Get the toolkit THIS IS MAC OS ONLY
                 MenuToolkit tk = MenuToolkit.toolkit();
 
-                menuBar.getMenus()
-                        .clear();
+                menuBar.getMenus().clear();
 
                 // Add the default application menu
                 bar.getMenus()
@@ -622,32 +649,28 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
                     systemLogger.log(FINER, "Set MacOS menu bar");
                 }
             } else {// if windows
-                menuBar.getMenus()
-                        .clear();
-                menuBar.getMenus()
-                        .addAll(menu2, menu3, menu4);
+                menuBar.getMenus().clear();
+                menuBar.getMenus().addAll(menu2, menu3, menu4);
+                if (screenControl.isTouch()) {
+                    topMenu.setRight(closeButton);
+                }
                 systemLogger.log(FINER, "Set non-MacOS menu bar");
+                setMenuStyles();
+
             }
         }
-
     }
 
     /**
-     * Opens OS keyboard for Windows systems
+     * Increases the size of the MenuBar to match the exit button
      */
-    private void openKeyboard() {
-        if(System.getProperty("os.name")
-                .startsWith("Windows")) {
-            try {
-                Runtime.getRuntime().exec("cmd /c osk");
-            } catch (IOException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setHeaderText("Error");
-                alert.setContentText("System keyboard could not be opened");
-                alert.show();
+    private void setMenuStyles() {
+        menuBar.setPrefHeight(35);
+        for (Menu menu : menuBar.getMenus()) {
+            menu.setStyle("-fx-font-size: 15px;");
+            for (MenuItem menuItem : menu.getItems()) {
+                menuItem.setStyle("-fx-font-size: 15px;");
             }
-        } else {
-            SystemLogger.systemLogger.log(Level.INFO, "System keyboard can not be opened on non-Windows system", this);
         }
     }
 
@@ -663,15 +686,31 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
      * Opens new map instance if a map is not visible
      */
     void openMap() {
-
         if (!screenControl.getMapOpen()) {
-            GUIMap controller = (GUIMap) screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
+            GUIMap controller = (GUIMap) screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser(), null);
             screenControl.setMapOpen(true);
             controller.setPatients(new ArrayList<>());
         }
         if(screenControl.isTouch()) {
             homePane.toFront();
         }
+    }
+
+    /**
+     * Refreshes the current tab shown by switching to the first tab then switching back
+     * to the current tab. If the current tab is the first tab then it switches to the
+     * second.
+     */
+    private void refresh() {
+        int selectedIndex = horizontalTabPane.getSelectionModel().getSelectedIndex();
+        if (horizontalTabPane.getSelectionModel().getSelectedIndex() != 0) {
+            horizontalTabPane.getSelectionModel().select(0);
+            horizontalTabPane.getSelectionModel().select(selectedIndex);
+        } else {
+            horizontalTabPane.getSelectionModel().select(1);
+            horizontalTabPane.getSelectionModel().select(selectedIndex);
+        }
+        userActions.log(Level.INFO, "Refreshed current tab", "Attempted to refresh current tab");
     }
 
 
@@ -702,32 +741,6 @@ public class GUIHome extends TargetedController implements Observer, Touchscreen
     void addAsterisk() {
         if (!userNameDisplay.getText().contains("*")) {
             userNameDisplay.setText(userNameDisplay.getText() + "*");
-        }
-    }
-
-    @Override
-    public void zoomWindow(ZoomEvent zoomEvent) {
-        if(zoomEvent.getSource().equals(homePane)) {
-            homePaneTouchController.zoomPane(zoomEvent);
-            zoomEvent.consume();
-        }
-    }
-
-    @Override
-    public void rotateWindow(RotateEvent rotateEvent) {
-        if(rotateEvent.getSource().equals(homePane)) {
-            homePaneTouchController.rotatePane(rotateEvent);
-            rotateEvent.consume();
-        }
-    }
-
-    @Override
-    public void scrollWindow(ScrollEvent scrollEvent) {
-        if(scrollEvent.getSource().equals(homePane)) {
-            if (scrollEvent.isDirect()) {
-                homePaneTouchController.scrollPane(scrollEvent);
-            }
-            scrollEvent.consume();
         }
     }
 

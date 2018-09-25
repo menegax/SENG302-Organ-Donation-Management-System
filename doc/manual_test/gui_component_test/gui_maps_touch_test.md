@@ -18,12 +18,12 @@
 
 ### Zoom into map
 1. The user places two fingers on the map on the touch screen
-2. The user slides their fingers down
+2. The user slides their fingers apart
 3. The map zooms in
 
 ### Zoom out of map
 1. The user places two fingers on the map on the touch screen
-2. The user slides their fingers up
+2. The user slides their fingers together
 3. The map zooms out
 
 

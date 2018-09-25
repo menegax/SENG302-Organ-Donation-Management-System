@@ -8,6 +8,7 @@ import model.Patient;
 import model.PatientOrgan;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
+import javafx.geometry.Point2D;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -32,7 +33,7 @@ public class MapBridge {
     @SuppressWarnings("unused") // used in corresponding javascript
     public void openPatientProfile(String patientNhi) {
         Patient patient = new PatientDataService().getPatientByNhi(patientNhi);
-        GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, patient);
+        GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, patient, null);
         controller.setTarget(patient);
     }
 

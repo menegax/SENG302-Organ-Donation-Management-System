@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import tornadofx.control.DateTimePicker?>
 
+<?import javafx.scene.control.ComboBox?>
 <GridPane fx:id="deregistrationReasonPane" prefHeight="220.0" prefWidth="600.0" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIRequiredOrganDeregistrationReason">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="140.0" />
@@ -49,7 +50,7 @@
          <children>
             <TextField fx:id="locationDeathTxt" prefHeight="27.0" prefWidth="384.0" promptText="Death Street" />
             <TextField fx:id="deathCity" prefHeight="27.0" prefWidth="384.0" promptText="Death City" GridPane.columnIndex="1" />
-            <ChoiceBox fx:id="deathRegion" accessibleText="Death Region" prefWidth="150.0" GridPane.columnIndex="2" />
+            <ComboBox fx:id="deathRegion" accessibleText="Death Region" prefWidth="150.0" GridPane.columnIndex="2" />
          </children>
       </GridPane>
    </children>

@@ -209,6 +209,9 @@ public class GUIPatientProfile extends TargetedController {
 		Collection<Medication> meds = patient.getCurrentMedications();
 		List<String> medsMapped = meds.stream().map(Medication::getMedicationName).collect(Collectors.toList());
 		medListProperty.setValue(FXCollections.observableArrayList(medsMapped));
+		if (medListProperty.getValue().size() == 0) {
+		    medListProperty.setValue(FXCollections.observableArrayList(""));
+        }
 		medList.itemsProperty().bind(medListProperty);
 	}
 
@@ -237,9 +240,14 @@ public class GUIPatientProfile extends TargetedController {
 		}
 		donatingListProperty.setValue(FXCollections.observableArrayList(organsMappedD));
 		receivingListProperty.setValue(FXCollections.observableArrayList(organsMappedR));
+        if (donatingListProperty.getValue().size() == 0) {
+            donatingListProperty.setValue(FXCollections.observableArrayList(""));
+        }
+        if (receivingListProperty.getValue().size() == 0) {
+            receivingListProperty.setValue(FXCollections.observableArrayList(""));
+        }
 		donationList.itemsProperty().bind(donatingListProperty);
 		receivingList.itemsProperty().bind(receivingListProperty);
-		receivingListProperty.setValue(FXCollections.observableArrayList(organsMappedR));
 		if (!(userControl.getLoggedInUser() instanceof Patient)) {
             setupListviewDoubleClick();
         }
@@ -278,7 +286,7 @@ public class GUIPatientProfile extends TargetedController {
 		Matcher matcher = pattern.matcher(listItem);
 		if (matcher.find()) {
 			Patient selected = patientDataService.getPatientByNhi(matcher.group(1));
-			GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, selected);
+			GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, selected, screenControl.getTouchParent(patientProfilePane));
 			controller.setTarget(selected);
 		}
 	}
@@ -296,26 +304,44 @@ public class GUIPatientProfile extends TargetedController {
 				: patient.getStreetNumber() + " " + patient.getStreetName());
 		if (patient.getStreetName() == null || patient.getStreetName().length() == 0) {
 			streetLbl.getStyleClass().add("notSet");
-		} else {
-			streetLbl.getStyleClass().clear();
+		}
+		else {
+			if (screenControl.isTouch()) {
+				streetLbl.setStyle("-fx-fill: white; ");
+			} else {
+				streetLbl.setStyle("-fx-fill: black; ");
+			}
 		}
 		suburbLbl.setText((patient.getSuburb() == null || patient.getSuburb().length() == 0) ? "Not set" : patient.getSuburb());
 		if (patient.getSuburb() == null || patient.getSuburb().length() == 0) {
 			suburbLbl.getStyleClass().add("notSet");
-		} else {
-			suburbLbl.getStyleClass().clear();
+		}
+		else {
+			if (screenControl.isTouch()) {
+				suburbLbl.setStyle("-fx-fill: white; ");
+			} else {
+				suburbLbl.setStyle("-fx-fill: black; ");
+			}
 		}
 		cityLbl.setText((patient.getCity() == null || patient.getCity().length() == 0) ? "Not set" : patient.getCity());
 		if (patient.getCity() == null || patient.getCity().length() == 0) {
 			cityLbl.getStyleClass().add("notSet");
 		} else {
-			cityLbl.getStyleClass().clear();
+			if (screenControl.isTouch()) {
+				cityLbl.setStyle("-fx-fill: white; ");
+			} else {
+				cityLbl.setStyle("-fx-fill: black; ");
+			}
 		}
 		regionLbl.setText(patient.getRegion() == null ? "Not set" : patient.getRegion().getValue());
 		if (patient.getRegion() == null) {
 			regionLbl.getStyleClass().add("notSet");
 		} else {
-			regionLbl.getStyleClass().clear();
+			if (screenControl.isTouch()) {
+				cityLbl.setStyle("-fx-fill: white; ");
+			} else {
+				cityLbl.setStyle("-fx-fill: black; ");
+			}
 		}
 		if (patient.getZip() != 0) {
 			zipLbl.setText(String.valueOf(patient.getZip()));
@@ -323,7 +349,11 @@ public class GUIPatientProfile extends TargetedController {
 				zipLbl.setText("0" + zipLbl.getText());
 			}
 		} else {
-			zipLbl.setText("Not set");
+			if (screenControl.isTouch()) {
+				zipLbl.setStyle("-fx-fill: white; ");
+			} else {
+				zipLbl.setStyle("-fx-fill: black; ");
+			}
 		}
 	}
 
@@ -370,21 +400,19 @@ public class GUIPatientProfile extends TargetedController {
 						setListInvalidStyle(item, donatingListProperty);
 					}
 				} else {
-					this.setStyle("-fx-background-color: WHITE");
 					this.setText(item);
 				}
 			}
 
 			private void setListInvalidStyle(String item, ListProperty<String> listProperty) {
-				this.setStyle("-fx-background-color: WHITE");
 				this.setText(item);
-				if (item != null) {
+				if (item != null && !item.equals("")) {
 					String[] itemArray = item.split(" \\|");
 					String organ = itemArray[0];
 					for (String listItem : listProperty) {
 						if (listItem.contains(organ)) {
 							this.getStyleClass().add("invalid");
-							this.setStyle("-fx-background-color: #e6b3b3");
+							this.setStyle("-fx-background-color: #ff0000");
 						}
 					}
 				}
