@@ -37,15 +37,6 @@ public class MapBridge {
     }
 
     /**
-     * Used by javascript map
-     * @param filterByArea whether single touches should filter by area or not
-     */
-    @SuppressWarnings("unused")
-    public void setFilterByArea(boolean filterByArea) {
-        screenControl.getMapController().setFilterByArea(filterByArea);
-    }
-
-    /**
      * Collects the patient list from available organs list
      */
     public List getAvailableOrgans() {

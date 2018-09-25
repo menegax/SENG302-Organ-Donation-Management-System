@@ -3,6 +3,7 @@ var markers = [];
 var infoWindows = [];
 var failedPatientArray = [];
 var markerSetId = 0;
+var filterByAreaListener, filterStart, filterEnd;
 
 var originalZoom;
 
@@ -41,14 +42,23 @@ function init() {
     google.maps.event.addListenerOnce(map, 'idle', function () {
         document.getElementById('filterAreaBtn').addEventListener('click', function () {
             console.log("Filter area button clicked!");
-            map.setOptions({gestureHandling: 'none'});
-            mapBridge.setFilterByArea(true);
+            filterByAreaListener = google.maps.event.addListener(map, 'click', function(e) {
+                console.log(filterStart);
+                if (filterStart === undefined) {
+                    filterStart = e.latLng;
+                } else {
+                    filterEnd = e.latLng;
+                    filterArea();
+                    google.maps.event.removeListener(filterByAreaListener);
+                }
+            });
         });
     });
 }
 
-function filterArea(start, end) {
-    map.setOptions({gestureHandling: 'cooperative'});
+function filterArea() {
+
+
 }
 
 /**

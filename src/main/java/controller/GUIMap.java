@@ -42,12 +42,6 @@ public class GUIMap {
 
     private Collection<Patient> patients = new ArrayList<>();
 
-    private boolean filterByArea = false;
-
-    private TouchPoint filterStart;
-
-    private TouchPoint filterEnd;
-
     public static JSObject getJSBridge(){ return jsBridge; }
 
 
@@ -120,16 +114,6 @@ public class GUIMap {
                                 Math.pow(touchOne.getY() - touchTwo.getY(), 2));
                         jsBridge.call("setJankaZoom", Math.pow(currentDistance / originalDistance, ZOOMFACTOR));
                     }
-                } else if (event.getTouchCount() == 1) {
-                    if (filterByArea) {
-                        if (filterStart == null) {
-                            filterStart = event.getTouchPoint();
-                        } else {
-                            filterEnd = event.getTouchPoint();
-                            jsBridge.call("filterArea", filterStart, filterEnd);
-                            filterByArea = false;
-                        }
-                    }
                 }
             }
         }));
@@ -144,7 +128,4 @@ public class GUIMap {
         WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> SystemLogger.systemLogger.log(Level.FINE, message));
     }
 
-    public void setFilterByArea(boolean filterByArea) {
-        this.filterByArea = filterByArea;
-    }
 }
