@@ -7,6 +7,7 @@ import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.transform.Rotate;
+import org.tuiofx.widgets.skin.MTComboBoxListViewSkin;
 import org.tuiofx.widgets.utils.Util;
 
 import java.util.ArrayList;
@@ -22,17 +23,19 @@ public class TouchComboBoxSkin extends ComboBoxListViewSkin {
 
     private Boolean doHide = false;
 
+    private Boolean doShow = false;
+
     public TouchComboBoxSkin(ComboBox comboBox, Pane pane) {
         super(comboBox);
         if (screenControl.isTouch()) {
             getPopup().setAutoHide(false);
             comboBox.setOnTouchPressed(event -> {
+                doShow = true;
                 show();
-                getPopupContent().setVisible(true);
             });
             comboBox.setOnMouseClicked(event -> {
+                doShow = true;
                 show();
-                getPopupContent().setVisible(true);
             });
             addTouchSkin(pane);
             comboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -50,6 +53,17 @@ public class TouchComboBoxSkin extends ComboBoxListViewSkin {
         if (doHide) {
             getPopupContent().setVisible(false);
             doHide = false;
+        }
+    }
+
+    /**
+     * Only hides if we specifically want it to hide through doHide
+     */
+    @Override
+    public void show() {
+        if (doShow) {
+            getPopupContent().setVisible(true);
+            doShow = false;
         }
     }
 

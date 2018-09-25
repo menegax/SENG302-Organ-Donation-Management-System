@@ -154,10 +154,10 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
      * Sets the ComboBox skins for ComboBoxes on this screen
      */
     private void setupComboBoxSkins() {
-        birthGenderFilter.setSkin(new TouchComboBoxSkin(birthGenderFilter, pane));
-        donationFilter.setSkin(new TouchComboBoxSkin(donationFilter, pane));
-        recievingFilter.setSkin(new TouchComboBoxSkin(recievingFilter, pane));
-        regionFilter.setSkin(new TouchComboBoxSkin(regionFilter, pane));
+        new TouchComboBoxSkin(birthGenderFilter, pane);
+        new TouchComboBoxSkin(donationFilter, pane);
+        new TouchComboBoxSkin(recievingFilter, pane);
+        new TouchComboBoxSkin(regionFilter, pane);
     }
 
 

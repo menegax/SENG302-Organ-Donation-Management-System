@@ -200,13 +200,12 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
         setupAgeSliderListeners();
         setupFilterListeners();
         filterTravelTimes();
-        birthGenderFilter.setSkin(new TouchComboBoxSkin(birthGenderFilter, potentialMatchesPane));
-        regionFilter.setSkin(new TouchComboBoxSkin(regionFilter, potentialMatchesPane));
         if (screenControl.isTouch()) {
             touchHandler = new MultiTouchHandler();
             touchHandler.initialiseHandler(potentialMatchesPane);
         }
-
+        new TouchComboBoxSkin(birthGenderFilter, potentialMatchesPane);
+        new TouchComboBoxSkin(regionFilter, potentialMatchesPane);
     }
 
 
