@@ -147,6 +147,9 @@ public class GUIPatientUpdateDonations extends UndoableController {
 
     /**
      * Checks if organ is promised or not to a patient already
+     * @param patient the patient object
+     * @param organ the organ to check
+     * @return whether the organ is promised
      */
     public boolean promised(Patient patient, GlobalEnums.Organ organ) {
         boolean promise = false;

@@ -60,6 +60,7 @@ import static javafx.scene.control.Alert.AlertType.ERROR;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
+
 public class GUIHome extends TargetedController implements Observer, IWindowObserver {
 
 
@@ -697,7 +698,7 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
 
     /**
      * Refreshes the current tab shown by switching to the first tab then switching back
-     * to the current tab. If the current tab is the first tab then it switches to the 
+     * to the current tab. If the current tab is the first tab then it switches to the
      * second.
      */
     private void refresh() {
