@@ -3,7 +3,7 @@ var markers = [];
 var infoWindows = [];
 var failedPatientArray = [];
 var markerSetId = 0;
-
+var potentialMatches;
 var originalZoom;
 
 var isViewingPotentialMatches = false;
@@ -176,12 +176,30 @@ function getDeadPatientInfoContent(patient) {
 }
 
 /**
- * Starts populating the map with potential matches
+ * Triggers Java method to find potential matches
  */
 function viewPotentialMatches(patientNhi) {
     isViewingPotentialMatches = true;
     isViewingPotentialMatches = false;
-    mapBridge.getPotentialMatches();
+    mapBridge.getPotentialMatches(patientNhi, currentOrgan);
+}
+
+/**
+ * Populates map with potential matches
+ */
+function populatePotentialMatches(patientNhi, donor) {
+    var donorMarker;
+    markers.forEach(function (marker) {
+       if (marker.nhi === patientNhi) {
+           donorMarker = marker;
+       }
+    });
+    setPatients(potentialMatches);
+    if (donorMarker !== undefined) {
+        donorMarker.setMap(map);
+        markers.push(donorMarker);
+        patients.push(donor);
+    }
 }
 
 /**

@@ -18,8 +18,6 @@ import static java.lang.Math.abs;
 
 public class PotentialMatchFinder {
 
-    private List<OrganWaitlist.OrganRequest> requests;
-
     private ObservableList<OrganWaitlist.OrganRequest> allRequests = FXCollections.observableArrayList();
 
     private PatientDataService patientDataService = new PatientDataService();
@@ -32,13 +30,11 @@ public class PotentialMatchFinder {
 
     private OrganWaitlist organWaitList;
 
-
     public ObservableList<OrganWaitlist.OrganRequest> matchOrgan(PatientOrgan patientOrgan) {
         patient = patientOrgan.getPatient();
         organ = patientOrgan.getOrgan();
         clinicianDataService = new ClinicianDataService();
         organWaitList = clinicianDataService.getOrganWaitList();
-        requests = new ArrayList<>();
         for (OrganWaitlist.OrganRequest request: organWaitList) {
             if(checkMatch(request)) {
                 allRequests.add(request);
@@ -72,6 +68,6 @@ public class PotentialMatchFinder {
     }
 
     public List<OrganWaitlist.OrganRequest> getRequests() {
-        return requests;
+        return allRequests;
     }
 }

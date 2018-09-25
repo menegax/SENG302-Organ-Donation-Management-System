@@ -3,16 +3,16 @@ package utility;
 import controller.GUIHome;
 import controller.GUIMap;
 import controller.ScreenControl;
+import javafx.collections.ObservableList;
 import model.Patient;
 import model.PatientOrgan;
+import org.mockito.internal.matchers.Or;
+import service.OrganWaitlist;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
 import javafx.geometry.Point2D;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -78,7 +78,18 @@ public class MapBridge {
         return patientDataService.getPatientByNhi(nhi);
     }
 
-    public void getPotentialMatches(String patientNhi) {
+    public void getPotentialMatches(String patientNhi, GlobalEnums.Organ organ) {
+        PotentialMatchFinder potentialMatchFinder = new PotentialMatchFinder();
+        Patient patient = patientDataService.getPatientByNhi(patientNhi);
+        PatientOrgan patientOrgan = new PatientOrgan(patient, organ);
+        ObservableList<OrganWaitlist.OrganRequest> allRequests = potentialMatchFinder.matchOrgan(patientOrgan);
+        List<OrganWaitlist.OrganRequest> requests = new ArrayList<OrganWaitlist.OrganRequest>(allRequests);
+        List<Patient> patients = new ArrayList<>();
+        for(OrganWaitlist.OrganRequest request : requests) {
+            patients.add(request.getReceiver());
+        }
+        GUIMap.getJSBridge().setMember("potentialMatches", patients);
+        GUIMap.getJSBridge().call("populatePotentialMatches", patientNhi, patient);
 
     }
 }
