@@ -96,11 +96,7 @@ function addMarker(patient) {
 
 function makeMarker(patient, results) {
     var name = patient.getNameConcatenated();
-
-    var randx = Math.random() * 0.02 - 0.01;
-    var randy = Math.random() * 0.02 - 0.01;
-    var finalLoc = new google.maps.LatLng(results.lat + randx, results.lng + randy);
-
+    var finalLoc = new google.maps.LatLng(results.lat, results.lng);
     if (patient.isDead()) {
         return new google.maps.Marker({
             map: map,
@@ -414,7 +410,7 @@ function buildOrganDropdown(infowindow) {
  */
 function reloadInfoWindow(patient) {
     if (patient.isDead()) {
-        let matchedMarkers = markers.filter(function(marker) {
+        var matchedMarkers = markers.filter(function(marker) {
             return marker.nhi === patient.getNhiNumber();
         });
         if (matchedMarkers.length > 0) {
