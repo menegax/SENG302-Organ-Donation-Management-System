@@ -118,7 +118,6 @@ public class MapBridge {
      */
     @SuppressWarnings("unused")
     public List getAvailableOrgans() {
-    public void getAvailableOrgans() {
         List<PatientOrgan> masterData = new ArrayList<PatientOrgan>();
         List<Patient> deadPatients = patientDataService.getDeadDonors();
         for (Patient patient : deadPatients) {
@@ -137,11 +136,11 @@ public class MapBridge {
         }
 
         Set<Patient> uniqueSetOfPatients = new HashSet<Patient>();
-        for (int i = 0; i < masterData.size(); i++) {
-            uniqueSetOfPatients.add(masterData.get(i).getPatient());
+
+        for (PatientOrgan aMasterData : masterData) {
+            uniqueSetOfPatients.add(aMasterData.getPatient());
         }
-        List<Patient> patients = new ArrayList<Patient>(uniqueSetOfPatients);
-        GUIMap.getJSBridge().call("setPatients",patients);
+        return new ArrayList<>(uniqueSetOfPatients);
     }
 
 

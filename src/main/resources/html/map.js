@@ -5,7 +5,6 @@ var infoWindows = [];
 var failedPatientArray = [];
 var markerSetId = 0;
 var filterByAreaListener, filterStart, filterEnd;
-var patientsFilteredByArea;
 var interruptMarkers = false;
 var donations = [];
 var currentMarker;
@@ -104,6 +103,7 @@ function init() {
         document.getElementById('clearFilterAreaBtn').addEventListener('click', function () {
             console.log("Clear filter area button clicked!");
             clearFilterArea();
+            clearRectangle();
         });
     });
 }
