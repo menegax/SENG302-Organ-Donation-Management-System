@@ -151,14 +151,7 @@ function attachInfoWindow(patient, marker) {
             else {
                 iw["iwindow"].open(map, marker);
             }
-        })
-        if (patient.getDonations().size() > 0 && patient.getDeathDate() != null) {
-            for (let i = 0; i < patient.getDonations().size(); i++) {
-                createOrganButtons(patient.getDonations().get(i).toString(), patient.getDonations().size());
-            }
-            setCurrentOrgan(patient.getDonations().get(0).toString());
-        }
-        createOpenPatientButton();
+        });
     });
 }
 
@@ -208,21 +201,6 @@ function createOrganButtons(organ, numberOfOrgans) {
         if (numberOfOrgans === currentTickOfOrganButtons) {
             editedInfos.push(currentInfoWindow);
         }
-    }
-}
-
-
-/**
- * create the open patient button
- */
-function createOpenPatientButton() {
-    if (!(createdOpenPatient.includes(currentInfoWindow))) {
-        currentInfoWindow.setOptions({
-            content: currentInfoWindow.content
-            + '<br><input type="button" onclick="openPatientProfile(\'' + currentPatient.getNhiNumber()
-            + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>'
-        });
-        createdOpenPatient.push(currentInfoWindow);
     }
 }
 
