@@ -4,6 +4,8 @@ import com.sun.javafx.webkit.WebConsoleListener;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.scene.input.TouchEvent;
+import javafx.scene.input.TouchPoint;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import model.Patient;
@@ -39,6 +41,12 @@ public class GUIMap {
     private Double originalDistance;
 
     private Collection<Patient> patients = new ArrayList<>();
+
+    private boolean filterByArea = true;
+
+    private TouchPoint filterStart;
+
+    private TouchPoint filterEnd;
 
     public static JSObject getJSBridge(){ return jsBridge; }
 
@@ -111,6 +119,18 @@ public class GUIMap {
                         double currentDistance = Math.sqrt(Math.pow(touchOne.getX() - touchTwo.getX(), 2) +
                                 Math.pow(touchOne.getY() - touchTwo.getY(), 2));
                         jsBridge.call("setJankaZoom", Math.pow(currentDistance / originalDistance, ZOOMFACTOR));
+                    }
+                } else if (event.getTouchCount() == 1) {
+                    if (filterByArea) {
+                        if (filterStart == null) {
+                            filterStart = event.getTouchPoint();
+                        } else if (event.getEventType() != TouchEvent.TOUCH_RELEASED) {
+                            filterEnd = event.getTouchPoint();
+                        } else {
+                            filterEnd = event.getTouchPoint();
+                            jsBridge.call("filterArea", filterStart, filterEnd);
+                        }
+                        event.consume();
                     }
                 }
             }
