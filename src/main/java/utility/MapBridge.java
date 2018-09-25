@@ -10,10 +10,6 @@ import service.PatientDataService;
 import service.interfaces.IPatientDataService;
 
 import java.util.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 
 /**
@@ -98,7 +94,6 @@ public class MapBridge {
 
     /**
      * Collects the patient list from available organs list
-     * @return the list of patients that have available organs
      */
     public void getAvailableOrgans() {
         List<PatientOrgan> masterData = new ArrayList<PatientOrgan>();
