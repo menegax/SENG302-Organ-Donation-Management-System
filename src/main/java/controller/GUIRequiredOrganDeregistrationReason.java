@@ -101,9 +101,9 @@ public class GUIRequiredOrganDeregistrationReason extends TargetedController{
         if(screenControl.isTouch()) {
             touchHandler = new MultiTouchHandler();
             touchHandler.initialiseHandler(deregistrationReasonPane);
+            new TouchComboBoxSkin(deathRegion, deregistrationReasonPane);
         }
         dateOfDeath.setSkin(new TouchDatePickerSkin(dateOfDeath, deregistrationReasonPane));
-        new TouchComboBoxSkin(deathRegion, deregistrationReasonPane);
     }
 
 
