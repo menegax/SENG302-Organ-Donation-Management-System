@@ -53,7 +53,7 @@ public class GUIAdministratorUserRegister extends UndoableController {
     private TextField userIdRegister;
 
     @FXML
-    private ChoiceBox regionRegister;
+    private ComboBox regionRegister;
 
     @FXML
     private PasswordField passwordTxt;

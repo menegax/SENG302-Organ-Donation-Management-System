@@ -48,7 +48,7 @@ public class GUIRequiredOrganDeregistrationReason extends TargetedController{
     private TextField deathCity;
 
     @FXML
-    private ChoiceBox<String> deathRegion;
+    private ComboBox<String> deathRegion;
 
     @FXML
     private ChoiceBox<GlobalEnums.DeregistrationReason> reasons;
