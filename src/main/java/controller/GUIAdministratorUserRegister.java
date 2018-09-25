@@ -107,7 +107,9 @@ public class GUIAdministratorUserRegister extends UndoableController {
         });
         TouchDatePickerSkin dateOfBirthSkin = new TouchDatePickerSkin(birthRegister, (Pane) screenControl.getTouchParent(userRegisterPane));
         birthRegister.setSkin(dateOfBirthSkin);
-        new TouchComboBoxSkin(regionRegister, (Pane) screenControl.getTouchParent(userRegisterPane));
+        if (screenControl.isTouch()) {
+            new TouchComboBoxSkin(regionRegister, (Pane) screenControl.getTouchParent(userRegisterPane));
+        }
     }
 
     /**

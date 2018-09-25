@@ -147,7 +147,9 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
 
         setupUndoRedo();
         updateProfileCount();
-        setupComboBoxSkins();
+        if (screenControl.isTouch()) {
+            setupComboBoxSkins();
+        }
     }
 
     /**

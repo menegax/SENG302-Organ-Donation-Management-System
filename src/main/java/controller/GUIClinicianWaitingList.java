@@ -70,8 +70,10 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
         populateTable();
         setupDoubleClickToPatientEdit();
         populateFilterChoiceBoxes();
-        new TouchComboBoxSkin(organSelection, (Pane) screenControl.getTouchParent(clinicianWaitingList));
-        new TouchComboBoxSkin(regionSelection, (Pane) screenControl.getTouchParent(clinicianWaitingList));
+        if (screenControl.isTouch()) {
+            new TouchComboBoxSkin(organSelection, (Pane) screenControl.getTouchParent(clinicianWaitingList));
+            new TouchComboBoxSkin(regionSelection, (Pane) screenControl.getTouchParent(clinicianWaitingList));
+        }
     }
 
 
