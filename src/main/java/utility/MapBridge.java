@@ -102,7 +102,7 @@ public class MapBridge {
                             .submit(targetPatientOrgan.getProgressTask());
 
                     GUIMap.getJSBridge()
-                            .call("matchedOrgan",
+                            .call("createMatchedOrganArrow",
                                     patient.getCurrentLocation(),
                                     recipient.getCurrentLocation(),
                                     recipient.getNhiNumber(),

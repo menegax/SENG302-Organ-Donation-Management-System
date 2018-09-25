@@ -183,18 +183,20 @@ function getAlivePatientInfoContent(patient) {
 /**
  * Triggered via java if there is a match to create a line
  */
-function matchedOrgan(geolocation, geolocation1, recipientNhi, color, organ) {
-    //var matchedOrganPath = [{geolocation}, {geolocation1.lat, ge}];
+function createMatchedOrganArrow(donorLoc, recipientLoc, recipientNhi, progressColor, organ) {
+
     if (!markers.some(function(marker) {
         return marker.nhi === recipientNhi;
     })) {
         return;
     }
+
     var matchedOrganPath = [{
-        lat: geolocation.lat, lng: geolocation.lng
+        lat: donorLoc.lat, lng: donorLoc.lng
     },{
-        lat: geolocation1.lat, lng: geolocation1.lng
+        lat: recipientLoc.lat, lng: recipientLoc.lng
     }];
+
     var matchedOrgan = new google.maps.Polyline({
         map: null,
         icons: [{
@@ -205,7 +207,7 @@ function matchedOrgan(geolocation, geolocation1, recipientNhi, color, organ) {
         }],
         path: matchedOrganPath,
         geodesic: true,
-        strokeColor: color,
+        strokeColor: progressColor,
         strokeOpacity: 1.0,
         strokeWeight: 2,
         recipientNhi: recipientNhi,
