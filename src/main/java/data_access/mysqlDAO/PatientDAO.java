@@ -1,22 +1,60 @@
 package data_access.mysqlDAO;
 
+import static utility.GlobalEnums.FilterOption.AGELOWER;
+import static utility.GlobalEnums.FilterOption.AGEUPPER;
+import static utility.GlobalEnums.FilterOption.BIRTHGENDER;
+import static utility.GlobalEnums.FilterOption.DONATIONS;
+import static utility.GlobalEnums.FilterOption.DONOR;
+import static utility.GlobalEnums.FilterOption.RECIEVER;
+import static utility.GlobalEnums.FilterOption.REGION;
+import static utility.GlobalEnums.FilterOption.REQUESTEDDONATIONS;
+import static utility.SystemLogger.systemLogger;
+
 import data_access.factories.MySqlFactory;
-import data_access.interfaces.*;
-import model.*;
-import utility.*;
+import data_access.interfaces.IContactDataAccess;
+import data_access.interfaces.IDiseaseDataAccess;
+import data_access.interfaces.IDonationsDataAccess;
+import data_access.interfaces.ILogDataAccess;
+import data_access.interfaces.IMedicationDataAccess;
+import data_access.interfaces.IPatientDataAccess;
+import data_access.interfaces.IProcedureDataAccess;
+import data_access.interfaces.IRequiredOrganDataAccess;
+import data_access.interfaces.ITransplantWaitListDataAccess;
+import model.Disease;
+import model.Medication;
+import model.OrganReceival;
+import model.Patient;
+import model.Procedure;
+import utility.GlobalEnums;
+import utility.GlobalEnums.BirthGender;
+import utility.GlobalEnums.BloodGroup;
+import utility.GlobalEnums.DiseaseState;
+import utility.GlobalEnums.FilterOption;
+import utility.GlobalEnums.MedicationStatus;
+import utility.GlobalEnums.Organ;
+import utility.GlobalEnums.PreferredGender;
+import utility.GlobalEnums.Region;
+import utility.ImportObservable;
+import utility.PatientActionRecord;
+import utility.ResourceManager;
+import utility.SystemLogger;
 
-import utility.GlobalEnums.*;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.zip.DataFormatException;
-
-import static utility.GlobalEnums.FilterOption.*;
-import static utility.SystemLogger.systemLogger;
 
 public class PatientDAO implements IPatientDataAccess {
 
@@ -227,9 +265,9 @@ public class PatientDAO implements IPatientDataAccess {
             }
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
-                Patient patient = constructPatientObject(resultSet, new ArrayList<String>() {{
-                    add(resultSet.getString("Region"));
-                }});
+                Map<Organ, String> donations = donatingOrgansDataAccess.getDonatingOrgansByDonorNhi(resultSet.getString("nhi"));
+                Map<Organ, OrganReceival> requiredOrgans = requiredOrgansDataAccess.getRequiredOrganByNhi(resultSet.getString("nhi"));
+                Patient patient = mapBasicPatient(resultSet, requiredOrgans, donations);
                 //Add patient to resultMap with appropriate score
                 if (searchTerm.equals("")) {
                     resultMap.get(0)
@@ -244,6 +282,7 @@ public class PatientDAO implements IPatientDataAccess {
             return resultMap;
         }
         catch (Exception e) {
+            e.printStackTrace();
             systemLogger.log(Level.SEVERE, "Could not search patients from MYSQL DB", this);
         }
         return null;
@@ -275,10 +314,11 @@ public class PatientDAO implements IPatientDataAccess {
         try (Connection connection = mySqlFactory.getConnectionInstance()) {
             PreparedStatement statement = connection.prepareStatement(ResourceManager.getStringForQuery("SELECT_DEAD_PATIENTS"));
             List<Patient> patients = new ArrayList<>();
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                Map<Organ, String> donations = donatingOrgansDataAccess.getDonatingOrgansByDonorNhi(resultSet.getString("nhi"));
-                patients.add(constructPatientObject(resultSet, null, null, null, null, null, null, donations));
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                Map<Organ, String> donations = donatingOrgansDataAccess.getDonatingOrgansByDonorNhi(rs.getString("nhi"));
+                Map<Organ, OrganReceival> requiredOrgans = requiredOrgansDataAccess.getRequiredOrganByNhi(rs.getString("nhi"));
+                patients.add(mapBasicPatient(rs, requiredOrgans, donations));
             }
             return patients;
         }
@@ -286,6 +326,24 @@ public class PatientDAO implements IPatientDataAccess {
             systemLogger.log(Level.SEVERE, "Could not get dead patients from MYSQL db", this);
         }
         return new ArrayList<>();
+    }
+
+
+    /**
+     * Helper method to map basic patient
+     * @param rs - result set to strip basic contact information off
+     * @return - return basic patient object with basic info + current address
+     * @throws SQLException - thrown when column does not exist
+     */
+    private Patient mapBasicPatient(ResultSet rs, Map<Organ, OrganReceival> required, Map<Organ, String> donations) throws SQLException{
+        return constructPatientObject(rs,
+                new ArrayList<String>(){{
+                    add(rs.getString("StreetNumber"));
+                    add(rs.getString("StreetName"));
+                    add(rs.getString("Suburb"));
+                    add(rs.getString("Zip"));
+                    add(rs.getString("Region"));
+                    add(rs.getString("City"));}}, required, donations);
     }
 
 
@@ -399,29 +457,32 @@ public class PatientDAO implements IPatientDataAccess {
     }
 
 
-    private Patient constructPatientObject(ResultSet attributes, List<String> contacts) throws SQLException {
-        Map<GlobalEnums.Organ, OrganReceival> required = new HashMap<>();
+    private Patient constructPatientObject(ResultSet attributes, List<String> contacts, Map<Organ, OrganReceival> required, Map<Organ, String> donations) throws SQLException {
         try {
             if (attributes.getInt("hasRequired") == 1) {
                 OrganReceival organReceival = new OrganReceival(LocalDate.now());
-                required.put(Organ.BONE, organReceival);
+                if (required == null) {
+                    required = new HashMap<>();
+                }
             }
         }
         catch (SQLException ignore) {
             // pass through
         }
 
-        Map<GlobalEnums.Organ, String> donations = new HashMap<>();
         try {
             if (attributes.getInt("hasDonations") == 1) {
-                donations.put(Organ.BONE, null);
+                if (donations == null) {
+                    donations = new HashMap<>();
+                }
             }
         }
         catch (SQLException ignore) {
             // pass through
         }
-
-        return constructPatientObject(attributes, contacts, null, null, null, null, required, donations);
+        Patient patient = constructPatientObject(attributes, new ArrayList<>(), null, null, null, null, required, donations);
+        mapBasicAddress(patient, contacts);
+        return patient;
     }
 
 
@@ -535,6 +596,7 @@ public class PatientDAO implements IPatientDataAccess {
                 pastDiseases.add(x);
             }
         });
+
         //map contact info etc
         if (contacts != null) {
             if (contacts.size() > 1) {
@@ -569,7 +631,23 @@ public class PatientDAO implements IPatientDataAccess {
         return patient;
     }
 
-
+    /**
+     * Helper method to map basic address info to patient object
+     * @param patient - patient obj to map to
+     * @param contacts - streetNo, StreetName, Suburb, Zip, Region, City
+     */
+    private void mapBasicAddress(Patient patient, List<String> contacts) {
+        patient.setStreetNumber(contacts.get(0));
+        patient.setStreetName(contacts.get(1));
+        try {
+            patient.setSuburb(contacts.get(2));
+        } catch (DataFormatException ignored) {
+            //pass through
+        }
+        patient.setZip(Integer.parseInt(contacts.get(3)));
+        patient.setRegion(contacts.get(4) != null ? Region.getEnumFromString(contacts.get(4)) : null);
+        patient.setCity(contacts.get(5));
+    }
     private String getNextRecordString(Patient aPatient) {
         return String.format(ResourceManager.getStringForQuery("PATIENT_INSERT_ANOTHER"),
                 aPatient.getNhiNumber(),

@@ -25,6 +25,29 @@ import utility.Searcher;
 import utility.parsing.DateConverterCSV;
 import utility.parsing.DateTimeConverterCSV;
 import utility.parsing.EnumConverterCSV;
+import utility.GlobalEnums;
+import utility.GlobalEnums.BirthGender;
+import utility.GlobalEnums.BloodGroup;
+import utility.GlobalEnums.DiseaseState;
+import utility.GlobalEnums.MedicationStatus;
+import utility.GlobalEnums.Organ;
+import utility.GlobalEnums.PreferredGender;
+import utility.GlobalEnums.Region;
+import utility.GlobalEnums.Status;
+import utility.MapBridge;
+import utility.GlobalEnums.BirthGender;
+import utility.GlobalEnums.BloodGroup;
+import utility.GlobalEnums.DiseaseState;
+import utility.GlobalEnums.MedicationStatus;
+import utility.GlobalEnums.Organ;
+import utility.GlobalEnums.PreferredGender;
+import utility.GlobalEnums.Region;
+import utility.GlobalEnums.Status;
+import utility.PatientActionRecord;
+import utility.Searcher;
+import utility.parsing.DateConverterCSV;
+import utility.parsing.DateTimeConverterCSV;
+import utility.parsing.EnumConverterCSV;
 
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
@@ -37,6 +60,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
@@ -421,6 +445,8 @@ public class Patient extends User {
         setRequiredOrgans(newPatientAttributes.getRequiredOrgans());
         setWorkPhone(newPatientAttributes.getWorkPhone());
         setZip(newPatientAttributes.getZip());
+        MapBridge mp = new MapBridge(); //coupling to map bridge
+        mp.updateInfoWindow(newPatientAttributes);
     }
 
     /**
@@ -569,6 +595,7 @@ public class Patient extends User {
 
     public void setDeathStreet(String deathStreet) {
         this.deathStreet = deathStreet;
+        clearCurrentLocation();
         userModified();
     }
 
@@ -579,6 +606,7 @@ public class Patient extends User {
 
     public void setDeathCity(String deathCity) {
         this.deathCity = deathCity;
+        clearCurrentLocation();
         userModified();
     }
 
@@ -588,6 +616,7 @@ public class Patient extends User {
 
     public void setDeathRegion(Region region) {
         this.deathRegion = region;
+        clearCurrentLocation();
         userModified();
     }
 
@@ -766,11 +795,23 @@ public class Patient extends User {
         userModified();
     }
 
+
+    /**
+     * Don't use! Unless this is for testing purposes
+     * @return the current LatLng
+     */
+    public LatLng getCurrentLocationForTestingOnly() {
+        return this.currentLocation;
+    }
+
     public LatLng getCurrentLocation() throws InterruptedException, ApiException, IOException {
         if (currentLocation == null) {
             if (this.isDead()) {
                 this.currentLocation = APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getDeathLocationConcat());
             } else {
+                if (this.getFormattedAddress().trim().equals("0")) { //if only part of address to google is 0 for default zip
+                    return null;
+                }
                 this.currentLocation = APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getFormattedAddress());
             }
         }
@@ -795,7 +836,6 @@ public class Patient extends User {
      */
     private void clearCurrentLocation() {
         this.currentLocation = null;
-        currentLocation = null;
     }
 
     /**
@@ -861,8 +901,20 @@ public class Patient extends User {
         userModified();
     }
 
+
+    /**
+     * Gets a formatted address that contains no nulls
+     * @return - return formatted address string
+     */
+    @SuppressWarnings("WeakerAccess")
     public String getFormattedAddress() {
-        return streetNumber + " " + streetName + " " + suburb + " " + region + " " + zip;
+        return String.format("%s %s %s %s %s %s",
+                Objects.toString(streetNumber, ""),
+                Objects.toString(streetName, ""),
+                Objects.toString(suburb, ""),
+                Objects.toString(city, ""),
+                Objects.toString(region, ""),
+                Objects.toString(zip, ""));
     }
 
     /**

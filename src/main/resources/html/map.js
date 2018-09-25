@@ -1,6 +1,8 @@
 var map, geocoder, patients, mapBridge, successCount;
 var markers = [];
 var infoWindows = [];
+var failedPatientArray = [];
+var markerSetId = 0;
 var matchedOrganLines = [];
 
 function init() {
@@ -8,7 +10,22 @@ function init() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: -40.59225, lng: 173.51012}, zoom: 6, disableDefaultUI: true, scaleControl: true, gestureHandling: 'cooperative'
     });
-    setMapDragEnd();
+
+    google.maps.event.addListenerOnce(map, 'idle', function () {
+        setMapDragEnd();
+        document.getElementById('availableOrgansView').addEventListener('click', function () {
+            validCount = 0;
+            failedPatientArray = [];
+            markers.forEach(function (marker) {
+                marker.setMap(null);
+            });
+            markers = [];
+            patients = mapBridge.getAvailableOrgans();
+            successCount = 0;
+            markerSetId++;
+            addMarkers(patients.size(), markerSetId);
+        });
+    });
 }
 
 /**
@@ -59,42 +76,112 @@ function addMarker(patient) {
     }
     var name = patient.getNameConcatenated();
     console.log("Adding marker to map for patient " + patient.getNhiNumber());
-    geocoder.geocode({'address': address}, function (results, status) {
-        if (status === 'OK') {
-            successCount++;
-            var organOptions = getOrganOptions(patient);
-            var finalLoc = new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng());
-            var marker = new google.maps.Marker({
-                map: map, position: finalLoc, title: name, nhi: patient.getNhiNumber()
-            });
-
-            // create info window
-            var infoWindow = new google.maps.InfoWindow({
-                content: '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</h5><span style="font-size: 14px">'
-                + patient.getAddressString() + '<br><br>' + organOptions.donating + '<br><br>' + organOptions.receiving
-                + '</span><br><input type="button" onclick="openPatientProfile(\'' + patient.getNhiNumber()
-                + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>'
-            });
-            infoWindows.push(infoWindow);
-
-            // add listener to open infoWindow when marker clicked
-            marker.addListener('click', function () {
-                //infoWindow.open(map, marker);
-                infoWindows.forEach(function (iw) {
-                    if (iw !== infoWindow) {
-                        iw.close();
-                    }
-                    else {
-                        iw.open(map, marker);
-                    }
-                })
-            });
-            markers.push(marker);
+    var latLong = patient.getCurrentLocation();
+    if (latLong !== null) {
+        successCount++;
+        var marker = makeMarker(patient, latLong); //set up markers
+        attachInfoWindow(patient, marker);
+        markers.push(marker);
+    }
+    else {
+        var index = failedPatientArray.indexOf(patient);
+        if (index !== -1) {
+            failedPatientArray[index] = patient;
+        }else {
+            failedPatientArray.push(patient);
         }
-        else {
-            console.log('Geocode failed for patient ' + patient.getNhiNumber() + ' because: ' + status);
-        }
+        console.log('Geocoding failed because: ' + status);
+    }
+}
+
+function makeMarker(patient, results) {
+    var name = patient.getNameConcatenated();
+
+    var randx = Math.random() * 0.02 - 0.01;
+    var randy = Math.random() * 0.02 - 0.01;
+    var finalLoc = new google.maps.LatLng(results.lat + randx, results.lng + randy);
+
+    if (patient.isDead()) {
+        return new google.maps.Marker({
+            map: map,
+            position: finalLoc,
+            title: name,
+            animation: google.maps.Animation.DROP,
+            // label: 'D',
+            nhi: patient.getNhiNumber(),
+            icon: '../image/markers/blue.png'
+        });
+    }
+    else if (!patient.isDead()) {
+        return new google.maps.Marker({
+            map: map,
+            position: finalLoc,
+            title: name,
+            animation: google.maps.Animation.DROP,
+            // label: 'A',
+            nhi: patient.getNhiNumber(),
+            icon: '../image/markers/green.png'
+        });
+    }
+
+}
+
+function attachInfoWindow(patient, marker) {
+    var infoWindow;
+    if (patient.isDead()) {
+        infoWindow = new google.maps.InfoWindow({
+            content: getDeadPatientInfoContent(patient),
+            maxWidth:550
+        });
+        buildOrganDropdown(infoWindow);
+    } else {
+        infoWindow = new google.maps.InfoWindow({
+            content: getAlivePatientInfoContent(patient),
+            maxWidth:350
+        });
+    }
+    mapInfoWindowToPatient(infoWindow, patient);
+    marker.addListener('click', function () { // when clicking on the marker, all other markers' info windows close
+        infoWindows.forEach(function (iw) {
+            if (iw["iwindow"] !== infoWindow) {
+                iw["iwindow"].close();
+            }
+            else {
+                iw["iwindow"].open(map, marker);
+            }
+        })
     });
+}
+
+/**
+ * Gets the dead patients html content for the info window
+ * @param patient - patient to attach to info window
+ * @returns {string}
+ */
+function getDeadPatientInfoContent(patient) {
+    var addressString = patient.getDeathLocationConcat();
+    var nhi = patient.getNhiNumber();
+    return '<button onclick="openPatientProfile(\'' + nhi + '\')" type="button" class="btn btn-link" style="font-size: 24px; margin-left: -10px">' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</button>' + '<br>'
+        + '<span class="info-window-address">' + addressString + '</span><br>'
+        + '<label>Blood Group: ' + patient.getBloodGroup() + '</label><br>'
+        + '<label>Age: ' + patient.getAge() + '</label><br>'
+        + '<label>Birth Gender: ' + patient.getBirthGender() + '</label><br>'
+        + '<label style="padding-top: 5px;">Organ to Assign</label>'
+        + '<select id="dropdown" style="margin-left: 5%; float: right; height: 25px"></select>'
+        + '<input type="button" onclick="assignOrgan()" class="btn btn-sm btn-block btn-primary mt-3 float-left" value="Assign Organ" style="margin-top: 20px"/>';
+}
+
+/**
+ * Gets the alive patients html content for the info window
+ * @param patient - patient to attach to info window
+ * @returns {string}
+ */
+function getAlivePatientInfoContent(patient) {
+    var organOptions = getOrganOptions(patient);
+    return '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</h5><span style="font-size: 14px">'
+        + patient.getAddressString() + '<br><br>' + organOptions.donating + '<br><br>' + organOptions.receiving
+        + '</span><br><input type="button" onclick="openPatientProfile(\'' + patient.getNhiNumber()
+        + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>';
 }
 
 /**
@@ -158,22 +245,34 @@ function openPatientProfile(patientNhi) {
 function getOrganOptions(patient) {
     var donations = patient.getDonations().toString();
     var donationStr;
-    if (donations !== '[]') {
-        donationStr = '<b>Donations:</b><br>' + donations.substring(1, donations.length - 1);
+    if (donations !== '{}') {
+        var reg = /(\w+)=\w+,?/g;
+        donationStr = '<b>Donations:</b><br>';
+        var donationsArray = [];
+        var result;
+        var string = donations.substring(1, donations.length - 1);
+        while (result = reg.exec(string)) {
+            donationsArray.push(result[1]);
+        }
+        donationStr += donationsArray.join(", ");
     }
     else {
         donationStr = 'No Donations';
     }
-
     var required = patient.getRequiredOrgans().toString();
-    var matching = required.substring(1, required.length - 1).match(/[a-z]+/g);
-    var requiredStr;
-    if (matching) {
-        requiredStr = '<b>Required:</b><br>' + matching.join(', ');
-    }
-    else {
+    if (required !== '{}') {
+        reg = /(\w+)=\w+,?/g;
+        reqsArray = [];
+        requiredStr = '<b>Required:</b><br>';
+        string = required.substring(1, required.length - 1);
+        while (result = reg.exec(string)) {
+            reqsArray.push(result[1]);
+        }
+        requiredStr += reqsArray.join(", ");
+    } else {
         requiredStr = 'No Requirements';
     }
+
     return {donating: donationStr, receiving: requiredStr};
 }
 
@@ -183,17 +282,21 @@ function getOrganOptions(patient) {
  */
 function setPatients(_patients) {
     patients = _patients;
+    hideNotification();
     clearMarkers();
     clearLines();
     successCount = 0;
-    addMarkers(patients.size());
+    infoWindows = [];
+    markerSetId++;
+    addMarkers(patients.size(), markerSetId);
 }
 
 /**
  * Add markers to the map
  * @param i
+ * @param id
  */
-function addMarkers(i) {
+function addMarkers(i, id) {
     if (i < 1) {
         showNotification(successCount, patients.size());
         markers.forEach(function (marker) {
@@ -201,9 +304,12 @@ function addMarkers(i) {
         });
         return;
     }
+    if (id !== markerSetId) {
+        return; //break task
+    }
     addMarker(patients.get(i-1));
     setTimeout(function() {
-        addMarkers(--i);
+        addMarkers(--i, id);
     }, 700);
 }
 
@@ -211,6 +317,7 @@ function addMarkers(i) {
  * Clear the markers from the map
  */
 function clearMarkers() {
+    failedPatientArray = [];
     markers.forEach(function (marker) {
         marker.setMap(null);
     });
@@ -240,6 +347,114 @@ function hideNotification() {
  * @param numTotal total patients to load
  */
 function showNotification(numSuccess, numTotal) {
-    $('#marker-notification-msg').html('Successfully loaded ' + numSuccess + ' out of ' + numTotal + ' patient locations');
+    var modalContent = "";
+    var modalMessage = 'Successfully loaded ' + numSuccess + ' out of ' + numTotal + ' patient locations.';
+    $('#marker-notification-msg').html();
     $('#marker-notification').show();
+    setTimeout(function() {
+        hideNotification();
+    }, 10000);
+    failedPatientArray.forEach(function(patient) {
+        var nhi = patient.getNhiNumber();
+        var address;
+        if (patient.isDead()) {
+            address = patient.getDeathLocationConcat();
+        } else {
+            address = patient.getFormattedAddress();
+        }
+        modalContent += '<tr>\n' +
+           '<th scope=\"row\"><button  onclick="openPatientProfile(\'' + nhi + '\')" type=\"button\" class=\"btn btn-link\" style=\"font-size: 15px; margin-left: -20px\">'+  patient.getNhiNumber() + '</button></th>\n' +
+           '<td style=\"font-size: 15px; padding-top: 18px\">' + patient.getNameConcatenated() + '</td>\n' +
+           '<td style=\"font-size: 15px; padding-top: 18px\">' + address + '</td>\n' +
+           '</tr>';
+    });
+    if (failedPatientArray.length ===  0){
+        $('#marker-notification').html('<span>' + modalMessage + '</span><span class="marker-notification-close" onclick="hideNotification()"> &times;</span>');
+    } else {
+        $('#marker-notification').html('<span>' + modalMessage + '</span>' +
+            '    <a href="#" data-toggle="modal" data-target="#failedPatients">View failed patients</a>\n' +
+            '    <span class="marker-notification-close" onclick="hideNotification()"> &times;</span>');
+        $('#failed-patient-table').html(modalContent);
+    }
+}
+
+/**
+ * Populates organ dropdown with patient dontations
+ * @param patient - patient whos info window is being looked at
+ * @param infowindow - info window being displayed
+ */
+function buildOrganDropdown(infowindow) {
+    google.maps.event.addListener(infowindow, "domready", function() {
+        infoWindows.forEach(function(iw) {
+            if (iw["iwindow"] === infowindow) {
+                var patient2 = iw["patient"];
+                $('#dropdown').html('');
+                $('#dropdown').html('<option value="organs">None</option>');
+                var reg = /(\w+)=\w+,?/g;
+                var donationsArray = [];
+                var result;
+                while (result = reg.exec(patient2.getDonations().toString().slice(1, -1))) {
+                    donationsArray.push(result[1]);
+                }
+                for (var i = 0; i< donationsArray.length; i++) {
+                    $('#dropdown').append($('<option>', {
+                        value: i + 1,
+                        text: donationsArray[i]
+                    }));
+                }
+            }
+        });
+    }, false);
+}
+
+/**
+ * Intended to be able to reload patients info window,
+ * to be called from JAVA
+ * @param patient - patient whose info window is to be updated
+ */
+function reloadInfoWindow(patient) {
+    if (patient.isDead()) {
+        let matchedMarkers = markers.filter(function(marker) {
+            return marker.nhi === patient.getNhiNumber();
+        });
+        if (matchedMarkers.length > 0) {
+            matchedMarkers[0].setOptions({
+                icon: '../image/markers/blue.png'
+            });
+        }
+    }
+    for (var i =0; i<infoWindows.length; i++) {
+        if (infoWindows[i]["nhi"] === patient.getNhiNumber()) {
+            infoWindows[i]["patient"] = patient;
+            if (patient.isDead()) {
+                infoWindows[i]["iwindow"].setContent(getDeadPatientInfoContent(patient));
+                buildOrganDropdown(infoWindows[i]["iwindow"]);
+            } else {
+                infoWindows[i]["iwindow"].setContent(getAlivePatientInfoContent(patient));
+            }
+        }
+    }
+}
+
+
+/**
+ * Maps patient to its information window in global jsonarray
+ * @param infoWindow - info window to map patient to
+ * @param patient - patient to map
+ */
+function mapInfoWindowToPatient(infoWindow, patient) {
+    var hasExistingInfoWindow = false;
+    var i;
+    for (i = 0; i < infoWindows.length; i++) {
+        if (infoWindows[i]["patient"].getNhiNumber() === patient.getNhiNumber()) {
+            hasExistingInfoWindow = true;
+            break;
+        }
+    };
+    if (hasExistingInfoWindow) {
+        infoWindows.splice(i, 1, { "iwindow" : infoWindow, "patient" : patient, "nhi" : patient.getNhiNumber()}); //hacks -> cannot use patient obj so need nhi
+                                                                                                                  //java -> js references out of whack when updating
+    } else {
+        infoWindows.push({ "iwindow" : infoWindow, "patient" : patient, "nhi" : patient.getNhiNumber()}); //
+    }
 }
