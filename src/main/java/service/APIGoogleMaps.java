@@ -39,9 +39,9 @@ public class APIGoogleMaps {
      * Retrieves the LatLng object from a string address
      * @param address the address to geocode
      * @return LatLng object containing the coordinates
-     * @throws InterruptedException
-     * @throws ApiException
-     * @throws IOException
+     * @throws InterruptedException InterruptedException
+     * @throws ApiException ApiException
+     * @throws IOException IOException
      */
     public LatLng geocodeAddress(String address) throws InterruptedException, ApiException, IOException {
         GeocodingResult[] results = GeocodingApi.geocode(context, address)
