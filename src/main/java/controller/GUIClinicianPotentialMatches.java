@@ -596,11 +596,12 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
                 try {
                     Patient selectedUser = patientDataService.getPatientByNhi(request.getReceiverNhi());
                     patientDataService.save(selectedUser);
-                    Parent parent = screenControl.getTouchParent(potentialMatchesPane);
+                    Parent parent = potentialMatchesPane.getParent();
                     GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser, parent);
                     controller.setTarget(selectedUser);
                 }
                 catch (Exception e) {
+                    e.printStackTrace();
                     userActions.log(Level.SEVERE,
                             "Failed to retrieve selected patient from database",
                             new String[] { "Attempted to retrieve selected patient from database", request.getReceiverNhi() });
