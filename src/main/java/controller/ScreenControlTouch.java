@@ -126,7 +126,7 @@ class ScreenControlTouch extends ScreenControl {
             touchPane.getChildren().addAll(panes);
             Scene newScene = new Scene(touchPane);
             touchStage.setScene(newScene);
-            if (!fullScreen) {
+            if (fullScreen) {
             	ensureFullScreen();
             }
             addCanvas(newScene);
@@ -170,12 +170,14 @@ class ScreenControlTouch extends ScreenControl {
      * @param pane The map pane
      */
     private void setMapPanePosition(Region pane) {
-    	pane.setPrefWidth(touchPane.getWidth());
-    	pane.setPrefHeight(touchPane.getHeight());
+    	pane.setPrefWidth(touchStage.getWidth());
+    	pane.setPrefHeight(touchStage.getHeight());
     	pane.setTranslateX(0);
     	pane.setTranslateY(0);
-    	pane.setScaleX(1);
-    	pane.setScaleY(1);
+        pane.setLayoutX(0);
+        pane.setLayoutY(0);
+        pane.setScaleX(1);
+        pane.setScaleY(1);
     }
     
     /**
