@@ -443,6 +443,8 @@ function reloadInfoWindow(patient) {
             }
         }
     }
+    clearCircles();
+    mapBridge.loadCircle(patient.getNhiNumber(), currentOrgan);
 }
 
 
