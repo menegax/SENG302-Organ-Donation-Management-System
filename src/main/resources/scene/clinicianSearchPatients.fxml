@@ -14,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane fx:id="pane" prefHeight="581.0" prefWidth="769.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianSearchPatients">
+<GridPane fx:id="pane" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianSearchPatients">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="274.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="235.0" />
@@ -22,10 +22,10 @@
    </columnConstraints>
    <rowConstraints>
       <RowConstraints />
-      <RowConstraints maxHeight="30.40001220703125" minHeight="16.800006103515624" prefHeight="28.000003051757812" vgrow="NEVER" />
-      <RowConstraints maxHeight="161.59999389648436" minHeight="60.0" prefHeight="150.39999694824218" vgrow="NEVER" />
+      <RowConstraints maxHeight="30.40001220703125" minHeight="16.800006103515624" prefHeight="10.0" vgrow="NEVER" />
+      <RowConstraints maxHeight="161.59999389648436" minHeight="60.0" prefHeight="130.0" vgrow="NEVER" />
       <RowConstraints maxHeight="78.00001220703126" minHeight="37.399993896484375" prefHeight="37.399993896484375" vgrow="NEVER" />
-      <RowConstraints minHeight="10.0" prefHeight="362.79998779296875" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="330.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
