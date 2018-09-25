@@ -16,6 +16,7 @@ function init() {
         zoomControl: false,
         heading:90,
         tilt:45,
+        clickableIcons: false,
         gestureHandling: 'cooperative'
     });
 
@@ -38,8 +39,8 @@ function init() {
 
     google.maps.event.addListenerOnce(map, 'idle', function () {
         document.getElementById('filterAreaBtn').addEventListener('click', function () {
-            //todo insert functionality here
-            console.log("filter map button clicked!");
+            console.log("Filter area button clicked!");
+            map.setOptions({gestureHandling: 'none'});
         });
     });
 }
