@@ -1,5 +1,9 @@
 package utility;
 
+import static java.time.temporal.ChronoUnit.HOURS;
+import static java.time.temporal.ChronoUnit.MINUTES;
+import static java.time.temporal.ChronoUnit.SECONDS;
+
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.ProgressBar;
@@ -7,8 +11,6 @@ import model.Patient;
 import model.PatientOrgan;
 
 import java.time.LocalDateTime;
-
-import static java.time.temporal.ChronoUnit.*;
 
 
 public class ProgressTask extends Task<Void> {
@@ -66,13 +68,13 @@ public class ProgressTask extends Task<Void> {
 
     /**
      * Sets the color of the progress bar
+     * @return
      */
     public String getColor() { return color; }
 
     /**
      * set the color of progress bar // -fx-accent: green;
      * @param finalI - the ratio of time elapsed / upper bound of the organ
-     * @return color of progress bar
      */
     public void setColor(double finalI) {
         String RED = "#FF0000";

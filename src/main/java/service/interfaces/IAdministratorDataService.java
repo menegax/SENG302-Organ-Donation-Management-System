@@ -19,8 +19,10 @@ public interface IAdministratorDataService {
      */
     void deleteUser(User user);
 
+
     /**
      * Import records into the system
+     * @param filePath the path to the file
      */
     void importRecords(String filePath);
 

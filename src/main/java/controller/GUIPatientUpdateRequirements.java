@@ -190,9 +190,11 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
         }
     }
 
-
     /**
      * Checks if organ is promised or not to a patient already
+     * @param patient
+     * @param organ
+     * @return
      */
     public boolean promised(Patient patient, GlobalEnums.Organ organ) {
         boolean promise = false;

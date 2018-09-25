@@ -13,6 +13,7 @@ public interface IRequiredOrganDataAccess {
      *
      * @param nhi     The patients nhi
      * @param requiredOrgan The organs that is being updated
+     * @param date the date
      * @return The success code of the update
      */
     int updateRequiredOrgans(String nhi, GlobalEnums.Organ requiredOrgan, LocalDate date);
@@ -27,7 +28,7 @@ public interface IRequiredOrganDataAccess {
 
     /**
      * Removes a required organ for a certain patient (given by the nhi)
-     *
+     * @param organ the required organ
      * @param nhi The nhi for the patient to remove required organs from
      */
     void deleteRequiredOrganByNhi(String nhi, GlobalEnums.Organ organ);

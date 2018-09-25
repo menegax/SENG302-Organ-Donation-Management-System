@@ -98,8 +98,8 @@ public class UserControl {
 
     /**
      * Gets the target user that is currently being viewed
-     *
-     * @return - User that is being viewed
+     * @param undoableWrapper
+     * @return
      */
     public User getTargetUser(UndoableWrapper undoableWrapper) {
         return get(undoableWrapper);

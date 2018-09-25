@@ -282,6 +282,7 @@ public class Patient extends User {
      * @param height          height in meters
      * @param weight          weight in kilograms
      * @param nhi             NHI
+     * @throws DataFormatException If data poorly formatted
      */
     public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames, String preferredName,
                                  LocalDate birth, LocalDateTime death, String streetName, String streetNumber, String city, String suburb,

@@ -26,6 +26,7 @@ public interface ITransplantWaitListDataAccess {
 
     /**
      * Deletes all organ requests for the given nhi
+     * @param nhi the patient's nhi
      */
     void deleteRequestsByNhi(String nhi);
 

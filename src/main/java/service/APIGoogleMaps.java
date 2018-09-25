@@ -35,13 +35,14 @@ public class APIGoogleMaps {
         return apiGoogleMaps;
     }
 
+
     /**
      * Retrieves the LatLng object from a string address
-     * @param address the address to geocode
-     * @return LatLng object containing the coordinates
-     * @throws InterruptedException
-     * @throws ApiException
-     * @throws IOException
+     * @param address address to geocode
+     * @return the lat and long of the address
+     * @throws InterruptedException if api fails
+     * @throws ApiException if api fails
+     * @throws IOException if api fails
      */
     public LatLng geocodeAddress(String address) throws InterruptedException, ApiException, IOException {
         GeocodingResult[] results = GeocodingApi.geocode(context, address)

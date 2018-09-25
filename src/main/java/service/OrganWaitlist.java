@@ -1,15 +1,14 @@
 package service;
 
-import java.time.LocalDate;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
 import model.Patient;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
+
+import java.time.LocalDate;
+import java.util.Iterator;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 
@@ -41,6 +40,7 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
      * @param name      - The name of the patient requesting an organ.
      * @param organ     - The organ requested.
      * @param date      - The date of the request.
+	 * @param address   - The address of the request
      * @param region    - The region of the organ request.
      * @param nhi       - The NHI of the patient requesting an organ.
      * @return          - Returns true if Collection changed, otherwise false.
@@ -119,9 +119,7 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 			if (getClass() != other.getClass()) return false;
 			OrganRequest otherRequest = (OrganRequest) other;
 			if (nhi.equals(otherRequest.getReceiverNhi())) {
-				if (organ.equals(otherRequest.getRequestedOrgan())) {
-					return true;
-				}
+				return organ.equals(otherRequest.getRequestedOrgan());
 			}
 			return false;
 		}

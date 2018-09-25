@@ -80,6 +80,7 @@ public interface IPatientDataAccess {
 
     /**
      * Gets all the dead patients from the remote database
+     * @return the list of death donors
      */
     List<Patient> getDeadDonors();
 
