@@ -20,6 +20,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.web.WebView;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import model.User;
@@ -28,6 +29,7 @@ import service.UserDataService;
 import utility.TouchComboBoxSkin;
 import utility.undoRedo.UndoableWrapper;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -169,8 +171,10 @@ class ScreenControlTouch extends ScreenControl {
      * @param pane The map pane
      */
     private void setMapPanePosition(Region pane) {
-    	pane.setPrefWidth(touchStage.getWidth());
-    	pane.setPrefHeight(touchStage.getHeight());
+    	pane.setMaxWidth(screenBounds.getWidth());
+    	pane.setMaxHeight(screenBounds.getHeight() - 25);
+        pane.setMinWidth(screenBounds.getWidth());
+        pane.setMinHeight(screenBounds.getHeight() - 25);
     	pane.setTranslateX(0);
     	pane.setTranslateY(0);
         pane.setLayoutX(0);
