@@ -9,14 +9,9 @@ import model.Patient;
 import model.PatientOrgan;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
-import javafx.geometry.Point2D;
 
-import java.util.*;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -155,14 +150,13 @@ public class MapBridge {
     /**
      * Checks if the donor patient has organs that have been matched to a recipient patient, if so, triggers js method to
      * create a line between two markers
-     * @param geolocation
      * @param patientNhi
      * @throws InterruptedException
      * @throws ApiException
      * @throws IOException
      */
     @SuppressWarnings("unused") // used in corresponding javascript
-    public void checkOrganMatch(double[] geolocation, String patientNhi) throws InterruptedException, ApiException, IOException {
+    public void checkOrganMatch(String patientNhi) throws InterruptedException, ApiException, IOException {
         Patient patient = patientDataService.getPatientByNhi(patientNhi);
         Set<GlobalEnums.Organ> donations = patient.getDonations()
                 .keySet();
