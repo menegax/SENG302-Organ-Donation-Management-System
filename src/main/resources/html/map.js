@@ -83,10 +83,13 @@ function setUpFilterAreaButton() {
         document.getElementById('filterAreaBtn').addEventListener('click', function () {
             clearRectangle();
             clearFilterArea();
-            console.log("Filter area button clicked!");
+            if (filterStart === undefined) {
+                showGenericNotification('Press two points on the map to filter.');
+            }
             filterByAreaListener = google.maps.event.addListener(map, 'click', function (e) {
                 if (filterStart === undefined) {
                     filterStart = e.latLng;
+                    showGenericNotification('Press a second point on the map.');
                 }
                 else {
                     filterEnd = e.latLng;
@@ -141,6 +144,8 @@ function filterArea(area) {
  * Sets up the map legend
  */
 function setUpLegend() {
+
+    //todo make the legend not be all buggy and move around the map on startup @Andrew @Kyle
     var legend = document.getElementById('legend');
     for (var key in icons) {
         var type = icons[key];
@@ -161,6 +166,7 @@ function clearFilterArea() {
     markers.forEach(function (marker) {
         marker.setMap(map);
     });
+    showGenericNotification('Area filters have been cleared.');
 }
 
 /**
