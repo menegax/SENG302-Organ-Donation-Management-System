@@ -190,6 +190,36 @@
 5. Select the `Bone` button.
 6. EXPECTED: The green circle will cover the whole of NZ and no more at the opposite edge.
 
+### Test 23 - Assign organ
+1. View available organs on map
+2. Select a donor that has potential matches shown in the potential matches screen
+3. Select the appropriate organ from the dropdown
+4. Select view potential matches
+5. EXPECTED: A dialog box should pop-up informing the user how many matches were found
+6. EXPECTED: The same potential matches should be visible on the map and in the potential matches table
+7. EXPECTED: The map should also show a marker for the donor
+8. Click on a potential receiver
+9. Click on assign 'organ'
+10. Click on assign on the modal
+11. EXPECTED: The assignment should be visible in both patient's profiles
+12. EXPECTED: The map should reload with the most recently viewed set of patients (available organs)
+
+### Test 24 - Cancel assignment of organ 
+1. View available organs on map
+2. Select a donor that has potential matches shown in the potential matches screen
+3. Select the appropriate organ from the dropdown
+4. Select view potential matches
+5. Click on the cancel assignment button
+6. EXPECTED: The map should reload with the most recently viewed set of patients (available organs)
+
+### Test 25 - Attempt to assign organ with no matches
+1. View available organs on map
+2. Select a donor that has no potential matches shown in the potential matches screen
+3. Select the appropriate organ from the dropdown
+4. Select view potential matches 
+5. EXPECTED: A pop-up dialog should be displayed that no potential matches were found
+6. EXPECTED: The map should show the most recent set of patients loaded (available organs)
+
 ## Test History
 
 ### 24/09/18 - Joshua
@@ -287,27 +317,33 @@ Test 18: Pass
 
 ### 25/09/18 - Kyle & Hayden
 
-Test 1: Pass
-Test 2: Pass
-Test 3: Pass
-Test 4: Pass
-Test 5: Pass
-Test 6: Pass
-Test 7: Pass
-Test 8: Pass
-Test 9: Pass
-Test 10: Pass
-Test 11: Pass
-Test 12: Pass
-Test 13: Pass
-Test 14: Pass
-Test 15: Pass
-Test 16: Pass
-Test 17: Pass
-Test 18: Pass
-Test 19: Pass
-Test 20: Pass
-Test 21: Pass
-Test 22: Pass
+Test 1: Pass  
+Test 2: Pass  
+Test 3: Pass  
+Test 4: Pass  
+Test 5: Pass  
+Test 6: Pass  
+Test 7: Pass  
+Test 8: Pass  
+Test 9: Pass  
+Test 10: Pass  
+Test 11: Pass  
+Test 12: Pass  
+Test 13: Pass  
+Test 14: Pass    
+Test 15: Pass  
+Test 16: Pass  
+Test 17: Pass  
+Test 18: Pass  
+Test 19: Pass  
+Test 20: Pass  
+Test 21: Pass  
+Test 22: Pass  
+
+### 27/09/18 - Aidan Smith
+
+Test 23: Pass  
+Test 24: Pass  
+Test 25: Pass  
 
 **ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**
