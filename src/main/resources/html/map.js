@@ -438,7 +438,7 @@ function addMarker(patient) {
 function makeMarker(patient, location) {
     var name = patient.getNameConcatenated();
 
-    var finalLoc = new google.maps.LatLng(results.lat, results.lng);
+    var finalLoc = new google.maps.LatLng(location.lat, location.lng);
 
     if (patient.isDead() && !patient.getDonations().isEmpty()) {
         return new google.maps.Marker({
@@ -665,13 +665,12 @@ function getOrganOptions(patient) {
  * @param newPatients
  */
 function setPatients(newPatients) {
-    if (_patients.size() === 0) {
+    if (newPatients.size() === 0) {
         return;
     }
     patients = newPatients;
     hideNotification();
     resetMap();
-    loadingBar.set(0);
     clearMarkers();
     clearCircles();
     clearLines();
@@ -689,9 +688,7 @@ function setPatients(newPatients) {
  */
 function addMarkers(i, id) {
     if (i < 1) {
-        loadingBar.set(100);
         showNotification(successCount, patients.size());
-        $('#loading-overlay').hide();
         markers.forEach(function (marker) {
             mapBridge.checkOrganMatch(marker.nhi);
         });

@@ -176,52 +176,10 @@ public class MapBridge {
     /**
      * Checks if the donor patient has organs that have been matched to a recipient patient, if so, triggers js method to
      * create a line between two markers
-     * @param patientNhi
-     * @throws InterruptedException
-     * @throws ApiException
-     * @throws IOException
-     */
-    @SuppressWarnings("unused") // used in corresponding javascript
-    public void checkOrganMatch(String patientNhi) throws InterruptedException, ApiException, IOException {
-        Patient patient = patientDataService.getPatientByNhi(patientNhi);
-        Set<GlobalEnums.Organ> donations = patient.getDonations()
-                .keySet();
-
-        if (donations.size() > 0) {
-            for (GlobalEnums.Organ organ : donations) {
-                String recipientNhi = patient.getDonations()
-                        .get(organ);
-                if (recipientNhi != null) {
-                    Patient recipient = patientDataService.getPatientByNhi(recipientNhi);
-                    PatientOrgan targetPatientOrgan = new PatientOrgan(patient, organ);
-                    targetPatientOrgan.startTask();
-                    targetPatientOrgan.getProgressTask()
-                            .setProgressBar(new ProgressBar()); //dummy progress task
-                    CachedThreadPool.getCachedThreadPool()
-                            .getThreadService()
-                            .submit(targetPatientOrgan.getProgressTask());
-
-                    GUIMap.getJSBridge()
-                            .call("createMatchedOrganArrow",
-                                    patient.getCurrentLocation(),
-                                    recipient.getCurrentLocation(),
-                                    patientNhi,
-                                    recipient.getNhiNumber(),
-                                    organ.toString());
-
-                }
-            }
-        }
-
-    }
-
-    /**
-     * Checks if the donor patient has organs that have been matched to a recipient patient, if so, triggers js method to
-     * create a line between two markers
-     * @param patientNhi
-     * @throws InterruptedException
-     * @throws ApiException
-     * @throws IOException
+     * @param patientNhi - patient nhi
+     * @throws InterruptedException -  if geocode fails
+     * @throws ApiException - if geocode fails
+     * @throws IOException - if geocode fails
      */
     @SuppressWarnings("unused") // used in corresponding javascript
     public void checkOrganMatch(String patientNhi) throws InterruptedException, ApiException, IOException {
