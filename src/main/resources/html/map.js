@@ -609,10 +609,7 @@ function getOrganOptions(patient) {
  */
 function setPatients(newPatients) {
     globalPatients = newPatients;
-    hideNotification();
-    clearMarkers();
-    clearCircles();
-    clearFilterArea();
+    resetMap();
     successCount = 0;
     infoWindows = [];
     markerSetId++;
