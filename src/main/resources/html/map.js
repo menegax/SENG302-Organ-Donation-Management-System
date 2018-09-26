@@ -19,6 +19,9 @@ var defaultZoom = 6;
 var defaultCenterPos = {lat: -40.59225, lng: 173.51012};
 var iconBase = '../image/markers/';
 var icons = {
+    deadDonor: {
+        name: 'Dead Donor', icon: iconBase + 'orange.png'
+    },
     deceased: {
         name: 'Deceased', icon: iconBase + 'blue.png'
     }, alive: {
@@ -395,7 +398,6 @@ function setMapDragEnd() {
  * @param patient
  */
 function addMarker(patient) {
-    console.log("Adding marker to map for patient " + patient.getNhiNumber());
     var latLong = patient.getCurrentLocation();
     if (latLong !== null) {
         successCount++;
@@ -431,7 +433,13 @@ function makeMarker(patient, location) {
     var randy = Math.random() * 0.02 - 0.01;
     var finalLoc = new google.maps.LatLng(location.lat + randx, location.lng + randy); //todo can remove randomizer? replace `finalLoc` with `results`?
 
-    if (patient.isDead()) {
+    if (patient.isDead() && !patient.getDonations().isEmpty()) {
+        console.log("orgs: " + patient.getDonations());
+        return new google.maps.Marker({
+            map: map, position: finalLoc, title: name, animation: google.maps.Animation.DROP, nhi: patient.getNhiNumber(), icon: icons.deadDonor.icon
+        });
+    }
+    else if (patient.isDead()) {
         return new google.maps.Marker({
             map: map, position: finalLoc, title: name, animation: google.maps.Animation.DROP, nhi: patient.getNhiNumber(), icon: icons.deceased.icon
         });
@@ -685,9 +693,8 @@ function hideNotification() {//todo rename to hideMarkerNotification
  */
 function showNotification(numSuccess, numTotal) { //todo rename to showMarkerNotification
     var modalContent = "";
-    var modalMessage = 'Successfully loaded ' + numSuccess + ' out of ' + numTotal + ' patient locations';
-
     failedPatientArray.forEach(function (patient) {
+
         var nhi = patient.getNhiNumber();
         var address;
         if (patient.isDead()) {
@@ -701,17 +708,18 @@ function showNotification(numSuccess, numTotal) { //todo rename to showMarkerNot
                 + '</button></th>\n' + '<td style=\"font-size: 15px; padding-top: 18px\">' + patient.getNameConcatenated() + '</td>\n'
                 + '<td style=\"font-size: 15px; padding-top: 18px\">' + address + '</td>\n' + '</tr>';
     });
-
     if (failedPatientArray.length === 0) { //no failed patients -> success
-        $('#marker-notification').html('<span>' + 'Successfully loaded all patients');
 
+        $('#marker-notification').html('<span>' + 'Successfully loaded all ' + numTotal + ' patients');
         setTimeout(function () {
             hideNotification();
         }, 3000);
+
     }
     else {
+        var modalMessage = 'Successfully loaded ' + numSuccess + ' out of ' + numTotal + ' patient locations.';
         $('#marker-notification').html('<span>' + modalMessage + '</span>'
-                + '    <a href="#" data-toggle="modal" data-target="#failedPatients"><View failed patients</a>\n'
+                + '    <a href="#" data-toggle="modal" data-target="#failedPatients">View failed patients</a>\n'
                 + '    <span class="marker-notification-close" onclick="hideNotification()"> &times;</span>');
         $('#failed-patient-table').html(modalContent);
     }
@@ -719,7 +727,6 @@ function showNotification(numSuccess, numTotal) { //todo rename to showMarkerNot
     if (numTotal > 0) {
         $('#marker-notification').show();
     }
-
 
 }
 
