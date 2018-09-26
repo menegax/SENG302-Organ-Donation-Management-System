@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 
-class ScreenControlTouch extends ScreenControl {
+public class ScreenControlTouch extends ScreenControl {
 	
 	private Stage touchStage;
 	
@@ -326,7 +326,7 @@ class ScreenControlTouch extends ScreenControl {
      * Resizes the fonts of all objects in this node
      * @param pane the touch pane displayed currently
      */
-    private void resizeFonts(Pane pane) {
+    public void resizeFonts(Pane pane) {
         if (pane != null) {
             for (Node child : pane.getChildren()) {
                 if (child instanceof Pane) {

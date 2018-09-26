@@ -116,6 +116,9 @@ public class UndoableWrapper {
         statesHistoryScreens.set(index, controller.getStatesHistory());
         screenControl.getTabPane(this).getSelectionModel().select(newTab);
         tabMap.put(controller.getStatesHistory(), newTab);
+        if (screenControl.isTouch()) {
+            ((ScreenControlTouch) screenControl).resizeFonts(pane);
+        }
     }
 
     /**
@@ -184,5 +187,14 @@ public class UndoableWrapper {
             return pane;
         }
         return null;
+    }
+
+    /**
+     * Puts this statesHistoryScreen at the top of the undo/redo stack
+     * @param statesHistoryScreen the statesHistoryScreen to move to the top
+     */
+    public void bringToTop(StatesHistoryScreen statesHistoryScreen) {
+        statesHistoryScreens.remove(statesHistoryScreen);
+        statesHistoryScreens.add(statesHistoryScreen);
     }
 }

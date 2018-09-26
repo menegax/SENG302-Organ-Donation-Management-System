@@ -7,8 +7,7 @@ import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.UndoableWrapper;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Includes methods to assist with undo and redo functionality across the whole application
@@ -104,12 +103,17 @@ public class UndoRedoControl {
      * @param undoableScreen the undoable screen of the statesHistoryScreen to add it to
      */
     public void addAction(IAction action, GlobalEnums.UndoableScreen undoableScreen) {
+        Map<UndoableWrapper, StatesHistoryScreen> matchingWrappers = new HashMap<>();
         for (UndoableWrapper undoableWrapper : screenControl.getUndoableWrappers()) {
             for (StatesHistoryScreen statesHistoryScreen : undoableWrapper.getStatesHistoryScreens()) {
                 if (statesHistoryScreen.getUndoableScreen().equals(undoableScreen)) {
-                    statesHistoryScreen.addAction(action);
+                    matchingWrappers.put(undoableWrapper, statesHistoryScreen);
                 }
             }
+        }
+        for (UndoableWrapper undoableWrapper : matchingWrappers.keySet()) {
+            matchingWrappers.get(undoableWrapper).addAction(action);
+            undoableWrapper.bringToTop(matchingWrappers.get(undoableWrapper));
         }
     }
 
