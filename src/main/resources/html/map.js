@@ -553,6 +553,7 @@ function populatePotentialMatches(patientNhi, donor) {
  * no potential matches found
  */
 function noPotentialMatchesFound(){
+    mapBridge.populateLastSetOfPatients();
     isViewingPotentialMatches = false;
     $('#cancelAssignmentBtn').hide();
     showGenericNotification(0 + " potential matches found.");
@@ -599,8 +600,7 @@ function getPotentialMatchesContent(patient) {
  */
 function assignOrgan() {
     mapBridge.assignOrgan(donorPatientNhi, receiverPatientNhi, currentOrgan);
-    $('#cancelAssignmentBtn').hide();
-    $('#dropdown').prop('disabled', false);
+    mapBridge.populateLastSetOfPatients();
     receiverPatientNhi = undefined;
 }
 
