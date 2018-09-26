@@ -393,7 +393,7 @@ function setMapDragEnd() {
 
         if (!allowedBounds.contains(map.getCenter())) {
             // Out of bounds - Move the map back to center
-            map.setCenter({lat: -40.59225, lng: 173.51012}); //todo replace with recenter map method in BP6
+            centerAndZoomMap();
         }
     });
 }
@@ -434,9 +434,7 @@ function addMarker(patient) {
 function makeMarker(patient, location) {
     var name = patient.getNameConcatenated();
 
-    var randx = Math.random() * 0.02 - 0.01;
-    var randy = Math.random() * 0.02 - 0.01;
-    var finalLoc = new google.maps.LatLng(location.lat + randx, location.lng + randy); //todo can remove randomizer? replace `finalLoc` with `results`?
+    var finalLoc = new google.maps.LatLng(location.lat, location.lng);
 
     if (patient.isDead() && !patient.getDonations().isEmpty()) {
         return new google.maps.Marker({
@@ -555,6 +553,7 @@ function populatePotentialMatches(patientNhi, donor) {
  * no potential matches found
  */
 function noPotentialMatchesFound(){
+    mapBridge.populateLastSetOfPatients();
     isViewingPotentialMatches = false;
     $('#cancelAssignmentBtn').hide();
     showGenericNotification(0 + " potential matches found.");
@@ -601,8 +600,7 @@ function getPotentialMatchesContent(patient) {
  */
 function assignOrgan() {
     mapBridge.assignOrgan(donorPatientNhi, receiverPatientNhi, currentOrgan);
-    $('#cancelAssignmentBtn').hide();
-    $('#dropdown').prop('disabled', false);
+    mapBridge.populateLastSetOfPatients();
     receiverPatientNhi = undefined;
 }
 
@@ -776,7 +774,7 @@ function clearRectangle() {
 /**
  * Hides the marker notification
  */
-function hideNotification() {//todo rename to hideMarkerNotification
+function hideNotification() {
     $('#marker-notification').hide();
 }
 
@@ -785,7 +783,7 @@ function hideNotification() {//todo rename to hideMarkerNotification
  * @param numSuccess successfully loaded patients
  * @param numTotal total patients to load
  */
-function showNotification(numSuccess, numTotal) { //todo rename to showMarkerNotification
+function showNotification(numSuccess, numTotal) {
     var modalContent = "";
     failedPatientArray.forEach(function (patient) {
 

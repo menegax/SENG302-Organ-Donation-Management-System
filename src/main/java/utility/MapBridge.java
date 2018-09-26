@@ -46,7 +46,6 @@ public class MapBridge {
     private Logger systemLogger = SystemLogger.systemLogger;
 
     public void populateLastSetOfPatients() {
-        System.out.println("a");
         List lastSetOfPatients = GUIMap.getLastSetOfPatientsParsed();
         GUIMap.getJSBridge().call("setPatients", lastSetOfPatients);
     }
@@ -58,7 +57,6 @@ public class MapBridge {
      */
     @SuppressWarnings("unused") // used in corresponding javascript
     public void openPatientProfile(String patientNhi) {
-        System.out.println("b");
         Patient patient = new PatientDataService().getPatientByNhi(patientNhi);
         GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, patient, null);
         controller.setTarget(patient);
@@ -68,7 +66,6 @@ public class MapBridge {
      * Calculates marker radii
      */
     private void updateMarkerRadii(Patient patient, GlobalEnums.Organ organ) {
-        System.out.println("c");
         //constants using kilometers and seconds
         long organLoadTime = 1800;
         long organUnloadtime = 1800;
@@ -101,7 +98,6 @@ public class MapBridge {
         }
         radiiTask.messageProperty().addListener((observable, oldValue, newValue) -> {
             if (!oldValue.equals("")) { // first circle always gives green
-                System.out.println("d");
                 double rem = 0;
                 String[] time = newValue.split(":");
                 rem += Integer.parseInt(time[0]) * 3600;
@@ -128,7 +124,6 @@ public class MapBridge {
      * @param nhi the NHI of the patient
      */
     public void getPatientActiveDonations(String nhi) {
-        System.out.println("e");
         List<PatientOrgan> masterData = new ArrayList<>();
         List<Patient> deadPatients = patientDataService.getDeadDonors();
         for (Patient patient : deadPatients) {
@@ -153,7 +148,6 @@ public class MapBridge {
      */
     @SuppressWarnings("unused")
     public List getAvailableOrgans() {
-        System.out.println("f");
         List<PatientOrgan> masterData = new ArrayList<PatientOrgan>();
         List<Patient> deadPatients = patientDataService.getDeadDonors();
         for (Patient patient : deadPatients) {
@@ -186,7 +180,6 @@ public class MapBridge {
      * @param patient the patient to refresh
      */
     public void updateInfoWindow(Patient patient){
-        System.out.println("g");
         if (GUIMap.getJSBridge() != null) {
             GUIMap.getJSBridge().call("reloadInfoWindow", patient);
         } else {
@@ -201,7 +194,6 @@ public class MapBridge {
      * @return the patient
      */
     public Patient getPatientByNhi(String nhi) {
-        System.out.println("h");
         return patientDataService.getPatientByNhi(nhi);
     }
 
@@ -212,7 +204,6 @@ public class MapBridge {
      * @param organStr - String format of the organ to potentially match
      */
     public void getPotentialMatches(String patientNhi, String organStr) {
-        System.out.println("i");
         GlobalEnums.Organ organ = GlobalEnums.Organ.getEnumFromString(organStr);
         PotentialMatchFinder potentialMatchFinder = new PotentialMatchFinder();
         Patient patient = patientDataService.getPatientByNhi(patientNhi);
@@ -268,7 +259,6 @@ public class MapBridge {
      */
     @SuppressWarnings("unused")
     public void loadCircle(String patientNhi, String organStr) {
-        System.out.println("j");
         if (radiiTask != null) {
             radiiTask.setInterrupted();
         }
@@ -287,7 +277,6 @@ public class MapBridge {
      */
     @SuppressWarnings("unused")
     public void assignOrgan(String donorNhiStr, String receiverNhiStr, String organStr) {
-        System.out.println("k");
         GlobalEnums.Organ organ = GlobalEnums.Organ.getEnumFromString(organStr);
         Patient donor = patientDataService.getPatientByNhi(donorNhiStr);
         Patient receiver = patientDataService.getPatientByNhi(receiverNhiStr);
