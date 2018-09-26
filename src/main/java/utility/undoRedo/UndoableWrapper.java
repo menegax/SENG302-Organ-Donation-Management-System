@@ -116,6 +116,9 @@ public class UndoableWrapper {
         statesHistoryScreens.set(index, controller.getStatesHistory());
         screenControl.getTabPane(this).getSelectionModel().select(newTab);
         tabMap.put(controller.getStatesHistory(), newTab);
+        if (screenControl.isTouch()) {
+            ((ScreenControlTouch) screenControl).resizeFonts(pane);
+        }
     }
 
     /**
