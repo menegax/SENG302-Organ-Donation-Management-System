@@ -185,4 +185,13 @@ public class UndoableWrapper {
         }
         return null;
     }
+
+    /**
+     * Puts this statesHistoryScreen at the top of the undo/redo stack
+     * @param statesHistoryScreen the statesHistoryScreen to move to the top
+     */
+    public void bringToTop(StatesHistoryScreen statesHistoryScreen) {
+        statesHistoryScreens.remove(statesHistoryScreen);
+        statesHistoryScreens.add(statesHistoryScreen);
+    }
 }
