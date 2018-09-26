@@ -158,7 +158,8 @@ public class MapBridge {
         return patientDataService.getPatientByNhi(nhi);
     }
 
-    public void getPotentialMatches(String patientNhi, GlobalEnums.Organ organ) {
+    public void getPotentialMatches(String patientNhi, String organStr) {
+        GlobalEnums.Organ organ = GlobalEnums.Organ.getEnumFromString(organStr);
         PotentialMatchFinder potentialMatchFinder = new PotentialMatchFinder();
         Patient patient = patientDataService.getPatientByNhi(patientNhi);
         PatientOrgan patientOrgan = new PatientOrgan(patient, organ);

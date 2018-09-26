@@ -170,16 +170,18 @@ function getDeadPatientInfoContent(patient) {
         + '<label>Birth Gender: ' + patient.getBirthGender() + '</label><br>'
         + '<label style="padding-top: 5px;">Organ to Assign</label>'
         + '<select id="dropdown" style="margin-left: 5%; float: right; height: 25px"></select>'
-        + '<input type="button" onclick="viewPotentialMatches(patient.getNhiNumber())" class="btn btn-sm btn-block btn-primary mt-3 float-left" value="View Potential Matches" style="margin-top: 20px"/>';
+        + '<input type="button" onclick="viewPotentialMatches(\'' + nhi + '\')" class="btn btn-sm btn-block btn-primary mt-3 float-left" value="View Potential Matches" style="margin-top: 20px"/>';
 }
 
 /**
  * Triggers Java method to find potential matches
  */
 function viewPotentialMatches(patientNhi) {
-    isViewingPotentialMatches = true;
-    isViewingPotentialMatches = false;
-    mapBridge.getPotentialMatches(patientNhi, currentOrgan);
+    if (currentOrgan !== 'None') {
+        isViewingPotentialMatches = true;
+        isViewingPotentialMatches = false;
+        mapBridge.getPotentialMatches(patientNhi, currentOrgan);
+    }
 }
 
 /**
