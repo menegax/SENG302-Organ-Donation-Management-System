@@ -11,9 +11,7 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
-import javafx.scene.input.RotateEvent;
-import javafx.scene.input.TouchEvent;
-import javafx.scene.input.ZoomEvent;
+import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import org.controlsfx.control.RangeSlider;
@@ -23,11 +21,9 @@ import java.util.logging.Logger;
 
 /**
  * Handler class to deal with multiple users interacting with the application via touch events.
- * If a single pane isn't at 3 yet, but there are 10 touches on screen, no more gestures will be registered due to
+ * If a single pane isn't at two touches yet, but there are ten touches on screen, no more gestures will be registered due to
  * hardware limitations.
- * Tap brings into focus
- * Tap - left click
- * Tap and hold - right click on release
+ * One finger tap - left click
  * One finger drag - move pane
  * Two finger pinch - zoom
  * Two finger rotate - rotate
@@ -153,13 +149,14 @@ public class MultiTouchHandler {
         else {
             if (previousEvent != null && event.getEventType()
                     .equals(TouchEvent.TOUCH_RELEASED)) {
-                checkLeftClick();
+                checkLeftClick(touchEvent, event);
                 originCoordinates[findIndexOfTouchEvent(touchEvent.getId())] = null;
                 touches[findIndexOfTouchEvent(touchEvent.getId())] = null;
                 processPaneMomentum();
             }
             else if (previousEvent != null && event.getEventType()
                     .equals(TouchEvent.TOUCH_MOVED) && !(isNegligableMovement(touchEvent, previousEvent))) {
+                touchEvent.setHasMoved(true);
                 processEventMovement(previousEvent, touchEvent);
             }
             else {
@@ -287,8 +284,19 @@ public class MultiTouchHandler {
     /**
      * Evaluates whether the current states of touch events meet left click requirements
      */
-    private void checkLeftClick() {
-
+    private void checkLeftClick(CustomTouchEvent touchEvent, TouchEvent event) {
+        if(!touchEvent.isHasMoved()) {
+            System.out.println(event.getTouchPoint().getPickResult().getIntersectedNode().getClass());
+            System.out.println(event.getTouchPoint().getPickResult().getIntersectedNode().getParent().getClass());
+            System.out.println(event.getTouchPoint().getPickResult().getIntersectedNode().getParent().getParent().getClass());
+            System.out.println(event.getTouchPoint().getPickResult().getIntersectedNode().getParent().getParent().getParent().getClass()); //if tabpaneskin
+            System.out.println(event.getTouchPoint().getPickResult().getIntersectedNode().getParent().getParent().getParent().getParent().getClass());
+            System.out.println(event.getTouchPoint().getPickResult().getIntersectedNode().getParent().getParent().getParent().getParent().getParent().getParent().getClass());
+            System.out.println("\n");
+//            Event.fireEvent(touchEvent.getTarget(), new MouseEvent(MouseEvent.MOUSE_CLICKED, 0,
+//                    0, 0, 0, MouseButton.PRIMARY, 1, true, true, true, true,
+//                    true, true, true, true, true, true, null));
+        }
     }
 
 
