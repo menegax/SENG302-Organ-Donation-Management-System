@@ -550,7 +550,7 @@ function populatePotentialMatches(patientNhi, donor) {
         makeAndAttachInfoWindow(donor, donorMarker);
     }
 
-    showGenericNotification(patients.size() - 1 + " potential match(es) found.");
+    showGenericNotification(patients.size() - 1 + " potential match(es) found. Click on a match to assign the organ.");
 }
 
 /**
