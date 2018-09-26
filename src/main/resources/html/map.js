@@ -34,9 +34,6 @@ function init() {
     setUpViewAvailableOrgansButton();
     setUpFilterAreaButton();
     setUpFilterClearAreaButton();
-
-    showGenericNotification("yo daddyo");
-
 }
 
 /**
@@ -312,7 +309,13 @@ function makeAndAttachFilterRectangle() {
 
     // Define a rectangle and set its editable property to true.
     var filterBound = new google.maps.Rectangle({
-        map: map, bounds: bounds
+        map: map,
+        bounds: bounds,
+        strokeColor: '#c4c6c9', //from bootstrap alert-secondary
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: '#e2e3e5', //from bootstrap alert-secondary
+        fillOpacity: 0.35
     });
     rectangle.push(filterBound);
     google.maps.event.removeListener(filterByAreaListener);
