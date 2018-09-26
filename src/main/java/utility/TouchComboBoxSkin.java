@@ -43,7 +43,7 @@ public class TouchComboBoxSkin extends MTComboBoxListViewSkin implements ITouchS
         }
     }
 
-    public TouchComboBoxSkin getSkin(ComboBox comboBox) {
+    public static TouchComboBoxSkin getSkin(ComboBox comboBox) {
     	return comboBoxSkins.get(comboBox);
     }
     
