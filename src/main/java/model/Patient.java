@@ -8,14 +8,11 @@ import com.univocity.parsers.annotations.Parsed;
 import com.univocity.parsers.annotations.Validate;
 import org.apache.commons.lang3.StringUtils;
 import service.APIGoogleMaps;
+import utility.*;
+import utility.GlobalEnums.*;
 import utility.parsing.DateConverterCSV;
 import utility.parsing.DateTimeConverterCSV;
 import utility.parsing.EnumConverterCSV;
-import utility.GlobalEnums;
-import utility.GlobalEnums.*;
-import utility.PatientActionRecord;
-import utility.Searcher;
-import utility.SystemLogger;
 
 import java.beans.PropertyChangeSupport;
 import java.io.IOException;
@@ -24,16 +21,12 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
 
-import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.INFO;
 import static utility.UserActionHistory.userActions;
 
@@ -99,9 +92,9 @@ public class Patient extends User {
 
     private LatLng currentLocation;
 
-    private List<Organ> donations;
+    private Map<Organ, String> donations;
 
-    private Map<Organ, LocalDate> requiredOrgans;
+    private Map<Organ, OrganReceival> requiredOrgans;
 
     @Parsed(field = "nhi")
     private String nhiNumber;
@@ -145,14 +138,16 @@ public class Patient extends User {
 
     private GlobalEnums.Organ removedOrgan;
 
+    private transient Logger systemLogger = SystemLogger.systemLogger;
+
     /**
      * Used only for importing. Don't use elsewhere.
      */
     public Patient() {
         this.CREATED = new Timestamp(System.currentTimeMillis());
         this.modified = CREATED;
-        this.requiredOrgans = new HashMap();
-        this.donations = new ArrayList<>();
+        this.requiredOrgans = new HashMap<>();
+        this.donations = new HashMap<>();
     }
 
 
@@ -172,7 +167,7 @@ public class Patient extends User {
         this.preferredName = firstName;
         this.birth = date;
         this.nhiNumber = nhiNumber.toUpperCase();
-        this.donations = new ArrayList<>();
+        this.donations = new HashMap<>();
         this.userActionsList = new ArrayList<>();
         this.requiredOrgans = new HashMap<>();
         if (propertyChangeSupport == null) {
@@ -184,7 +179,7 @@ public class Patient extends User {
     public Patient(String nhiNumber, String firstName, ArrayList<String> middleNames, String lastName, LocalDate birth,
                    Timestamp created, Timestamp modified, LocalDateTime death, String deathStreet, String deathCity,Region deathRegion, GlobalEnums.BirthGender gender,
                    GlobalEnums.PreferredGender prefGender, String preferredName, double height, double weight,
-                   BloodGroup bloodType, List<Organ> donations, Map<Organ, LocalDate> receiving, String streetNumber,
+                   BloodGroup bloodType, HashMap<Organ, String> donations, Map<Organ, OrganReceival> receiving, String streetNumber,
                    String city, String suburb, Region region, int zip, String homePhone, String workPhone,
                    String mobilePhone, String emailAddress, String contactName, String contactRelationship,
                    String contactHomePhone, String contactWorkPhone, String contactMobilePhone, String contactEmailAddress,
@@ -252,7 +247,7 @@ public class Patient extends User {
         this.preferredName = preferredName;
         this.userActionsList = new ArrayList<>();
         this.requiredOrgans = new HashMap<>();
-        this.donations = new ArrayList<>();
+        this.donations = new HashMap<>();
         databaseImport();
     }
 
@@ -276,6 +271,7 @@ public class Patient extends User {
      * @param height          height in meters
      * @param weight          weight in kilograms
      * @param nhi             NHI
+     * @throws DataFormatException Dataformatexception
      */
     public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames, String preferredName,
                                  LocalDate birth, LocalDateTime death, String streetName, String streetNumber, String city, String suburb,
@@ -417,35 +413,27 @@ public class Patient extends User {
         setRequiredOrgans(newPatientAttributes.getRequiredOrgans());
         setWorkPhone(newPatientAttributes.getWorkPhone());
         setZip(newPatientAttributes.getZip());
+        MapBridge mp = new MapBridge(); //coupling to map bridge
+        mp.updateInfoWindow(newPatientAttributes);
     }
 
     /**
      * Update the organ donations list of the patient
      *
-     * @param newDonations - list of organs to add
-     * @param rmDonations  - list of organs to remove
+     * @param newDonations - map of organs to add
+     * @param rmDonations  - map of organs to remove
      */
-    public void updateDonations(ArrayList<String> newDonations, ArrayList<String> rmDonations) {
+    public void updateDonations(Map<Organ, String> newDonations, Map<Organ, String> rmDonations) {
         if (newDonations != null) {
-            for (String organ : newDonations) {
-                Organ organEnum = Organ.getEnumFromString(organ); //null if invalid
-                if (organEnum == null) {
-                    userActions.log(Level.WARNING, "Invalid organ \"" + organ + "\"given and not added", "attempted to add to patient donations");
-                } else {
-                    userActions.log(INFO, addDonation(organEnum), "attempted to update patient donations");
-                    userModified();
-                }
+            for (Organ organ : newDonations.keySet()) {
+                userActions.log(INFO, addDonation(organ), "attempted to update patient donations");
+                userModified();
             }
         }
         if (rmDonations != null) {
-            for (String organ : rmDonations) {
-                Organ organEnum = Organ.getEnumFromString(organ);
-                if (organEnum == null) {
-                    userActions.log(Level.SEVERE, "Invalid organ \"" + organ + "\" given and not removed", "attempted to remove from patient donations");
-                } else {
-                    userActions.log(INFO, removeDonation(organEnum), "attempted to remove from patient donations");
-                    userModified();
-                }
+            for (Organ organ : rmDonations.keySet()) {
+                userActions.log(INFO, removeDonation(organ), "attempted to remove from patient donations");
+                userModified();
             }
         }
     }
@@ -499,8 +487,8 @@ public class Patient extends User {
         return concatName.toString();
     }
 
-    public List<Organ> getDonations() {
-        return donations == null ? new ArrayList<>() : donations;
+    public Map<Organ, String> getDonations() {
+        return donations == null ? new HashMap<>() : donations;
     }
 
     /**
@@ -508,7 +496,7 @@ public class Patient extends User {
      *
      * @param donations The donations being set to the patient donations array list
      */
-    public void setDonations(List<Organ> donations) {
+    public void setDonations(Map<Organ, String> donations) {
         this.donations = donations;
         userModified();
     }
@@ -575,6 +563,7 @@ public class Patient extends User {
 
     public void setDeathStreet(String deathStreet) {
         this.deathStreet = deathStreet;
+        clearCurrentLocation();
         userModified();
     }
 
@@ -585,6 +574,7 @@ public class Patient extends User {
 
     public void setDeathCity(String deathCity) {
         this.deathCity = deathCity;
+        clearCurrentLocation();
         userModified();
     }
 
@@ -594,6 +584,7 @@ public class Patient extends User {
 
     public void setDeathRegion(Region region) {
         this.deathRegion = region;
+        clearCurrentLocation();
         userModified();
     }
 
@@ -772,11 +763,44 @@ public class Patient extends User {
         userModified();
     }
 
+
+    /**
+     * Don't use! Unless this is for testing purposes
+     * @return the current LatLng
+     */
+    public LatLng getCurrentLocationForTestingOnly() {
+        return this.currentLocation;
+    }
+
+    /**
+     * Gets the current location of the patient as a LatLng
+     * Returns the death location if the patient is dead
+     * Returns null if the location could not be geocoded correctly
+     * @return the location of the patient as a latLong
+     * @throws InterruptedException InterruptedException
+     * @throws ApiException ApiException
+     * @throws IOException IOException
+     */
     public LatLng getCurrentLocation() throws InterruptedException, ApiException, IOException {
         if (currentLocation == null) {
-            this.currentLocation = APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getFormattedAddress());
+            if (this.isDead()) {
+                return APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getDeathLocationConcat());
+            } else {
+                if (this.getFormattedAddress().trim().equals("0")) { //if only part of address to google is 0 for default zip
+                    return null;
+                }
+                return APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getFormattedAddress());
+            }
         }
         return currentLocation;
+    }
+
+    public boolean isDead() {
+        if (deathStreet == null || deathCity == null || deathRegion == null) {
+            return false;
+        }
+
+        return !(deathStreet.isEmpty() && deathCity.isEmpty());
     }
 
 
@@ -789,7 +813,6 @@ public class Patient extends User {
      */
     private void clearCurrentLocation() {
         this.currentLocation = null;
-        currentLocation = null;
     }
 
     /**
@@ -833,11 +856,11 @@ public class Patient extends User {
     }
 
     /**
-     * gets the current requred organs of the patient
+     * gets the current required organs of the patient
      *
      * @return required organs of the patient
      */
-    public Map<Organ, LocalDate> getRequiredOrgans() {
+    public Map<Organ, OrganReceival> getRequiredOrgans() {
         return this.requiredOrgans;
     }
 
@@ -850,13 +873,25 @@ public class Patient extends User {
      *
      * @param requiredOrgans organs the patient is to receive
      */
-    public void setRequiredOrgans(Map<GlobalEnums.Organ, LocalDate> requiredOrgans) {
+    public void setRequiredOrgans(Map<GlobalEnums.Organ, OrganReceival> requiredOrgans) {
         this.requiredOrgans = requiredOrgans;
         userModified();
     }
 
+
+    /**
+     * Gets a formatted address that contains no nulls
+     * @return - return formatted address string
+     */
+    @SuppressWarnings("WeakerAccess")
     public String getFormattedAddress() {
-        return streetNumber + " " + streetName + " " + suburb + " " + region + " " + zip;
+        return String.format("%s %s %s %s %s %s",
+                Objects.toString(streetNumber, ""),
+                Objects.toString(streetName, ""),
+                Objects.toString(suburb, ""),
+                Objects.toString(city, ""),
+                Objects.toString(region, ""),
+                Objects.toString(zip, ""));
     }
 
     /**
@@ -866,10 +901,10 @@ public class Patient extends User {
      * @return string of message
      */
     public String addDonation(Organ organ) {
-        if (donations.contains(organ)) {
+        if (donations.keySet().contains(organ)) {
             return "Organ " + organ + " is already part of the patient's donations, so was not added.";
         } else {
-            donations.add(organ);
+            donations.put(organ, null);
             userModified();
             userActions.log(INFO, "Added organ " + organ + " to patient donations", new String[] {"Attempted to add organ " + organ + " to patient donations", nhiNumber});
             return "Successfully added " + organ + " to donations";
@@ -891,8 +926,8 @@ public class Patient extends User {
         if (requiredOrgans == null) {
             requiredOrgans = new HashMap<>();
         }
-        requiredOrgans.put(organ, LocalDate.now());
-        userModified();
+        OrganReceival organReceival = new OrganReceival(LocalDate.now());
+        requiredOrgans.put(organ, organReceival);
         userActions.log(INFO, "Added organ " + organ + " to patient required organs", "Attempted to add organ " + organ + " to patient required organs");
         return "Successfully added " + organ + " to required organs";
     }
@@ -904,7 +939,7 @@ public class Patient extends User {
      * @return string of message
      */
     public String removeDonation(Organ organ) {
-        if (donations.contains(organ)) {
+        if (donations.keySet().contains(organ)) {
             donations.remove(organ);
             userModified();
             userActions.log(INFO, "Removed " + organ + " from patient donations", "Attempted to remove donation from a patient");

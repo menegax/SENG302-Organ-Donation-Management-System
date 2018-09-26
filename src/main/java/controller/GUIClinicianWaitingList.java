@@ -1,38 +1,37 @@
 package controller;
 
-import javafx.application.Platform;
+import static utility.UserActionHistory.userActions;
+
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
-import model.DrugInteraction;
-import model.User;
-import model.Patient;
+import javafx.scene.layout.Pane;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import service.ClinicianDataService;
 import service.OrganWaitlist;
 import service.PatientDataService;
 import utility.GlobalEnums;
-import utility.GlobalEnums.*;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
-import javafx.collections.transformation.SortedList;
+import utility.GlobalEnums.Organ;
+import utility.GlobalEnums.Region;
+import utility.TouchComboBoxSkin;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
-import java.util.zip.DataFormatException;
-
-import static java.util.logging.Level.FINE;
-import static utility.SystemLogger.systemLogger;
-import static utility.UserActionHistory.userActions;
 
 /**
  * Controller class to manage organ waiting list for patients who require an organ.
@@ -60,7 +59,7 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
      * Initializes waiting list screen by populating table and initializing a double click action
      * to view a patient's profile.
      */
-    public void load() {
+    public void loadController() {
         ClinicianDataService clinicianDataService = new ClinicianDataService();
         OrganWaitlist organRequests = clinicianDataService.getOrganWaitList();
         for (OrganWaitlist.OrganRequest request: organRequests) {
@@ -71,6 +70,10 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
         populateTable();
         setupDoubleClickToPatientEdit();
         populateFilterChoiceBoxes();
+        if (screenControl.isTouch()) {
+            new TouchComboBoxSkin(organSelection, (Pane) screenControl.getTouchParent(clinicianWaitingList));
+            new TouchComboBoxSkin(regionSelection, (Pane) screenControl.getTouchParent(clinicianWaitingList));
+        }
     }
 
 
@@ -101,7 +104,8 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
                     try {
                         Patient selectedUser = patientDataService.getPatientByNhi(request.getReceiverNhi());
                         patientDataService.save(selectedUser);
-                        GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser);
+                        Parent parent = screenControl.getTouchParent(clinicianWaitingList);
+                        GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser, parent);
                         controller.setTarget(selectedUser);
                     } catch (Exception e) {
                         userActions.log(Level.SEVERE, "Failed to retrieve selected patient from database", new String[]{"Attempted to retrieve selected patient from database", request.getReceiverNhi()});
@@ -220,8 +224,19 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
     @FXML
     public void viewOnMap() {
         List<Patient> patients = new ArrayList<>();
-        for (int i = 0; i < masterData.size(); i++) {
-            patients.add(patientDataService.getPatientByNhi(masterData.get(i).getReceiverNhi()));
+        boolean found = false;
+        for (OrganWaitlist.OrganRequest aMasterData : masterData) {
+            for (Patient patient : patients) {
+                found = false;
+                if (patient.getNhiNumber().equals(aMasterData.getReceiverNhi())) {
+                    found = true;
+                    break;
+
+                }
+            }
+            if (!found) {
+                patients.add(patientDataService.getPatientByNhi(aMasterData.getReceiverNhi()));
+            }
         }
 
         Alert alert;
@@ -232,7 +247,7 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
                 populateMap(patients);
             });
         } else {
-            screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
+            screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser(), null);
             populateMap(patients);
         }
     }
@@ -245,5 +260,22 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
         screenControl.setIsCustomSetMap(true);
         screenControl.getMapController().setPatients(patients);
         screenControl.setMapOpen(true);
+    }
+
+    /**
+     * Displays the matching criteria in an info window for the user to read
+     */
+    @FXML
+    public void openInfoWindow() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("Information");
+
+        StringBuilder infoText = new StringBuilder();
+        infoText.append("Patients must have requested an organ in their profile to appear in this list.\n");
+
+        alert.setContentText(infoText.toString());
+
+        alert.show();
+
     }
 }

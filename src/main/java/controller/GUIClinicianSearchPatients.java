@@ -13,6 +13,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.zip.DataFormatException;
 
+import javafx.scene.Parent;
+import javafx.scene.layout.Pane;
+
 import javafx.event.ActionEvent;
 import javafx.scene.control.*;
 import org.apache.commons.lang3.StringUtils;
@@ -25,6 +28,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.geometry.Point2D;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import model.Patient;
@@ -39,10 +43,14 @@ import utility.GlobalEnums.FilterOption;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
 import utility.GlobalEnums.UndoableScreen;
+import utility.TouchComboBoxSkin;
 import utility.undoRedo.StatesHistoryScreen;
 
 public class GUIClinicianSearchPatients extends UndoableController implements IWindowObserver {
 
+	@FXML
+	private GridPane pane;
+	
     @FXML
     private TableView<Patient> patientDataTable;
 
@@ -114,7 +122,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
     /**
      * Initialises the data within the table to all patients
      */
-    public void load() {
+    public void loadController() {
         displayY.setText("Display all " + count + " profiles");
         setupAgeSliderListeners();
         populateDropdowns();
@@ -139,6 +147,19 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
 
         setupUndoRedo();
         updateProfileCount();
+        if (screenControl.isTouch()) {
+            setupComboBoxSkins();
+        }
+    }
+
+    /**
+     * Sets the ComboBox skins for ComboBoxes on this screen
+     */
+    private void setupComboBoxSkins() {
+        new TouchComboBoxSkin(birthGenderFilter, (Pane) screenControl.getTouchParent(pane));
+        new TouchComboBoxSkin(donationFilter, (Pane) screenControl.getTouchParent(pane));
+        new TouchComboBoxSkin(recievingFilter, (Pane) screenControl.getTouchParent(pane));
+        new TouchComboBoxSkin(regionFilter, (Pane) screenControl.getTouchParent(pane));
     }
 
 
@@ -172,7 +193,8 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
                 Patient selected = patientDataTable.getSelectionModel()
                         .getSelectedItem();
                 patientDataService.save(patientDataService.getPatientByNhi(selected.getNhiNumber())); //save to local
-                GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected);
+                Parent parent = screenControl.getTouchParent(pane);
+                GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected, parent);
                 controller.setTarget(selected);
             }
         });
@@ -201,13 +223,13 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
                 .getAge())));
         columnStatus.setCellValueFactory(d -> {
             Patient patient = d.getValue();
-            if (patient.getDonations()
+            if (patient.getDonations().keySet()
                     .size() > 0) {
                 return new SimpleStringProperty(patient.getRequiredOrgans()
                         .size() > 0 ? "Donating & Receiving" : "Donating");
             }
-            else if (patient.getRequiredOrgans()
-                    .size() > 0) {
+            else if (patient.getRequiredOrgans().keySet()
+                    .size() > 0 && patient.getDeathDate() == null) {
                 return new SimpleStringProperty("Receiving");
             }
             return new SimpleStringProperty("--");
@@ -235,7 +257,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
         patientDataTable.setItems(sortedData);
     }
 
-
+    @SuppressWarnings("WeakerAccess")
     public void search() {
         List<Patient> results = clinicianDataService.searchPatients(searchEntry.getText(), filter, numResults);
         masterData.clear();
@@ -336,7 +358,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
                 }
                 else {
                     StringBuilder tooltipText = new StringBuilder(patient.getNameConcatenated() + ". Donations: ");
-                    for (Organ organ : patient.getDonations()) {
+                    for (Organ organ : patient.getDonations().keySet()) {
                         tooltipText.append(organ)
                                 .append(", ");
                     }
@@ -507,11 +529,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
      */
     @FXML
     public void viewOnMap() {
-        List<Patient> patients = new ArrayList<>();
-
-        for (int i = 0; i < masterData.size(); i++) {
-            patients.add(patientDataService.getPatientByNhi(masterData.get(i).getNhiNumber()));
-        }
+        List<Patient> patients = new ArrayList<>(masterData);
 
         if (screenControl.getMapOpen()) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?", ButtonType.OK, ButtonType.NO);

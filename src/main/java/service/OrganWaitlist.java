@@ -1,14 +1,14 @@
 package service;
 
-import java.time.LocalDate;
-import java.util.Iterator;
-import java.util.SortedSet;
-import java.util.TreeSet;
-
 import model.Patient;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
+
+import java.time.LocalDate;
+import java.util.Iterator;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 
@@ -42,6 +42,7 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
      * @param date      - The date of the request.
      * @param region    - The region of the organ request.
      * @param nhi       - The NHI of the patient requesting an organ.
+	 * @param address   - The address of the patientorgan
      * @return          - Returns true if Collection changed, otherwise false.
      */
 	public boolean add(String name, Organ organ, LocalDate date, Region region, String nhi, String address) {
@@ -69,7 +70,7 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 	/**
 	 * A organ request for the waiting list.
 	 */
-	public class OrganRequest implements Comparable<OrganRequest> {
+	public class OrganRequest implements Comparable<OrganRequest>{
 		LocalDate date;
 		Region region;
 		Organ organ;
@@ -106,7 +107,7 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 			this.birth = birth;
 			this.receiver = new PatientDataService().getPatientByNhi(nhi);
 		}
-		
+
 		/**
 		 * Override of equals method, to enable checking for duplicates.
 		 * @param other	- The object to compare for equality.
@@ -142,6 +143,9 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 		public int compareTo(OrganRequest o) {
 			if (date.isBefore(o.getRequestDate())) {
 				return -1;
+			}
+			if (this.getReceiverNhi().equals(o.getReceiverNhi()) && this.getRequestedOrgan().equals(o.getRequestedOrgan())){
+				return 0;
 			}
 			return 1;
 		}

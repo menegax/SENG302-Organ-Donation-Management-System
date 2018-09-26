@@ -1,13 +1,13 @@
 package controller;
 
-import static java.util.logging.Level.INFO;
-import static utility.SystemLogger.systemLogger;
-
 import model.User;
 import utility.undoRedo.UndoableWrapper;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static java.util.logging.Level.INFO;
+import static utility.SystemLogger.systemLogger;
 
 public class UserControl {
 
@@ -98,7 +98,7 @@ public class UserControl {
 
     /**
      * Gets the target user that is currently being viewed
-     *
+     * @param undoableWrapper - The undoable wrapper to get the target of
      * @return - User that is being viewed
      */
     public User getTargetUser(UndoableWrapper undoableWrapper) {
@@ -110,6 +110,7 @@ public class UserControl {
      * Sets the user to be viewed
      *
      * @param user - Patient object to view
+     * @param undoableWrapper - The undoable wrapper to get the target of
      */
     void setTargetUser(User user, UndoableWrapper undoableWrapper) {
         add(undoableWrapper, user);

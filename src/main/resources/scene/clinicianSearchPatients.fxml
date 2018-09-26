@@ -14,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane prefHeight="581.0" prefWidth="769.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianSearchPatients">
+<GridPane fx:id="pane" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianSearchPatients">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="274.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="235.0" />
@@ -22,10 +22,10 @@
    </columnConstraints>
    <rowConstraints>
       <RowConstraints />
-      <RowConstraints maxHeight="30.40001220703125" minHeight="16.800006103515624" prefHeight="28.000003051757812" vgrow="NEVER" />
-      <RowConstraints maxHeight="161.59999389648436" minHeight="60.0" prefHeight="150.39999694824218" vgrow="NEVER" />
+      <RowConstraints maxHeight="30.40001220703125" minHeight="16.800006103515624" prefHeight="10.0" vgrow="NEVER" />
+      <RowConstraints maxHeight="161.59999389648436" minHeight="60.0" prefHeight="130.0" vgrow="NEVER" />
       <RowConstraints maxHeight="78.00001220703126" minHeight="37.399993896484375" prefHeight="37.399993896484375" vgrow="NEVER" />
-      <RowConstraints minHeight="10.0" prefHeight="362.79998779296875" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="330.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
@@ -77,12 +77,12 @@
                   <RowConstraints maxHeight="27.199999999999996" minHeight="27.199999999999996" prefHeight="27.199999999999996" />
               </rowConstraints>
                <children>
-                  <Text fx:id="ageLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="0 - 100" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                  <Text fx:id="ageLabel" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="0 - 100" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="4" GridPane.valignment="TOP">
                      <font>
                         <Font name="System Bold" size="18.0" />
                      </font>
                   </Text>
-                  <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Age" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="Age" GridPane.halignment="LEFT" GridPane.rowIndex="4" GridPane.valignment="TOP">
                      <font>
                         <Font size="20.0" />
                      </font>
@@ -123,23 +123,24 @@
             <ComboBox fx:id="donationFilter" prefHeight="40.0" prefWidth="210.0" promptText="None" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets right="5.0" />
-               </GridPane.margin></ComboBox>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Birth Gender" GridPane.valignment="CENTER">
+               </GridPane.margin>
+            </ComboBox>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="Birth Gender" GridPane.valignment="CENTER">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Donating Organ" GridPane.columnIndex="1" GridPane.valignment="CENTER">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="Donating Organ" GridPane.columnIndex="1" GridPane.valignment="CENTER">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Recieving Organ" GridPane.columnIndex="2" GridPane.valignment="CENTER">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="Recieving Organ" GridPane.columnIndex="2" GridPane.valignment="CENTER">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Region" GridPane.columnIndex="3" GridPane.valignment="CENTER">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="Region" GridPane.columnIndex="3" GridPane.valignment="CENTER">
                <font>
                   <Font size="15.0" />
                </font>
@@ -170,7 +171,7 @@
             <Insets right="60.0" />
          </GridPane.margin>
       </Button>
-      <Button mnemonicParsing="false" onAction="#viewOnMap" prefHeight="30.0" prefWidth="118.0" text="View on Map" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
+      <Button mnemonicParsing="false" onAction="#viewOnMap" prefHeight="25.0" prefWidth="139.5" text="View on Map" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="5">
          <GridPane.margin>
             <Insets right="60.0" />
          </GridPane.margin>

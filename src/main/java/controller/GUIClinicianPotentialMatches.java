@@ -1,10 +1,5 @@
 package controller;
 
-import static java.lang.Math.abs;
-import static java.time.temporal.ChronoUnit.DAYS;
-import static utility.SystemLogger.systemLogger;
-import static utility.UserActionHistory.userActions;
-
 import com.google.maps.model.LatLng;
 import data_access.localDAO.PatientLocalDAO;
 import javafx.beans.property.ObjectProperty;
@@ -18,13 +13,16 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.scene.control.*;
-import javafx.scene.input.RotateEvent;
-import javafx.scene.input.ScrollEvent;
-import javafx.scene.input.ZoomEvent;
+import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.ProgressBar;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
-import javafx.util.converter.LocalTimeStringConverter;
 import model.Patient;
 import model.PatientOrgan;
 import org.apache.commons.lang3.StringUtils;
@@ -33,19 +31,33 @@ import service.APIGoogleMaps;
 import service.ClinicianDataService;
 import service.OrganWaitlist;
 import service.PatientDataService;
+import utility.CachedThreadPool;
+import utility.GlobalEnums;
+import utility.MultiTouchHandler;
 import utility.*;
 import utility.GlobalEnums.BirthGender;
 import utility.GlobalEnums.FilterOption;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
-
+import utility.undoRedo.IAction;
+import utility.undoRedo.MultiAction;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
-public class GUIClinicianPotentialMatches extends TargetedController implements IWindowObserver, TouchscreenCapable {
+import static java.lang.Math.abs;
+import static java.time.temporal.ChronoUnit.DAYS;
+import static utility.SystemLogger.systemLogger;
+import static utility.UserActionHistory.userActions;
+
+public class GUIClinicianPotentialMatches extends UndoableController implements IWindowObserver {
 
     private int SECONDSINHOURS = 3600;
 
@@ -88,6 +100,9 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
     public Button closeButton;
 
     @FXML
+    public Button infoWindowBtn;
+
+    @FXML
     private GridPane filterGrid;
 
     @FXML
@@ -98,6 +113,9 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
 
     @FXML
     private Text ageSliderLabel;
+
+    @FXML
+    private Button assignOrganButton;
 
     private Organ targetOrgan;
 
@@ -117,11 +135,16 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
 
     private Map<FilterOption, String> filter = new HashMap<>();
 
-    private TouchPaneController matchTouchPane;
-
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private SortedList<OrganWaitlist.OrganRequest> sortedRequests;
+
+    private ClinicianDataService clinicianDataService;
+
+    private OrganWaitlist organWaitList;
+
+    private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
+    private MultiTouchHandler touchHandler;
 
     private final static double AVERAGE_RADIUS_OF_EARTH_KM = 6371;
 
@@ -148,7 +171,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         targetPatientOrgan.startTask();
         targetPatientOrgan.getProgressTask().setProgressBar(new ProgressBar()); //dummy progress task
         CachedThreadPool.getCachedThreadPool().getThreadService().submit(targetPatientOrgan.getProgressTask());
-        load();
+        loadController();
     }
 
 
@@ -156,18 +179,18 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
      * Initializes matches list screen by populating table and initializing a double click action
      * to view a patient's profile.
      */
-    public void load() {
+    public void loadController() {
         boundsOfNz.put(0, new LatLng(-34.386058, 166.848052));
         boundsOfNz.put(2, new LatLng(-47.058964, 164.456064));
         boundsOfNz.put(1, new LatLng(-34.073159, 179.323815));
         boundsOfNz.put(3, new LatLng(-46.494633, 179.932955));
         allRequests.clear();
         loadRegionDistances();
-        ClinicianDataService clinicianDataService = new ClinicianDataService();
-        OrganWaitlist organRequests = clinicianDataService.getOrganWaitList();
+        clinicianDataService = new ClinicianDataService();
+        organWaitList = clinicianDataService.getOrganWaitList();
         requests = new ArrayList<>();
-        for (OrganWaitlist.OrganRequest request : organRequests) {
-            if (checkMatch(request)) {
+        for (OrganWaitlist.OrganRequest request: organWaitList) {
+            if(checkMatch(request)) {
                 allRequests.add(request);
             }
         }
@@ -178,13 +201,11 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         setupFilterListeners();
         filterTravelTimes();
         if (screenControl.isTouch()) {
-            matchTouchPane = new TouchPaneController(potentialMatchesPane);
-            potentialMatchesPane.setOnZoom(this::zoomWindow);
-            potentialMatchesPane.setOnRotate(this::rotateWindow);
-            potentialMatchesPane.setOnScroll(this::scrollWindow);
-            potentialMatchesPane.setOnTouchPressed(event -> potentialMatchesPane.toFront());
+            touchHandler = new MultiTouchHandler();
+            touchHandler.initialiseHandler(potentialMatchesPane);
+            new TouchComboBoxSkin(birthGenderFilter, potentialMatchesPane);
+            new TouchComboBoxSkin(regionFilter, potentialMatchesPane);
         }
-
     }
 
 
@@ -573,7 +594,8 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
                 try {
                     Patient selectedUser = patientDataService.getPatientByNhi(request.getReceiverNhi());
                     patientDataService.save(selectedUser);
-                    GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser);
+                    Parent parent = screenControl.getTouchParent(potentialMatchesPane);
+                    GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser, parent);
                     controller.setTarget(selectedUser);
                 }
                 catch (Exception e) {
@@ -590,7 +612,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
      * Called when a profile opened from this window is closed
      */
     public void windowClosed() {
-        load();
+        loadController();
         potentialMatchesTable.refresh();
     }
 
@@ -721,6 +743,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
      * Sets the filter listeners for the potential matches list
      */
     private void setupFilterListeners() {
+        assignOrganButton.setDisable(true);
         expiryTimeLabel.textProperty().addListener(e -> {
             filterTravelTimes();
         });
@@ -749,25 +772,34 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
             filter.put(FilterOption.AGELOWER, String.valueOf(rangeSlider.getLowValue()));
             filterRequests();
         });
+        potentialMatchesTable.getSelectionModel().selectedItemProperty().addListener(((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                assignOrganButton.setDisable(false);
+            } else {
+                assignOrganButton.setDisable(true);
+            }
+        }));
     }
 
+    /**
+     * Assigns the target patients donating organ to the selected receiver. Also removed organ from waitlist
+     */
+    public void assignOrganToPatient(){
+        OrganWaitlist.OrganRequest selectedRequest = potentialMatchesTable.getSelectionModel().getSelectedItem();
+        Patient organReceiver = patientDataService.getPatientByNhi(selectedRequest.getReceiverNhi());
+        Patient after1 = (Patient) target.deepClone();
+        Patient after2 = (Patient) organReceiver.deepClone();
+        after1.getDonations().put(targetOrgan, after2.getNhiNumber());
+        after2.getRequiredOrgans().get(targetOrgan).setDonorNhi(after1.getNhiNumber());
+        organWaitList.getRequests().remove(selectedRequest);
+        clinicianDataService.updateOrganWaitList(organWaitList);
+        IAction action = new MultiAction((Patient) target, after1, organReceiver, after2);
+        undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.CLINICIANAVAILABLEORGANS);
+        userActions.log(Level.INFO, "Assigned organ (" + targetOrgan + ") to patient " + organReceiver.getNhiNumber(), "Attempted to assign organ to patient");
 
-    @Override
-    public void zoomWindow(ZoomEvent zoomEvent) {
-        matchTouchPane.zoomPane(zoomEvent);
+        closeMatchWindow();
     }
 
-
-    @Override
-    public void rotateWindow(RotateEvent rotateEvent) {
-        matchTouchPane.rotatePane(rotateEvent);
-    }
-
-
-    @Override
-    public void scrollWindow(ScrollEvent scrollEvent) {
-        matchTouchPane.scrollPane(scrollEvent);
-    }
 
 
     @FXML
@@ -795,7 +827,7 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
             alert.show();
             alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> populateMap(patients));
         } else {
-            screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
+            screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser(), null);
             populateMap(patients);
         }
     }
@@ -809,4 +841,31 @@ public class GUIClinicianPotentialMatches extends TargetedController implements 
         screenControl.getMapController().setPatients(patients);
         screenControl.setMapOpen(true);
     }
+
+
+    /**
+     * Displays the matching criteria in an info window for the user to read
+     */
+    @FXML
+    public void openInfoWindow() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText("Matching Criteria");
+        alert.setWidth(30.0);
+
+        StringBuilder infoText = new StringBuilder();
+        infoText.append("To match, the receiver must meet the following criteria:\n\n");
+        infoText.append("* The requesting organ must be the same as the donor is donating.\n");
+        infoText.append("* The potential recipient must not be dead.\n");
+        infoText.append("* The donor and receiver must be within 15 years apart in age.\n");
+        infoText.append("* If under 12, both the receiver and donor must be under 12 years old.\n");
+        infoText.append("* The donating organ must not have expired.\n");
+        infoText.append("* Those waiting the longest have the highest priority.\n");
+        infoText.append("* After comparing wait times, recipients with the closest location to the donor are prioritized.");
+
+        alert.setContentText(infoText.toString());
+
+        alert.show();
+
+    }
+
 }
