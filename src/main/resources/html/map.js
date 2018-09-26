@@ -574,6 +574,7 @@ function setPatients(newPatients) {
     hideNotification();
     clearMarkers();
     clearCircles();
+    clearFilterArea();
     successCount = 0;
     infoWindows = [];
     markerSetId++;
@@ -649,7 +650,7 @@ function hideNotification() {//todo rename to hideMarkerNotification
  */
 function showNotification(numSuccess, numTotal) { //todo rename to showMarkerNotification
     var modalContent = "";
-    var modalMessage = 'Successfully loaded ' + numSuccess + ' out of ' + numTotal + ' patient locations.';
+    var modalMessage = 'Successfully loaded ' + numSuccess + ' out of ' + numTotal + ' patient locations';
     $('#marker-notification-msg').html();
     $('#marker-notification').show();
 
