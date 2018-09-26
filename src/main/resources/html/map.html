@@ -36,6 +36,17 @@
             line-height: 15px;
         }
 
+        #cancelAssignmentBody {
+            position: absolute;
+            top: 7px;
+            right: 7px;
+            z-index: 5;
+            padding: 2px;
+            text-align: center;
+            font-family: 'Roboto','sans-serif';
+            line-height: 15px;
+        }
+
         #marker-notification-float {
             position: fixed;
             z-index: 500;
@@ -79,6 +90,9 @@
     <div id="floating-panel">
         <button id="availableOrgansView" type="button" class="btn btn-primary">View Available Organs</button>
     </div>
+    <div id="cancelAssignmentBody">
+        <button id="cancelAssignmentBtn" type="button" class="btn btn-primary" style="display: none">Cancel assignment</button>
+    </div>
     <div id="marker-notification-float">
         <div id="marker-notification-container">
             <span id="marker-notification" style="display: none">
@@ -97,8 +111,8 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <div class="modal-body">
-                        <table class="table">
+                    <div id="assignOrganBody" class="modal-body">
+                        <table id="assignOrganTable" class="table">
                             <thead class="thead-light">
                             <tr>
                                 <th id="donorNhi" scope="col">Donor NHI</th>
@@ -106,7 +120,7 @@
                                 <th id="organ" scope="col">Organ</th>
                             </tr>
                             </thead>
-                            <tbody id="assignOrganTable">
+                            <tbody id="assignOrganTableBody">
 
                             </tbody>
                         </table>

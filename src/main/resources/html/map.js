@@ -8,8 +8,9 @@ var markerSetId = 0;
 var potentialMatches = [];
 var donations = [];
 var currentMarker;
-var currentOrgan = undefined;
-var donorPatient;
+var currentOrgan;
+var donorPatientNhi;
+var receiverPatientNhi;
 var dropDownDonations = [];
 
 var originalZoom;
@@ -34,6 +35,22 @@ function init() {
         document.getElementById('availableOrgansView').addEventListener('click', function () {
             map.setCenter({lat: -40.59225, lng: 173.51012});
             mapBridge.getAvailableOrgans();
+        });
+        document.getElementById('cancelAssignmentBtn').addEventListener('click', function () {
+            isViewingPotentialMatches = false;
+            infos = infoWindows;
+            infoWindows = [];
+            console.log(patients);
+            patients.forEach(function (patient) {
+                console.log(patient.getNhiNumber());
+                infos.forEach(function (infoWindow) {
+                    console.log(infoWindow["nhi"]);
+                    if (patient.getNhiNumber() === infoWindow["nhi"]) {
+                        attachInfoWindow(patient, marker);
+                    }
+                });
+            });
+            $('#cancelAssignmentBtn').hide();
         });
     });
 }
@@ -131,17 +148,20 @@ function makeMarker(patient, results) {
 function attachInfoWindow(patient, marker) {
     var infoWindow;
     if (patient.isDead()) {
+        console.log("isDead");
         infoWindow = new google.maps.InfoWindow({
             content: getDeadPatientInfoContent(patient),
             maxWidth:550
         });
         buildOrganDropdown(infoWindow);
     } else if (potentialMatches !== []) {
+        console.log("isPotentialMatches");
         infoWindow = new google.maps.InfoWindow({
             content: getPotentialMatchesContent(patient),
             maxWidth:350
         });
     } else {
+        console.log("isReceiver");
         infoWindow = new google.maps.InfoWindow({
             content: getAlivePatientInfoContent(patient),
             maxWidth:350
@@ -150,7 +170,9 @@ function attachInfoWindow(patient, marker) {
     mapInfoWindowToPatient(infoWindow, patient);
     marker.addListener('click', function () { // when clicking on the marker, all other markers' info windows close
         currentMarker = marker;
-        currentOrgan = undefined;
+        if (!isViewingPotentialMatches) {
+            currentOrgan = undefined;
+        }
         infoWindows.forEach(function (iw) {
             if (iw["iwindow"] !== infoWindow) {
                 iw["iwindow"].close();
@@ -184,7 +206,6 @@ function getDeadPatientInfoContent(patient) {
  * Triggers Java method to find potential matches
  */
 function viewPotentialMatches(patientNhi) {
-    isViewingPotentialMatches = false;
     mapBridge.getPotentialMatches(patientNhi, currentOrgan);
 }
 
@@ -192,6 +213,7 @@ function viewPotentialMatches(patientNhi) {
  * Populates map with potential matches
  */
 function populatePotentialMatches(patientNhi, donor) {
+    $('#cancelAssignmentBtn').show();
     isViewingPotentialMatches = true;
     var donorMarker;
     markers.forEach(function (marker) {
@@ -204,7 +226,7 @@ function populatePotentialMatches(patientNhi, donor) {
             infoWindow["iwindow"].close();
         }
     });
-    setPatients(potentialMatches);
+    setPatients(patients);
     if (donorMarker !== undefined) {
         donorMarker.setMap(map);
         markers.push(donorMarker);
@@ -219,6 +241,7 @@ function populatePotentialMatches(patientNhi, donor) {
  */
 function noPotentialMatchesFound(numberOfPotentialMatches){
     isViewingPotentialMatches = false;
+    $('#cancelAssignmentBtn').hide();
     // showGenericNotification(numberOfPotentialMatches + " potential matches found.");
 }
 
@@ -243,26 +266,24 @@ function getAlivePatientInfoContent(patient) {
 function getPotentialMatchesContent(patient) {
     var organOptions = getOrganOptions(patient);
     var modalContent = '';
+    receiverPatientNhi = patient.getNhiNumber();
     modalContent += '<tr>\n' +
-        '<td style=\"font-size: 15px; padding-top: 18px\">' + donorPatient + '</td>\n' +
-        '<td style=\"font-size: 15px; padding-top: 18px\">' + patient.getNhiNumber() + '</td>\n' +
+        '<td style=\"font-size: 15px; padding-top: 18px\">' + donorPatientNhi + '</td>\n' +
+        '<td style=\"font-size: 15px; padding-top: 18px\">' + receiverPatientNhi + '</td>\n' +
         '<td style=\"font-size: 15px; padding-top: 18px\">' + currentOrgan + '</td>\n' +
         '</tr>';
-    $('#assignOrganTable').html(modalContent);
-    return '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</h5><span style="font-size: 14px">'
+    $('#assignOrganTableBody').html(modalContent);
+    return '<h5>' + receiverPatientNhi + ' - ' + patient.getNameConcatenated() + '</h5><span style="font-size: 14px">'
         + patient.getAddressString() + '<br><br>' + organOptions.donating + '<br><br>' + organOptions.receiving
-        + '</span><br><input type="button" onclick="openPatientProfile(\'' + patient.getNhiNumber()
+        + '</span><br><input type="button" onclick="openPatientProfile(\'' + receiverPatientNhi
         + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/> '
         + '<input type="button" class="btn btn-sm btn-success mt-3" '
-        + 'style="margin: auto" value="Assign \'' + currentOrgan +'\'" onClick="modalContent(\''+ patient.getNhiNumber() +'\')" data-toggle="modal" data-target="#assignOrganModal">';
-}
-
-function modalContent(receiverNhi) {
-
+        + 'style="margin: auto" value="Assign \'' + currentOrgan +'\'" data-toggle="modal" data-target="#assignOrganModal">';
 }
 
 function assignOrgan() {
-
+    mapBridge.assignOrgan(donorPatientNhi, receiverPatientNhi, currentOrgan);
+    receiverPatientNhi = undefined;
 }
 
 /**
@@ -362,10 +383,11 @@ function getOrganOptions(patient) {
 
 /**
  * Sets the patients for the map and adds the markers to the map
- * @param _patients
+ * @param patientsList
  */
-function setPatients(_patients) {
-    patients = _patients;
+function setPatients(patientsList) {
+    patients = patientsList;
+    console.log(patients);
     hideNotification();
     clearMarkers();
     clearCircles();
@@ -374,7 +396,6 @@ function setPatients(_patients) {
     markerSetId++;
     addMarkers(patients.size(), markerSetId);
     potentialMatches = [];
-    isViewingPotentialMatches = false;
 }
 
 /**

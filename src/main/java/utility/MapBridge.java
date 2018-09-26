@@ -3,6 +3,7 @@ package utility;
 import controller.GUIHome;
 import controller.GUIMap;
 import controller.ScreenControl;
+import controller.UndoRedoControl;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ProgressBar;
 import model.Patient;
@@ -12,9 +13,13 @@ import service.OrganWaitlist;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
 import javafx.geometry.Point2D;
+import utility.undoRedo.IAction;
+import utility.undoRedo.MultiAction;
 
 import java.util.*;
 import java.util.logging.Level;
+
+import static utility.UserActionHistory.userActions;
 
 /**
  * Provides the map javascript access to the java codebase
@@ -169,10 +174,14 @@ public class MapBridge {
         for(OrganWaitlist.OrganRequest request : requests) {
             patients.add(request.getReceiver());
         }
-        GUIMap.getJSBridge().setMember("potentialMatches", patients);
-        GUIMap.getJSBridge().setMember("donorPatient", patient.getNhiNumber());
-        GUIMap.getJSBridge().call("populatePotentialMatches", patientNhi, patient);
-        GUIMap.getJSBridge().call("noPotentialMatchesFound", patients.size());
+        if (patients.size() > 0) {
+            GUIMap.getJSBridge().setMember("patients", patients);
+            GUIMap.getJSBridge().setMember("potentialMatches", patients);
+            GUIMap.getJSBridge().setMember("donorPatientNhi", patient.getNhiNumber());
+            GUIMap.getJSBridge().call("populatePotentialMatches", patientNhi, patient);
+        } else {
+            GUIMap.getJSBridge().call("noPotentialMatchesFound", patients.size());
+        }
     }
 
     /**
@@ -191,5 +200,20 @@ public class MapBridge {
         if (patient.getDonations().containsKey(organ)) {
             updateMarkerRadii(patient, organ);
         }
+    }
+
+    @SuppressWarnings("unused")
+    public void assignOrgan(String donorNhiStr, String receiverNhiStr, String organStr) {
+        GlobalEnums.Organ organ = GlobalEnums.Organ.getEnumFromString(organStr);
+        Patient donor = patientDataService.getPatientByNhi(donorNhiStr);
+        Patient receiver = patientDataService.getPatientByNhi(receiverNhiStr);
+
+        Patient after1 = (Patient) donor.deepClone();
+        Patient after2 = (Patient) receiver.deepClone();
+        after1.getDonations().put(organ, after2.getNhiNumber());
+        after2.getRequiredOrgans().get(organ).setDonorNhi(after1.getNhiNumber());
+        IAction action = new MultiAction(donor, after1, receiver, after2);
+        UndoRedoControl.getUndoRedoControl().addAction(action, GlobalEnums.UndoableScreen.CLINICIANAVAILABLEORGANS);
+        userActions.log(Level.INFO, "Assigned organ (" + organ + ") to patient " + receiver.getNhiNumber(), "Attempted to assign organ to patient");
     }
 }
