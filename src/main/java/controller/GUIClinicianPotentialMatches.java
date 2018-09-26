@@ -598,7 +598,6 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
                     controller.setTarget(selectedUser);
                 }
                 catch (Exception e) {
-                    e.printStackTrace();
                     userActions.log(Level.SEVERE,
                             "Failed to retrieve selected patient from database",
                             new String[] { "Attempted to retrieve selected patient from database", request.getReceiverNhi() });
