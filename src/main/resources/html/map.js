@@ -92,6 +92,7 @@ function setUpFilterAreaButton() {
                     filterEnd = e.latLng;
                     filterArea({start: filterStart, end: filterEnd});
                     google.maps.event.removeListener(filterByAreaListener);
+                    filterByAreaListener = undefined;
                     makeAndAttachFilterRectangle();
                 }
             });
@@ -160,6 +161,10 @@ function setUpLegend() {
  * Reconnects every marker back to the map
  */
 function clearFilterArea() {
+    if (filterByAreaListener !== undefined) {
+        google.maps.event.removeListener(filterByAreaListener);
+        filterByAreaListener = undefined;
+    }
     filterAreaSet = false;
     markers.forEach(function (marker) {
         marker.setMap(map);
