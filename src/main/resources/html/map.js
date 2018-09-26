@@ -94,6 +94,8 @@ function setUpFilterAreaButton() {
                     google.maps.event.removeListener(filterByAreaListener);
                     filterByAreaListener = undefined;
                     makeAndAttachFilterRectangle();
+                    $('#filterAreaBtn').hide();
+                    $('#clearFilterAreaBtn').show();
                 }
             });
         });
@@ -169,6 +171,8 @@ function clearFilterArea() {
     markers.forEach(function (marker) {
         marker.setMap(map);
     });
+    $('#clearFilterAreaBtn').hide();
+    $('#filterAreaBtn').show();
     showGenericNotification('Area filters have been cleared.');
 }
 
