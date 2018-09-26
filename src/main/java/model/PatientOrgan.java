@@ -1,11 +1,11 @@
 package model;
 
+import static java.time.temporal.ChronoUnit.SECONDS;
+
 import utility.GlobalEnums;
 import utility.ProgressTask;
 
 import java.time.LocalDateTime;
-
-import static java.time.temporal.ChronoUnit.SECONDS;
 
 /**
  * Simple holder for patients and organ so that it is known which organ belongs to whom.
