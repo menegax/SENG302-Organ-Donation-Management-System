@@ -171,7 +171,7 @@ public class MapBridge {
         }
         GUIMap.getJSBridge().setMember("potentialMatches", patients);
         GUIMap.getJSBridge().call("populatePotentialMatches", patientNhi, patient);
-
+        GUIMap.getJSBridge().call("noPotentialMatchesFound", patients.size());
     }
 
     /**

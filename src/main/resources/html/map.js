@@ -1,4 +1,5 @@
-var map, geocoder, patients, mapBridge, successCount;
+var map, geocoder, mapBridge, successCount;
+var patients = [];
 var circles = [];
 var markers = [];
 var infoWindows = [];
@@ -177,17 +178,15 @@ function getDeadPatientInfoContent(patient) {
  * Triggers Java method to find potential matches
  */
 function viewPotentialMatches(patientNhi) {
-    if (currentOrgan !== 'None') {
-        isViewingPotentialMatches = true;
-        isViewingPotentialMatches = false;
-        mapBridge.getPotentialMatches(patientNhi, currentOrgan);
-    }
+    isViewingPotentialMatches = false;
+    mapBridge.getPotentialMatches(patientNhi, currentOrgan);
 }
 
 /**
  * Populates map with potential matches
  */
 function populatePotentialMatches(patientNhi, donor) {
+    isViewingPotentialMatches = true;
     var donorMarker;
     markers.forEach(function (marker) {
        if (marker.nhi === patientNhi) {
@@ -198,8 +197,18 @@ function populatePotentialMatches(patientNhi, donor) {
     if (donorMarker !== undefined) {
         donorMarker.setMap(map);
         markers.push(donorMarker);
-        patients.push(donor);
+        patients.add(donor);
+        attachInfoWindow(donor, donorMarker);
     }
+    // showGenericNotification(potentialMatches.size() + " potential matches found.");
+}
+
+/**
+ * no potential matches found
+ */
+function noPotentialMatchesFound(numberOfPotentialMatches){
+    isViewingPotentialMatches = false;
+    // showGenericNotification(numberOfPotentialMatches + " potential matches found.");
 }
 
 /**
