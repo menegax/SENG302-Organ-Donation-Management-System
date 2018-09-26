@@ -555,16 +555,16 @@ function populatePotentialMatches(patientNhi, donor) {
         console.log("disableeeeee");
     }
 
-    showGenericNotification(potentialMatches.size() + " potential matches found.");
+    showGenericNotification(patients.size() + " potential match(es) found.");
 }
 
 /**
  * no potential matches found
  */
-function noPotentialMatchesFound(numberOfPotentialMatches){
+function noPotentialMatchesFound(){
     isViewingPotentialMatches = false;
     $('#cancelAssignmentBtn').hide();
-    showGenericNotification(numberOfPotentialMatches + " potential matches found.");
+    showGenericNotification(0 + " potential matches found.");
 }
 
 /**
