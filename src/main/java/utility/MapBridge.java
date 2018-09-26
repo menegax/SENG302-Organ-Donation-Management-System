@@ -170,6 +170,7 @@ public class MapBridge {
             patients.add(request.getReceiver());
         }
         GUIMap.getJSBridge().setMember("potentialMatches", patients);
+        GUIMap.getJSBridge().setMember("donorPatient", patient.getNhiNumber());
         GUIMap.getJSBridge().call("populatePotentialMatches", patientNhi, patient);
         GUIMap.getJSBridge().call("noPotentialMatchesFound", patients.size());
     }

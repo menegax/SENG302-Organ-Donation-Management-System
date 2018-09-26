@@ -5,10 +5,11 @@ var markers = [];
 var infoWindows = [];
 var failedPatientArray = [];
 var markerSetId = 0;
-var potentialMatches;
+var potentialMatches = [];
 var donations = [];
 var currentMarker;
 var currentOrgan = undefined;
+var donorPatient;
 var dropDownDonations = [];
 
 var originalZoom;
@@ -135,7 +136,7 @@ function attachInfoWindow(patient, marker) {
             maxWidth:550
         });
         buildOrganDropdown(infoWindow);
-    } else if (potentialMatches.size() > 0) {
+    } else if (potentialMatches !== []) {
         infoWindow = new google.maps.InfoWindow({
             content: getPotentialMatchesContent(patient),
             maxWidth:350
@@ -198,7 +199,6 @@ function populatePotentialMatches(patientNhi, donor) {
            donorMarker = marker;
        }
     });
-    console.log(infoWindows);
     infoWindows.forEach(function (infoWindow) {
         if (infoWindow["nhi"] === donor.getNhiNumber()) {
             infoWindow["iwindow"].close();
@@ -235,16 +235,35 @@ function getAlivePatientInfoContent(patient) {
         + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>';
 }
 
+/**
+ * Create the information window content for a patient that is a potential match for the organ searched for
+ * @param patient
+ * @returns {string}
+ */
 function getPotentialMatchesContent(patient) {
     var organOptions = getOrganOptions(patient);
+    var modalContent = '';
+    modalContent += '<tr>\n' +
+        '<td style=\"font-size: 15px; padding-top: 18px\">' + donorPatient + '</td>\n' +
+        '<td style=\"font-size: 15px; padding-top: 18px\">' + patient.getNhiNumber() + '</td>\n' +
+        '<td style=\"font-size: 15px; padding-top: 18px\">' + currentOrgan + '</td>\n' +
+        '</tr>';
+    $('#assignOrganTable').html(modalContent);
     return '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</h5><span style="font-size: 14px">'
         + patient.getAddressString() + '<br><br>' + organOptions.donating + '<br><br>' + organOptions.receiving
-        + '</span><br><input type="button" onClick="matchPairs()" class="btn btn-sm btn-primary mt-3" '
-        + 'style="margin: auto" value="Assign \'' + currentOrgan +'\'">'
-        + '<br><input type="button" onclick="openPatientProfile(\'' + patient.getNhiNumber()
-        + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>';
+        + '</span><br><input type="button" onclick="openPatientProfile(\'' + patient.getNhiNumber()
+        + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/> '
+        + '<input type="button" class="btn btn-sm btn-success mt-3" '
+        + 'style="margin: auto" value="Assign \'' + currentOrgan +'\'" onClick="modalContent(\''+ patient.getNhiNumber() +'\')" data-toggle="modal" data-target="#assignOrganModal">';
 }
 
+function modalContent(receiverNhi) {
+
+}
+
+function assignOrgan() {
+
+}
 
 /**
  * Creates a circle radii for current organ marker selected
@@ -354,6 +373,8 @@ function setPatients(_patients) {
     infoWindows = [];
     markerSetId++;
     addMarkers(patients.size(), markerSetId);
+    potentialMatches = [];
+    isViewingPotentialMatches = false;
 }
 
 /**
