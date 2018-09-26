@@ -15,8 +15,6 @@ var EASTBOUND = 180;
 var WESTBOUND = 165;
 var rectangle = [];
 var dropDownDonations = [];
-
-var iconBase = '../image/markers/';
 var originalZoom;
 var iconBase = '../image/markers/';
 var icons = {
@@ -30,6 +28,20 @@ var icons = {
     }
 };
 
+/**
+ * Initialize method
+ */
+function init() {
+    setUpMap();
+    setUpLegend(icons);
+    setUpViewAvailableOrgansButton();
+    setUpFilterAreaButton();
+    setUpFilterClearAreaButton();
+}
+
+/**
+ * Sets up the map with styling and etc.
+ */
 function setUpMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: {lat: -40.59225, lng: 173.51012},
@@ -46,17 +58,6 @@ function setUpMap() {
         gestureHandling: 'cooperative',
         styles: getMapCustomStyle()
     });
-}
-
-/**
- * Initialize method
- */
-function init() {
-    setUpMap();
-    setUpLegend(icons);
-    setUpViewAvailableOrgansButton();
-    setUpFilterAreaButton();
-    setUpFilterClearAreaButton();
 }
 
 /**
@@ -124,7 +125,7 @@ function setUpViewAvailableOrgansButton() {
  * Gets globalPatients who are within the area and resets the markers on the map to be them
  */
 function filterArea(area) {
-    interruptMarkers = true
+    interruptMarkers = true;
     markers.forEach(function (marker) {
         if (!isPatientInArea(marker, area)) {
             marker.setMap(null);
@@ -142,7 +143,7 @@ function setUpLegend() {
         var name = type.name;
         var icon = type.icon;
         var div = document.createElement('div');
-        div.innerHTML = '<img src="' + icon + '"> ' + name;
+        div.innerHTML = '<img src="' + icon + '">' + name;
         legend.appendChild(div);
     }
 
