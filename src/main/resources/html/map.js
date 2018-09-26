@@ -248,8 +248,7 @@ function updateMarkerRadii(radius, color, organ) {
 /**
  * Triggered via java if there is a match to create a line
  */
-function createMatchedOrganArrow(donorLoc, recipientLoc, recipientNhi, donorNhi, organ) {
-
+function createMatchedOrganArrow(donorLoc, recipientLoc, donorNhi, recipientNhi, organ) {
     if (!markers.some(function(marker) {
         return marker.nhi === recipientNhi;
     })) {
