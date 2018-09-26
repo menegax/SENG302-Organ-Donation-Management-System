@@ -570,10 +570,11 @@ function noPotentialMatchesFound(){
  */
 function getAlivePatientInfoContent(patient) {
     var organOptions = getOrganOptions(patient);
-    return '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</h5><span style="font-size: 14px">'
-            + patient.getAddressString() + '<br><br>' + organOptions.donating + '<br><br>' + organOptions.receiving
-            + '</span><br><input type="button" onclick="openPatientProfile(\'' + patient.getNhiNumber()
-            + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>';
+    var nhi = patient.getNhiNumber()
+    return '<button onclick="openPatientProfile(\'' + nhi + '\')" type="button" class="btn btn-link" style="font-size: 24px; margin-left: -10px">'
+                        + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</button>' + '<br>' + '<span class="info-window-address">'
+            + patient.getAddressString() + '</span><br><br>' + organOptions.donating + '<br><br>' + organOptions.receiving
+            + '</span>';
 }
 
 /**
