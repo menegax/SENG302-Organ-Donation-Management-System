@@ -38,9 +38,6 @@ import java.util.Map;
 import java.util.logging.Level;
 
 class ScreenControlTouch extends ScreenControl {
-
-	/* Defines the size of the initial pane */
-    private final double INITIAL_PANE_SIZE = 0.85;
 	
 	private Stage touchStage;
 	
@@ -49,6 +46,8 @@ class ScreenControlTouch extends ScreenControl {
     private Region rootPane;
 
     private Pane touchPane = null;
+    
+    private final double INITIALPANESIZE = 0.55;
 
     private static ScreenControlTouch screenControlTouch;
 
@@ -213,8 +212,8 @@ class ScreenControlTouch extends ScreenControl {
     private void setInitialPaneSize(Region pane) {
     	pane.setTranslateX((touchStage.getWidth() - pane.getPrefWidth()) / 2);
     	pane.setTranslateY((touchStage.getHeight() - pane.getPrefWidth()) / 2);
-    	pane.setScaleX(INITIAL_PANE_SIZE);
-    	pane.setScaleY(INITIAL_PANE_SIZE);
+    	pane.setScaleX(INITIALPANESIZE);
+    	pane.setScaleY(INITIALPANESIZE);
     }
     
     /**
