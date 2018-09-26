@@ -434,7 +434,7 @@ public class GUIPatientProfile extends TargetedController {
 		} else {
 			undoableScreen = GlobalEnums.UndoableScreen.CLINICIANPROFILE;
 		}
-		undoRedoControl.addAction(action, undoableScreen);
+		undoRedoControl.addAction(action, undoableScreen, userControl.getLoggedInUser());
 		userActions.log(Level.INFO, "Successfully deleted patient profile",
 				new String[] { "Attempted to delete patient profile", ((Patient) target).getNhiNumber() });
 		screenControl.closeWindow(patientProfilePane);

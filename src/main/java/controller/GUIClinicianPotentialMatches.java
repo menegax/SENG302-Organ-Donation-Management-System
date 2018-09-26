@@ -794,7 +794,7 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
         organWaitList.getRequests().remove(selectedRequest);
         clinicianDataService.updateOrganWaitList(organWaitList);
         IAction action = new MultiAction((Patient) target, after1, organReceiver, after2);
-        undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.CLINICIANAVAILABLEORGANS);
+        undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.CLINICIANAVAILABLEORGANS, userControl.getLoggedInUser());
         userActions.log(Level.INFO, "Assigned organ (" + targetOrgan + ") to patient " + organReceiver.getNhiNumber(), "Attempted to assign organ to patient");
 
         closeMatchWindow();

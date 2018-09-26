@@ -112,7 +112,7 @@ public class GUIClinicianProfile extends UndoableController {
             } else {
                 undoableScreen = GlobalEnums.UndoableScreen.CLINICIANPROFILE;
             }
-            undoRedoControl.addAction(action, undoableScreen);
+            undoRedoControl.addAction(action, undoableScreen, userControl.getLoggedInUser());
             userActions.log(Level.INFO, "Successfully deleted clinician profile", new String[]{"Attempted to delete clinician profile", String.valueOf(((Clinician) target).getStaffID())});
             screenControl.closeWindow(clinicianProfilePane);
         }

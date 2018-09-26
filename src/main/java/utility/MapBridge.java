@@ -241,7 +241,7 @@ public class MapBridge {
         } else {
             undoableScreen = GlobalEnums.UndoableScreen.ADMINISTRATORPROFILE;
         }
-        UndoRedoControl.getUndoRedoControl().addAction(action, undoableScreen);
+        UndoRedoControl.getUndoRedoControl().addAction(action, undoableScreen, userControl.getLoggedInUser());
         userActions.log(Level.INFO, "Assigned organ (" + organ + ") to patient " + receiver.getNhiNumber(), "Attempted to assign organ to patient");
     }
 }

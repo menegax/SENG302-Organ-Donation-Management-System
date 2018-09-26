@@ -77,7 +77,7 @@ public class GUIAdministratorProfile extends UndoableController{
         if (!((Administrator) target).getUsername().toLowerCase().equals("admin")) {
             IAction action = new SingleAction(target, null);
             new AdministratorDataService().deleteUser(target);
-            undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.ADMINISTRATORPROFILE);
+            undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.ADMINISTRATORPROFILE, userControl.getLoggedInUser());
             userActions.log(Level.INFO, "Successfully deleted admin profile", new String[]{"Attempted to delete admin profile", ((Administrator) target).getUsername()});
             if (!((Administrator) target).getUsername().equals(((Administrator) userControl.getLoggedInUser()).getUsername())) {
                 screenControl.closeWindow(adminProfilePane);
