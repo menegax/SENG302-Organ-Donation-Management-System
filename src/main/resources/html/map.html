@@ -78,19 +78,26 @@
             font-size: 14px
         }
 
+        #legend {
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            z-index: 500;
+
+            background: #F8F9FA55;
+            border-radius: 5px;
+            padding: 10px;
+        }
+
         /*Fix font rendering on macOS*/
         * {font-family:sans-serif !important;}
     </style>
 </head>
 <body>
-    <div class="floating-panel">
-        <button id="availableOrgansView" type="button" class="btn btn-primary">View Available Organs</button>
-        <div style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px;">
-            <button id="filterAreaBtn" type="button" class="btn btn-primary">Filter Area</button>
-            <div style="padding-left: 5px; padding-right: 5px; padding-top: 5px; padding-bottom: 5px;">
-                <button id="clearFilterAreaBtn" type="button" class="btn btn-primary">Clear Filter Area</button>
-            </div>
-        </div>
+    <div class="floating-panel" style="text-align: left">
+        <button id="availableOrgansView" type="button" class="btn btn-block btn-primary">View Available Organs</button>
+        <button id="filterAreaBtn" type="button" class="btn btn-block btn-primary mt-2">Filter Area</button>
+        <button id="clearFilterAreaBtn" type="button" class="btn btn-block btn-danger mt-2" style="display: none">Clear Filter Area</button>
     </div>
     <div class="notification-float">
         <div class="notification-container">
@@ -132,7 +139,7 @@
             </div>
         </div>
     </div>
-    <div id="legend" style="padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px;"><h3>Legend</h3></div>
+    <div id="legend"><h3>Legend</h3></div>
     <div id="map"></div>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
