@@ -35,12 +35,14 @@ function init() {
     setUpViewAvailableOrgansButton();
     setUpFilterAreaButton();
     setUpFilterClearAreaButton();
+    setUpResetMapButton();
 }
 
 /**
  * Resets the map
  */
 function resetMap() {
+
     centerAndZoomMap();
     clearFilterArea();
     clearMarkers();
@@ -78,15 +80,27 @@ function setUpMap() {
 }
 
 /**
+ * Sets up the reset map button with a listener
+ */
+function setUpResetMapButton() {
+    google.maps.event.addListenerOnce(map, 'idle', function () {
+        document.getElementById('resetMapBtn').addEventListener('click', function () {
+            resetMap();
+            showGenericNotification('Map reset');
+        });
+    });
+}
+
+/**
  * Sets up the filter and clear area button with a listener
  */
 function setUpFilterClearAreaButton() {
     // clear filter area button
     google.maps.event.addListenerOnce(map, 'idle', function () {
         document.getElementById('clearFilterAreaBtn').addEventListener('click', function () {
-            console.log("Clear filter area button clicked!");
             clearFilterArea();
             clearRectangle();
+            showGenericNotification('Area filters have been cleared');
         });
     });
 }
@@ -140,6 +154,7 @@ function setUpViewAvailableOrgansButton() {
             successCount = 0;
             markerSetId++;
             addMarkers(globalPatients.size(), markerSetId);
+            showGenericNotification('Populating map...');
         });
     });
 }
@@ -192,7 +207,6 @@ function clearFilterArea() {
 
     $('#clearFilterAreaBtn').hide();
     $('#filterAreaBtn').show();
-    showGenericNotification('Area filters have been cleared');
 }
 
 /**
