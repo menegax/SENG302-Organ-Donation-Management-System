@@ -1,6 +1,7 @@
 package utility;
 
 import com.sun.javafx.scene.control.skin.LabeledText;
+import com.sun.javafx.scene.control.skin.TabPaneSkin;
 import controller.GUIHome;
 import javafx.event.Event;
 import javafx.event.EventTarget;
@@ -284,6 +285,7 @@ public class MultiTouchHandler {
      * Evaluates whether the current states of touch events meet left click requirements
      */
     private void checkLeftClick(CustomTouchEvent touchEvent, TouchEvent event) {
+        System.out.println(touchEvent.getId());
         System.out.println(this);
         System.out.println(touchEvent.getTarget().getClass());
         System.out.println(event.getTouchPoint().getPickResult().getIntersectedNode().getParent().getClass());
@@ -292,14 +294,22 @@ public class MultiTouchHandler {
                 ((Button)event.getTouchPoint().getPickResult().getIntersectedNode()).fire();
             } else if(touchEvent.getTarget() instanceof RadioButton) {
                 ((RadioButton)event.getTouchPoint().getPickResult().getIntersectedNode()).fire();
-            } else if (touchEvent.getTarget() instanceof TextField) {
-                ((TextField)event.getTouchPoint().getPickResult().getIntersectedNode()).selectAll();
+            } else if (event.getTouchPoint().getPickResult().getIntersectedNode().getParent() instanceof TextField) {
+                ((TextField)event.getTouchPoint().getPickResult().getIntersectedNode().getParent()).requestFocus();
             } else if(touchEvent.getTarget() instanceof CheckBox) {
                 CheckBox c = ((CheckBox)event.getTouchPoint().getPickResult().getIntersectedNode());
                 c.setSelected(!c.isSelected());
+            } else if(touchEvent.getTarget() instanceof ComboBox) {
+                ComboBox c = (ComboBox) touchEvent.getTarget();
+                c.show();
             } else if(touchEvent.getTarget().toString().contains("TabPaneSkin")) {
-                System.out.println("VSIFIHDFADIUGFKHRFV';WAL");
-            } else if (touchEvent.getTarget().getClass().toString().equals("class com.sun.javafx.scene.control.skin.LabeledText")) {
+//                System.out.println("VSIFIHDFADIUGFKHRFV';WAL");
+//                System.out.println(event.getTouchPoint().getPickResult().getIntersectedNode().getParent().().getClass());
+//                TabPaneSkin skin = (TabPaneSkin) event.getTarget();
+//                System.out.println(skin);
+//                TabPane tabPane = (TabPane) event.getTouchPoint().getPickResult().getIntersectedNode().getParent().
+//                        getParent().getParent();
+            } else if (event.getTouchPoint().getPickResult().getIntersectedNode().getParent() instanceof Label) {
                 Label l = (Label) event.getTouchPoint().getPickResult().getIntersectedNode().getParent();
                 GUIHome.TabName tabName = GUIHome.TabName.getEnumFromString(l.getText());
                 if(tabName != null) {
