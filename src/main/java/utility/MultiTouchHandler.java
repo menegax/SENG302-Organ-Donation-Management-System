@@ -301,7 +301,8 @@ public class MultiTouchHandler {
                 c.setSelected(!c.isSelected());
             } else if(touchEvent.getTarget() instanceof ComboBox) {
                 ComboBox c = (ComboBox) touchEvent.getTarget();
-                c.show();
+                TouchComboBoxSkin skin = (TouchComboBoxSkin) c.getSkin();
+                skin.showDropDown();
             } else if(touchEvent.getTarget().toString().contains("TabPaneSkin")) {
 //                System.out.println("VSIFIHDFADIUGFKHRFV';WAL");
 //                System.out.println(event.getTouchPoint().getPickResult().getIntersectedNode().getParent().().getClass());
