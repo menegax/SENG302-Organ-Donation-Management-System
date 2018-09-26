@@ -29,7 +29,6 @@ public class ProgressTask extends Task<Void> {
 
     private boolean interrupted;
 
-    private String color;
 
     /**
      * Constructor for the ProgressTask
