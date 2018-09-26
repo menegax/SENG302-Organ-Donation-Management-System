@@ -1,23 +1,28 @@
 package utility_test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
+import static utility.UserActionHistory.userActions;
+
 import model.Clinician;
 import model.Patient;
 import model.User;
-import org.junit.*;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
 import service.ClinicianDataService;
 import service.PatientDataService;
 import service.interfaces.IClinicianDataService;
 import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
-import utility.undoRedo.SingleAction;
 import utility.undoRedo.IAction;
+import utility.undoRedo.SingleAction;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
-
-import static org.junit.Assert.*;
-import static utility.UserActionHistory.userActions;
 
 public class ActionTest {
 
@@ -61,7 +66,7 @@ public class ActionTest {
     }
 
     /**
-     * tests the action constructor using patients
+     * tests the action constructor using globalPatients
      */
     @Test
     public void testPatientActionConstructor() {
@@ -107,7 +112,7 @@ public class ActionTest {
     }
 
 //    /**
-//     * tests the action unexecute method using patients
+//     * tests the action unexecute method using globalPatients
 //     */
 //    @Test
 //    public void testPatientUnexecute() throws InvalidObjectException{
@@ -153,7 +158,7 @@ public class ActionTest {
 //    }
 
     /**
-     * tests the action execute method using patients
+     * tests the action execute method using globalPatients
      */
     @Test
     public void testPatientExecute() {
@@ -219,7 +224,7 @@ public class ActionTest {
     }
 
     /**
-     * tests the action execute method does nothing gracefully using patients
+     * tests the action execute method does nothing gracefully using globalPatients
      */
     @Test
     public void testUselessExecutePatient() {
@@ -271,7 +276,7 @@ public class ActionTest {
     }
 
 //    /**
-//     * tests the action unexecute method does nothing gracefully using patients
+//     * tests the action unexecute method does nothing gracefully using globalPatients
 //     */
 //    @Test
 //    public void testUselessUnexecutePatient() throws InvalidObjectException{
@@ -331,7 +336,7 @@ public class ActionTest {
     }
 
     /**
-     * sets up the current and after users as patients with different first names
+     * sets up the current and after users as globalPatients with different first names
      */
     private void givenEditedPatient() {
         current = new Patient(nhi, beforeName, new ArrayList<>(), "test", LocalDate.of(2000, 1, 1));
@@ -347,7 +352,7 @@ public class ActionTest {
     }
 
     /**
-     * Sets up the current and after patients as a new patient being created
+     * Sets up the current and after globalPatients as a new patient being created
      */
     private void givenNewPatient() {
         current = null;
@@ -363,7 +368,7 @@ public class ActionTest {
     }
 
     /**
-     * Sets up the current and after patients as a patient being deleted
+     * Sets up the current and after globalPatients as a patient being deleted
      */
     private void givenDeletedPatient() {
         current = new Patient(nhi, beforeName, new ArrayList<>(), "test", LocalDate.of(2000, 1, 1));
