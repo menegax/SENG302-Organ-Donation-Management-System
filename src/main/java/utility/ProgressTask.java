@@ -25,6 +25,7 @@ public class ProgressTask extends Task<Void> {
 
     private boolean interrupted;
 
+    private String color;
 
     /**
      * Constructor for the ProgressTask
@@ -64,32 +65,47 @@ public class ProgressTask extends Task<Void> {
 
     /**
      * Sets the color of the progress bar
+     * @return the color string of the progress bar (in hex)
+     */
+    public String getColor() { return color; }
+
+    /**
+     * set the color of progress bar // -fx-accent: green;
      * @param finalI - the ratio of time elapsed / upper bound of the organ
      */
-    void setColor(double finalI) {
+    public void setColor(double finalI) {
+        String RED = "#FF0000";
+        String ORANGE = "#FFA500";
+        String GREEN = "#008000";
         double ratioOfLowerUpper = organ.getOrganLowerBoundSeconds() / (double)organ.getOrganUpperBoundSeconds();
         double percentage = (100 - ratioOfLowerUpper * 100);
         if (finalI >= ratioOfLowerUpper){ //has upper and lower bounds for expiry
             if (finalI >= ratioOfLowerUpper + ((1 - ratioOfLowerUpper)/2)) { //red if greater than ratio of lower/upper + middle point
                 progressBar.setStyle("-fx-accent: red; -fx-control-inner-background: rgba(255, 255, 255, 0.5);" +
                         "-fx-background-color: linear-gradient(to left, #f92f2e , #f92f2e " + percentage + "% , transparent 5%)");
+                color = RED;
             } else {
-                progressBar.setStyle("-fx-accent: orange; -fx-control-inner-background: rgba(255, 255, 255, 0.5);" +
+                progressBar.setStyle("-fx-accent: orange;-fx-control-inner-background: rgba(255, 255, 255, 0.5);" +
                         "-fx-background-color: linear-gradient(to left, #f92f2e , #f92f2e " + percentage + "% , transparent 5%)");
+                color = ORANGE;
             }
         } else {
             progressBar.setStyle("-fx-accent: green; -fx-control-inner-background: rgba(255, 255, 255, 0.5);" +
                     "-fx-background-color: linear-gradient(to left, #f92f2e , #f92f2e " + percentage + "% , transparent 5%)");
+            color = GREEN;
         }
         if (ratioOfLowerUpper == 1.0) { //one bound
             if (finalI >= 0.5) {
                 if (finalI >= 0.8) {
                     progressBar.setStyle("-fx-accent: red; -fx-control-inner-background: rgba(255, 255, 255, 0.5);");
+                    color = RED;
                 } else{
                     progressBar.setStyle("-fx-accent: orange; -fx-control-inner-background: rgba(255, 255, 255, 0.5);");
+                    color = ORANGE;
                 }
             } else {
                 progressBar.setStyle("-fx-accent: green; -fx-control-inner-background: rgba(255, 255, 255, 0.5);");
+                color = GREEN;
             }
         }
     }

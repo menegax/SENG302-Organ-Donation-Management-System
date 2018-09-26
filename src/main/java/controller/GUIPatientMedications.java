@@ -14,7 +14,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
-import utility.undoRedo.Action;
+import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.io.IOException;
@@ -152,7 +152,7 @@ public class GUIPatientMedications extends UndoableController {
      * Initializes the Medication GUI pane, adds any medications stored for donor to current and past listViews
      */
     @FXML
-    public void load() {
+    public void loadController() {
         //Register events for when an item is selected from a listView and set selection mode to multiple
         currentMedications.setOnMouseClicked(event -> onSelect(currentMedications));
         pastMedications.setOnMouseClicked(event -> onSelect(pastMedications));
@@ -195,7 +195,7 @@ public class GUIPatientMedications extends UndoableController {
         catch (NullPointerException e) {
             userActions.log(SEVERE,
                     "Error loading logged in user",
-                    new String[] { "Attempted to load patient profile", after.getNhiNumber() });
+                    new String[] { "Attempted to loadController patient profile", after.getNhiNumber() });
         }
     }
 
@@ -319,8 +319,10 @@ public class GUIPatientMedications extends UndoableController {
         after.getCurrentMedications()
                 .forEach((med) -> current.add(String.valueOf(med)));
         currentListProperty.set(FXCollections.observableArrayList(current));
-        currentMedications.itemsProperty()
-                .bind(currentListProperty);
+        if (current.size() == 0) {
+            currentListProperty.set(FXCollections.observableArrayList(""));
+        }
+        currentMedications.itemsProperty().bind(currentListProperty);
     }
 
 
@@ -334,6 +336,9 @@ public class GUIPatientMedications extends UndoableController {
         after.getMedicationHistory()
                 .forEach((med) -> history.add(String.valueOf(med)));
         historyListProperty.set(FXCollections.observableArrayList(history));
+        if (history.size() == 0) {
+            historyListProperty.set(FXCollections.observableArrayList(""));
+        }
         pastMedications.itemsProperty()
                 .bind(historyListProperty);
     }
@@ -354,7 +359,7 @@ public class GUIPatientMedications extends UndoableController {
 
             if (!(current.contains(medication) || history.contains(medication))) {
                 after.getCurrentMedications().add(new Medication(medication, GlobalEnums.MedicationStatus.CURRENT));
-                statesHistoryScreen.addAction(new Action(target, after));
+                statesHistoryScreen.addAction(new SingleAction(target, after));
                 userActions.log(Level.INFO,
                         "Added medication: " + medication,
                         new String[] { "Attempted to add medication: " + medication, ((Patient) target).getNhiNumber() });
@@ -397,24 +402,25 @@ public class GUIPatientMedications extends UndoableController {
      * Deletes a specified medication
      */
     private void performDelete(String medication) {
-        if (history.contains(medication)) {
-            after.getMedicationHistory()
-                    .remove(history.indexOf(medication));
-            userActions.log(Level.INFO,
-                    "Deleted medication: " + medication,
-                    new String[] { "Attempted to delete medication: " + medication, ((Patient) target).getNhiNumber() });
-            viewPastMedications();
-        }
-        else if (current.contains(medication)) {
-            after.getCurrentMedications()
-                    .remove(current.indexOf(medication));
-            userActions.log(Level.INFO,
-                    "Deleted medication: " + medication,
-                    new String[] { "Attempted to delete medication: " + medication, ((Patient) target).getNhiNumber() });
+        if (!medication.equals("")) {
+            if (history.contains(medication)) {
+                after.getMedicationHistory()
+                        .remove(history.indexOf(medication));
+                userActions.log(Level.INFO,
+                        "Deleted medication: " + medication,
+                        new String[]{"Attempted to delete medication: " + medication, ((Patient) target).getNhiNumber()});
+                viewPastMedications();
+            } else if (current.contains(medication)) {
+                after.getCurrentMedications()
+                        .remove(current.indexOf(medication));
+                userActions.log(Level.INFO,
+                        "Deleted medication: " + medication,
+                        new String[]{"Attempted to delete medication: " + medication, ((Patient) target).getNhiNumber()});
 
-            viewCurrentMedications();
+                viewCurrentMedications();
+            }
+            statesHistoryScreen.addAction(new SingleAction(target, after));
         }
-        statesHistoryScreen.addAction(new Action(target, after));
     }
 
 
@@ -436,7 +442,7 @@ public class GUIPatientMedications extends UndoableController {
                 userActions.log(Level.INFO,
                         "Moved medication to current: " + medication,
                         new String[] { "Attempted to move medication " + medication + " to current medications", after.getNhiNumber() });
-                statesHistoryScreen.addAction(new Action(target, after));
+                statesHistoryScreen.addAction(new SingleAction(target, after));
                 viewPastMedications();
             }
         }
@@ -460,7 +466,7 @@ public class GUIPatientMedications extends UndoableController {
                 userActions.log(Level.INFO,
                         "Moved medication to past: " + medication,
                         new String[] { "Attempted to move medication " + medication + " to past medications", after.getNhiNumber() });
-                statesHistoryScreen.addAction(new Action(target, after));
+                statesHistoryScreen.addAction(new SingleAction(target, after));
                 viewCurrentMedications();
             }
         }
@@ -469,7 +475,7 @@ public class GUIPatientMedications extends UndoableController {
 
     /**
      * Runs when an item is selected within a listView
-     * If there is only one item, the function to load the ingredients for the selected medication is called
+     * If there is only one item, the function to loadController the ingredients for the selected medication is called
      *
      * @param listView The listView of the selected item
      */
@@ -515,43 +521,42 @@ public class GUIPatientMedications extends UndoableController {
      * @param medication The medication to fetch the ingredients for
      */
     private void loadMedicationIngredients(String medication) {
-        APIHelper helper = new APIHelper();
-        ArrayList<String> newIngredients = new ArrayList<>();
-        Boolean hasIngredients = false;
+        if (!medication.equals("")) {
+            APIHelper helper = new APIHelper();
+            ArrayList<String> newIngredients = new ArrayList<>();
+            Boolean hasIngredients = false;
 
-        if (!ingredients.contains("Ingredients for '" + medication + "': ")) {
-            newIngredients.add("Ingredients for '" + medication + "': ");
-            try {
-                if (medication.length() == 1) {
-                    getDrugSuggestions(medication);
-                }
-                else {
-                    getDrugSuggestions(Collections.max(new ArrayList<>(Arrays.asList(medication.split(" ")))));
+            if (!ingredients.contains("Ingredients for '" + medication + "': ")) {
+                newIngredients.add("Ingredients for '" + medication + "': ");
+                try {
+                    if (medication.length() == 1) {
+                        getDrugSuggestions(medication);
+                    } else {
+                        getDrugSuggestions(Collections.max(new ArrayList<>(Arrays.asList(medication.split(" ")))));
+                    }
+
+                    if (suggestions.get("suggestions")
+                            .toString()
+                            .contains(medication)) {
+                        JsonArray response = helper.getMapiDrugIngredients(medication);
+                        response.forEach((element) -> newIngredients.add(element.getAsString()));
+                        hasIngredients = true;
+                    }
+                } catch (IOException e) {
+                    hasIngredients = false;
                 }
 
-                if (suggestions.get("suggestions")
-                        .toString()
-                        .contains(medication)) {
-                    JsonArray response = helper.getMapiDrugIngredients(medication);
-                    response.forEach((element) -> newIngredients.add(element.getAsString()));
-                    hasIngredients = true;
+                if (!hasIngredients) {
+                    newIngredients.add("There are no recorded ingredients for '" + medication + "'");
                 }
+                newIngredients.add("");
+                ingredients.addAll(0, newIngredients);
+            } else {
+                int index = ingredients.indexOf("Ingredients for '" + medication + "': ");
+                moveToTopInformationList(index);
             }
-            catch (IOException e) {
-                hasIngredients = false;
-            }
-
-            if (!hasIngredients) {
-                newIngredients.add("There are no recorded ingredients for '" + medication + "'");
-            }
-            newIngredients.add("");
-            ingredients.addAll(0, newIngredients);
+            displayIngredients(ingredients);
         }
-        else {
-            int index = ingredients.indexOf("Ingredients for '" + medication + "': ");
-            moveToTopInformationList(index);
-        }
-        displayIngredients(ingredients);
     }
 
 
@@ -631,7 +636,7 @@ public class GUIPatientMedications extends UndoableController {
      * Clears the information being currently displayed on the medicine information ListView on activation
      */
     private void refreshReview() {
-        ingredients = new ArrayList<>();
+        ingredients = new ArrayList<String>(){{add("");}};
         displayIngredients(ingredients);
     }
 }

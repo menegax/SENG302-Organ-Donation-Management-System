@@ -124,7 +124,7 @@ public class PatientLocalDAO implements IPatientDataAccess {
                     }
                     case DONATIONS: {
                         GlobalEnums.Organ donations = GlobalEnums.Organ.getEnumFromString(filter.get(option));
-                        if (patient.getDonations() == null || !patient.getDonations().contains(donations)) {
+                        if (patient.getDonations() == null || !patient.getDonations().keySet().contains(donations)) {
                             return false;
                         }
                         break;
@@ -170,10 +170,10 @@ public class PatientLocalDAO implements IPatientDataAccess {
     }
 
     @Override
-    public List<Patient> getDeadPatients() {
+    public List<Patient> getDeadDonors() {
         List<Patient> patients = new ArrayList<>();
         for (Patient patient : localDB.getPatients()) {
-            if (patient.getDeathDate() != null) {
+            if (patient.getDeathDate() != null && patient.getDonations().size() > 0) {
                 patients.add(patient);
             }
         }

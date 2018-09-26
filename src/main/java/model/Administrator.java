@@ -6,7 +6,6 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Defines the class for Administrators. Administrators have basic identifying information like a patient
@@ -57,6 +56,7 @@ public class Administrator extends User {
      * @param salt The salt of the password hash.
      * @param password The hashed password of the admin.
      * @param modified Timestamp of the last time the admin was modified.
+     * @param records The list of admin log records of the admin
      */
     public Administrator(String username, String fName, ArrayList<String> mNames, String lName, 
     		String salt, String password, Timestamp modified, List<AdministratorActionRecord> records) {

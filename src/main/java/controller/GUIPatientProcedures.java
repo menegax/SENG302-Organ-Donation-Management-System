@@ -7,8 +7,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
+import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
@@ -16,17 +19,15 @@ import model.Procedure;
 import service.PatientDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
-import utility.undoRedo.Action;
+import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.logging.Level;
 
 import static java.util.logging.Level.INFO;
-import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -35,7 +36,7 @@ import static utility.UserActionHistory.userActions;
 public class GUIPatientProcedures extends UndoableController implements IWindowObserver{
 
     @FXML
-    public AnchorPane patientProceduresPane;
+    private Pane patientProceduresPane;
 
     @FXML
     public TableView<Procedure> previousProceduresView;
@@ -88,7 +89,7 @@ public class GUIPatientProcedures extends UndoableController implements IWindowO
     /**
      * Sets the TableViews to the appropriate procedures for the current patient
      */
-    public void load() {
+    public void loadController() {
         if (userControl.getLoggedInUser() instanceof Patient) {
             this.patientClone = (Patient) this.target.deepClone();
             setupTables();
@@ -186,7 +187,8 @@ public class GUIPatientProcedures extends UndoableController implements IWindowO
      */
     @FXML
     public void addProcedure() {
-        GUIPatientProcedureForm controller = (GUIPatientProcedureForm) screenControl.show("/scene/patientProcedureForm.fxml", false, this, target);
+        Parent parent = screenControl.getTouchParent(patientProceduresPane);
+        GUIPatientProcedureForm controller = (GUIPatientProcedureForm) screenControl.show("/scene/patientProcedureForm.fxml", false, this, target, parent);
         controller.setTarget(target);
     }
 
@@ -213,7 +215,8 @@ public class GUIPatientProcedures extends UndoableController implements IWindowO
             userActions.log(Level.WARNING, "No procedure selected", new String[]{"Attempted to edit a procedure", ((Patient) target).getNhiNumber()});
             return;
         }
-        GUIPatientProcedureForm controller = (GUIPatientProcedureForm) screenControl.show("/scene/patientProcedureForm.fxml", false, this, target);
+        Parent parent = screenControl.getTouchParent(patientProceduresPane);
+        GUIPatientProcedureForm controller = (GUIPatientProcedureForm) screenControl.show("/scene/patientProcedureForm.fxml", false, this, target, parent);
         controller.setTarget(target);
         controller.setupEditing(selectedProcedure);
     }
@@ -239,7 +242,7 @@ public class GUIPatientProcedures extends UndoableController implements IWindowO
         }
         if (selectedProcedure != null) {
             patientClone.removeProcedure(selectedProcedure);
-            statesHistoryScreen.addAction(new Action(target, patientClone));
+            statesHistoryScreen.addAction(new SingleAction(target, patientClone));
             userActions.log(INFO, "Removed procedure " + selectedProcedure.getSummary(), new String[]{"Attempted to remove a procedure", ((Patient) target).getNhiNumber()});
             setupTables();
         }

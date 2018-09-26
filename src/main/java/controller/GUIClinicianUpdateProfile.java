@@ -5,13 +5,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import model.Clinician;
-import model.User;
 import service.ClinicianDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
 import utility.GlobalEnums.UIRegex;
-import utility.undoRedo.Action;
+import utility.TouchComboBoxSkin;
+import utility.undoRedo.IAction;
+import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.util.ArrayList;
@@ -26,6 +29,9 @@ import static utility.UserActionHistory.userActions;
  * Controller class to control GUI Clinician updating screen.
  */
 public class GUIClinicianUpdateProfile extends UndoableController {
+
+    @FXML
+    private GridPane clinicianUpdateProfile;
 
     @FXML
     private Label lastModifiedLbl;
@@ -52,7 +58,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
     private TextField suburbTxt;
 
     @FXML
-    private ChoiceBox regionDD;
+    private ComboBox regionDD;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -60,9 +66,9 @@ public class GUIClinicianUpdateProfile extends UndoableController {
     /**
      * Initializes the clinician editing screen.
      * Populates the Region drop down menu using region enums.
-     * Calls to load the clinician profile and calls to set up undo/redo functionality
+     * Calls to loadController the clinician profile and calls to set up undo/redo functionality
      */
-    public void load() {
+    public void loadController() {
         // Populate region dropdown with values from the Regions enum
         List<String> regions = new ArrayList<>();
         for (Region region : Region.values()) {
@@ -77,6 +83,9 @@ public class GUIClinicianUpdateProfile extends UndoableController {
                 .addListener((observable, oldValue, newValue) -> setValid(regionDD));
         loadProfile(((Clinician) target).getStaffID());
         setUpStateHistory();
+        if (screenControl.isTouch()) {
+            new TouchComboBoxSkin(regionDD, (Pane) screenControl.getTouchParent(clinicianUpdateProfile));
+        }
     }
 
 
@@ -84,16 +93,16 @@ public class GUIClinicianUpdateProfile extends UndoableController {
      * Loads the currently logged in clinician from the Database and populates the tables using the logged
      * in clinician's attributes.
      *
-     * @param staffId ID of clinician to load
+     * @param staffId ID of clinician to loadController
      */
     private void loadProfile(int staffId) {
         ClinicianDataService dataService = new ClinicianDataService();
-        Clinician clinician = dataService.getClinician(staffId); //load from db
+        Clinician clinician = dataService.getClinician(staffId); //loadController from db
         if (clinician != null) {
             target = clinician;
             populateForm(clinician);
         } else {
-            userActions.log(Level.SEVERE, "Error loading clinician profile", new String[]{"Attempted to load clinician profile", String.valueOf(((Clinician) target).getStaffID())});
+            userActions.log(Level.SEVERE, "Error loading clinician profile", new String[]{"Attempted to loadController clinician profile", String.valueOf(((Clinician) target).getStaffID())});
         }
     }
 
@@ -230,7 +239,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
                     new String[] { "Attempted to update clinician profile", String.valueOf(after.getStaffID()) });
             after.userModified();
 
-            Action action = new Action(target, after);
+            IAction action = new SingleAction(target, after);
             new ClinicianDataService().save(after);
             statesHistoryScreen.addAction(action);
         }

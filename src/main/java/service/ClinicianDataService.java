@@ -13,6 +13,9 @@ import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
+
+import static utility.SystemLogger.systemLogger;
 
 public class ClinicianDataService implements IClinicianDataService {
 
@@ -95,8 +98,9 @@ public class ClinicianDataService implements IClinicianDataService {
             task.get();
             return results;
         } catch (InterruptedException | ExecutionException e) {
-            return null;
+            systemLogger.log(Level.WARNING, "Unable to get task");
         }
+        return null;
     }
 
     @Override

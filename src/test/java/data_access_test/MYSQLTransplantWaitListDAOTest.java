@@ -63,7 +63,7 @@ public class MYSQLTransplantWaitListDAOTest {
         OrganWaitlist waitinglist = new OrganWaitlist();
         waitinglist.add("Test1", GlobalEnums.Organ.LIVER, LocalDate.of(2018,9,9),
                 GlobalEnums.Region.CANTERBURY, patient.getNhiNumber(), "14 Herbert Street, Richmond");
-        waitinglist.add("Test2", GlobalEnums.Organ.LIVER, LocalDate.of(2018,9,9),
+        waitinglist.add("Test2", GlobalEnums.Organ.BONE, LocalDate.of(2018,9,9),
                 GlobalEnums.Region.CANTERBURY, patient.getNhiNumber(), "14 The Drive, Richmond");
         daoFactory.getTransplantWaitingListDataAccess().updateWaitingList(waitinglist);
     }
