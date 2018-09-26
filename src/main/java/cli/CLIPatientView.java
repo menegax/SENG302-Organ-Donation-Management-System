@@ -1,4 +1,7 @@
 package cli;
+
+import static utility.UserActionHistory.userActions;
+
 import data_access.factories.DAOFactory;
 import data_access.interfaces.IPatientDataAccess;
 import picocli.CommandLine.Command;
@@ -8,8 +11,6 @@ import service.interfaces.IPatientDataService;
 import utility.GlobalEnums;
 
 import java.util.logging.Level;
-
-import static utility.UserActionHistory.userActions;
 
 @SuppressWarnings("unused")
 @Command(name = "view", description = "used to view patient attributes")

@@ -28,7 +28,7 @@
             padding: 0;
         }
 
-        #floating-panel {
+        .floating-panel {
             position: absolute;
             top: 7px;
             left: 7px;
@@ -39,27 +39,34 @@
             line-height: 15px;
         }
 
-        #marker-notification-float {
+        .notification-float {
             position: fixed;
             z-index: 500;
             top: 10px;
             width: 100%;
         }
 
-        #marker-notification-container {
+        .notification-float-bottom {
+            position: fixed;
+            z-index: 500;
+            bottom: 10px;
+            width: 100%;
+        }
+
+        .notification-container {
             text-align: center;
             margin: auto;
         }
 
-        #marker-notification {
-            border: 2px solid #007BFF;
+        .notification {
+            border: 2px solid #ed5b00;
             border-radius: 5px;
-            background: #007BFF;
+            background: #ed5b00;
             padding: 3px 10px;
             color: white;
         }
 
-        .marker-notification-close {
+        .notification-close {
             cursor: pointer;
         }
 
@@ -74,30 +81,15 @@
             font-size: 14px
         }
 
-        #loading-overlay {
+        #legend {
             position: absolute;
-            z-index: 2000;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.6);
-        }
+            top: 10px;
+            right: 20px;
+            z-index: 500;
 
-        #loading-gif-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-        }
-
-        .ldBar {
-            background: none !important;
-        }
-
-        .ldBar-label, .ldBar-label:after {
-            color: white;
-            font-weight: bold;
-            top: 40% !important;
-            user-select: none;
+            background: #F8F9FA55;
+            border-radius: 5px;
+            padding: 10px;
         }
 
         /*Fix font rendering on macOS*/
@@ -105,25 +97,24 @@
     </style>
 </head>
 <body>
-    <div id="loading-overlay" style="display: none">
-        <div id="loading-gif-container">
-            <div id="loadingBar" class="ldBar label-center" data-type="stroke" data-path="M90.5,23.2c0-12.5-10.2-22.7-22.7-22.7
-                c-13.6,0-20.9,8.6-22.3,13.8C44.3,8.9,
-                35.1,0.5,23.2,0.5C10.7,0.5,0.5,10.7,
-                0.5,23.2c0,22.2,36.5,45.3,45,55.9
-                C53.5,67.3,90.5,46.3,90.5,23.2z"
-                 data-stroke="#FF3C3C" data-stroke-width="6" data-stroke-trail="black" data-stroke-trail-width="10">
-            </div>
+    <div class="floating-panel" style="text-align: left">
+        <button id="availableOrgansView" type="button" class="btn btn-block btn-primary">View Available Organs</button>
+        <button id="filterAreaBtn" type="button" class="btn btn-block btn-primary mt-2">Filter Area</button>
+        <button id="clearFilterAreaBtn" type="button" class="btn btn-block btn-danger mt-2" style="display: none">Clear Filter Area</button>
+        <button id="resetMapBtn" type="button" class="btn btn-block btn-secondary mt-2">Reset Map</button>
+    </div>
+    <div class="notification-float">
+        <div class="notification-container">
+            <span id="marker-notification" class="alert alert-primary" style="display: none">
+                <span class="notification-msg"></span>
+                <!--<span class="marker-notification-close" onclick="hideNotification()"> &times;</span>-->
+            </span>
         </div>
     </div>
-    <div id="floating-panel">
-        <button id="availableOrgansView" type="button" class="btn btn-primary">View Available Organs</button>
-    </div>
-    <div id="marker-notification-float">
-        <div id="marker-notification-container">
-            <span id="marker-notification" style="display: none">
-                <span id="marker-notification-msg"></span>
-                <span class="marker-notification-close" onclick="hideNotification()"> &times;</span>
+    <div class="notification-float-bottom">
+        <div class="notification-container">
+            <span id="generic-notification" class="alert alert-danger" style="display: none">
+                <span class="notification-msg"></span>
             </span>
         </div>
     </div>
@@ -146,13 +137,13 @@
                         </tr>
                         </thead>
                         <tbody id="failed-patient-table">
-
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+    <div id="legend"><h3>Legend</h3></div>
     <div id="map"></div>
 <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>

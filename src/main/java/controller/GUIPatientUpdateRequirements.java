@@ -1,9 +1,10 @@
 package controller;
 
+import static java.util.logging.Level.FINEST;
+import static utility.UserActionHistory.userActions;
+
 import data_access.factories.DAOFactory;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Point2D;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -24,11 +25,13 @@ import utility.undoRedo.MultiAction;
 import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
-
-import static java.util.logging.Level.FINEST;
-import static utility.UserActionHistory.userActions;
 
 /**
  * This class is the controller for editing a patients required organs only accessible by the clinician

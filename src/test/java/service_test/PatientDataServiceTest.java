@@ -1,5 +1,8 @@
 package service_test;
 
+import static java.util.logging.Level.OFF;
+import static utility.UserActionHistory.userActions;
+
 import data_access.DBHelper;
 import data_access.factories.DAOFactory;
 import data_access.localDAO.LocalDB;
@@ -14,9 +17,6 @@ import utility.SystemLogger;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
-
-import static java.util.logging.Level.OFF;
-import static utility.UserActionHistory.userActions;
 
 public class PatientDataServiceTest {
 
@@ -83,7 +83,7 @@ public class PatientDataServiceTest {
     }
 
     /**
-     * Save patients to local database
+     * Save globalPatients to local database
      */
     private void whenPatientSavedToLocalDB() {
         patient = new Patient("ZLH0909", "Henry", new ArrayList<>(), "Smith", LocalDate.of(1950, 2, 2));

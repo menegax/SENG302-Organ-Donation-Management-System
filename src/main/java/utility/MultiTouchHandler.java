@@ -46,9 +46,9 @@ public class MultiTouchHandler {
      */
     private int MAXTOUCHESPERPANE = 2;
 
-    private final double MINPANESIZE = 0.4;
+    private final double MINPANESIZE = 0.25;
 
-    private final double MAXPANESIZE = 1.0;
+    private final double MAXPANESIZE = 0.65;
 
     private final double MAXVELOCITY = 2000;
 
