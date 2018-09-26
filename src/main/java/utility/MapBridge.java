@@ -187,20 +187,8 @@ public class MapBridge {
                                     recipient.getCurrentLocation(),
                                     patientNhi,
                                     recipient.getNhiNumber(),
-                                    targetPatientOrgan.getProgressTask()
-                                            .getColor(),
                                     organ.toString());
 
-                    targetPatientOrgan.getProgressTask()
-                            .messageProperty()
-                            .addListener((observable, oldValue, newValue) -> {
-                                if (!oldValue.equals("")) { // first circle always gives green
-                                    String color = targetPatientOrgan.getProgressTask()
-                                            .getColor();
-                                    GUIMap.getJSBridge()
-                                            .call("updateMatchedOrganLine", color, recipientNhi, organ.toString());
-                                }
-                            });
                 }
             }
         }

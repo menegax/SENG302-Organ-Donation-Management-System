@@ -23,6 +23,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import model.OrganReceival;
 import model.Patient;
 import model.PatientOrgan;
 import org.apache.commons.lang3.StringUtils;
@@ -594,8 +595,7 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
                 try {
                     Patient selectedUser = patientDataService.getPatientByNhi(request.getReceiverNhi());
                     patientDataService.save(selectedUser);
-                    Parent parent = screenControl.getTouchParent(potentialMatchesPane);
-                    GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser, parent);
+                    GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser, potentialMatchesPane);
                     controller.setTarget(selectedUser);
                 }
                 catch (Exception e) {

@@ -8,7 +8,6 @@ var matchedOrganLines = [];
 var donations = [];
 var currentMarker;
 var currentOrgan = undefined;
-var dropDownDonations = [];
 var loadingBar;
 
 var originalZoom;
@@ -109,7 +108,6 @@ function makeMarker(patient, results) {
             map: map,
             position: finalLoc,
             title: name,
-            //animation: google.maps.Animation.DROP,
             // label: 'D',
             nhi: patient.getNhiNumber(),
             icon: '../image/markers/blue.png'
@@ -120,7 +118,6 @@ function makeMarker(patient, results) {
             map: map,
             position: finalLoc,
             title: name,
-            //animation: google.maps.Animation.DROP,
             // label: 'A',
             nhi: patient.getNhiNumber(),
             icon: '../image/markers/green.png'
@@ -251,7 +248,7 @@ function updateMarkerRadii(radius, color, organ) {
 /**
  * Triggered via java if there is a match to create a line
  */
-function createMatchedOrganArrow(donorLoc, recipientLoc, recipientNhi, donorNhi, progressColor, organ) {
+function createMatchedOrganArrow(donorLoc, recipientLoc, recipientNhi, donorNhi, organ) {
 
     if (!markers.some(function(marker) {
         return marker.nhi === recipientNhi;
@@ -275,7 +272,7 @@ function createMatchedOrganArrow(donorLoc, recipientLoc, recipientNhi, donorNhi,
         }],
         path: matchedOrganPath,
         geodesic: true,
-        strokeColor: progressColor,
+        strokeColor: '#0000FF',
         strokeOpacity: 1.0,
         strokeWeight: 2,
         recipientNhi: recipientNhi,
@@ -283,18 +280,6 @@ function createMatchedOrganArrow(donorLoc, recipientLoc, recipientNhi, donorNhi,
         organ: organ
     });
     matchedOrganLines.push(matchedOrgan);
-}
-
-/**
- * updates the line of the matched organ and places it on the map
- */
-function updateMatchedOrganLine(color, nhi, organ) {
-    matchedOrganLines.forEach(function (line) {
-       if (line.recipientNhi === nhi && line.organ === organ) {
-           line.setOptions({strokeColor: color});
-       }
-    });
-
 }
 
 /**
@@ -508,6 +493,9 @@ function reloadInfoWindow(patient) {
     }
     clearCircles();
     mapBridge.loadCircle(patient.getNhiNumber(), currentOrgan);
+    markers.forEach(function (marker) {
+        mapBridge.checkOrganMatch(marker.position, marker.nhi);
+    });
 }
 
 
