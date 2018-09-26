@@ -9,12 +9,17 @@ import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
+import javafx.scene.Parent;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
 import service.ClinicianDataService;
@@ -23,6 +28,7 @@ import service.PatientDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
+import utility.TouchComboBoxSkin;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -64,6 +70,10 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
         populateTable();
         setupDoubleClickToPatientEdit();
         populateFilterChoiceBoxes();
+        if (screenControl.isTouch()) {
+            new TouchComboBoxSkin(organSelection, (Pane) screenControl.getTouchParent(clinicianWaitingList));
+            new TouchComboBoxSkin(regionSelection, (Pane) screenControl.getTouchParent(clinicianWaitingList));
+        }
     }
 
 
@@ -94,7 +104,8 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
                     try {
                         Patient selectedUser = patientDataService.getPatientByNhi(request.getReceiverNhi());
                         patientDataService.save(selectedUser);
-                        GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser);
+                        Parent parent = screenControl.getTouchParent(clinicianWaitingList);
+                        GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser, parent);
                         controller.setTarget(selectedUser);
                     } catch (Exception e) {
                         userActions.log(Level.SEVERE, "Failed to retrieve selected patient from database", new String[]{"Attempted to retrieve selected patient from database", request.getReceiverNhi()});
@@ -236,7 +247,7 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
                 populateMap(patients);
             });
         } else {
-            screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
+            screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser(), null);
             populateMap(patients);
         }
     }

@@ -48,6 +48,10 @@
     -fx-font-size: 16px;
 }
 
+.text {
+    -fx-text-fill: #f5f5f5;
+}
+
 /* For invalid text-fields within forms */
 .invalid {
     -fx-background-color: #e6b3b3; /* color1 */
@@ -97,7 +101,6 @@ Button {
     -fx-background-radius: 6;
 }
 
-
 .save-button {
     -fx-background-color: linear-gradient(#5DADE2, #3498DB);
     -fx-text-fill: #FFFFFF;
@@ -131,6 +134,10 @@ Button {
 
 .form Label, .form CheckBox {
     -fx-font-size: 14;
+}
+
+.form Text {
+    -fx-text-fill: white;
 }
 
 #loginButton {

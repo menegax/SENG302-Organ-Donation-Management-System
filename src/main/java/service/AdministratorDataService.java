@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.geometry.Point2D;
 import model.Administrator;
 import model.Clinician;
 import model.Patient;
@@ -85,7 +86,7 @@ public class AdministratorDataService implements IAdministratorDataService {
     }
 
     private void showImportResults() {
-        screenControl.show("/scene/adminImportResults.fxml", false, null, null);
+        screenControl.show("/scene/adminImportResults.fxml", false, null, null, null);
     }
 
     @Override

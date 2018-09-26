@@ -282,7 +282,6 @@ public class PatientDAO implements IPatientDataAccess {
             return resultMap;
         }
         catch (Exception e) {
-            e.printStackTrace();
             systemLogger.log(Level.SEVERE, "Could not search patients from MYSQL DB", this);
         }
         return null;

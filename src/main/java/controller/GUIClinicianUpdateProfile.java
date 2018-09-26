@@ -5,11 +5,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import model.Clinician;
 import service.ClinicianDataService;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Region;
 import utility.GlobalEnums.UIRegex;
+import utility.TouchComboBoxSkin;
 import utility.undoRedo.IAction;
 import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
@@ -26,6 +29,9 @@ import static utility.UserActionHistory.userActions;
  * Controller class to control GUI Clinician updating screen.
  */
 public class GUIClinicianUpdateProfile extends UndoableController {
+
+    @FXML
+    private GridPane clinicianUpdateProfile;
 
     @FXML
     private Label lastModifiedLbl;
@@ -52,7 +58,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
     private TextField suburbTxt;
 
     @FXML
-    private ChoiceBox regionDD;
+    private ComboBox regionDD;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -77,6 +83,9 @@ public class GUIClinicianUpdateProfile extends UndoableController {
                 .addListener((observable, oldValue, newValue) -> setValid(regionDD));
         loadProfile(((Clinician) target).getStaffID());
         setUpStateHistory();
+        if (screenControl.isTouch()) {
+            new TouchComboBoxSkin(regionDD, (Pane) screenControl.getTouchParent(clinicianUpdateProfile));
+        }
     }
 
 

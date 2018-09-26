@@ -13,6 +13,7 @@ import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -20,9 +21,6 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.input.RotateEvent;
-import javafx.scene.input.ScrollEvent;
-import javafx.scene.input.ZoomEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import model.Patient;
@@ -35,14 +33,12 @@ import service.OrganWaitlist;
 import service.PatientDataService;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
+import utility.MultiTouchHandler;
+import utility.*;
 import utility.GlobalEnums.BirthGender;
 import utility.GlobalEnums.FilterOption;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
-import utility.TouchPaneController;
-import utility.TouchscreenCapable;
-import utility.TouchPaneController;
-import utility.TouchscreenCapable;
 import utility.undoRedo.IAction;
 import utility.undoRedo.MultiAction;
 
@@ -61,7 +57,7 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
-public class GUIClinicianPotentialMatches extends UndoableController implements IWindowObserver, TouchscreenCapable {
+public class GUIClinicianPotentialMatches extends UndoableController implements IWindowObserver {
 
     private int SECONDSINHOURS = 3600;
 
@@ -139,8 +135,6 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
 
     private Map<FilterOption, String> filter = new HashMap<>();
 
-    private TouchPaneController matchTouchPane;
-
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private SortedList<OrganWaitlist.OrganRequest> sortedRequests;
@@ -150,6 +144,8 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
     private OrganWaitlist organWaitList;
 
     private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
+    private MultiTouchHandler touchHandler;
+
     private final static double AVERAGE_RADIUS_OF_EARTH_KM = 6371;
 
     /**
@@ -205,13 +201,11 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
         setupFilterListeners();
         filterTravelTimes();
         if (screenControl.isTouch()) {
-            matchTouchPane = new TouchPaneController(potentialMatchesPane);
-            potentialMatchesPane.setOnZoom(this::zoomWindow);
-            potentialMatchesPane.setOnRotate(this::rotateWindow);
-            potentialMatchesPane.setOnScroll(this::scrollWindow);
-            potentialMatchesPane.setOnTouchPressed(event -> potentialMatchesPane.toFront());
+            touchHandler = new MultiTouchHandler();
+            touchHandler.initialiseHandler(potentialMatchesPane);
+            new TouchComboBoxSkin(birthGenderFilter, potentialMatchesPane);
+            new TouchComboBoxSkin(regionFilter, potentialMatchesPane);
         }
-
     }
 
 
@@ -600,7 +594,8 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
                 try {
                     Patient selectedUser = patientDataService.getPatientByNhi(request.getReceiverNhi());
                     patientDataService.save(selectedUser);
-                    GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser);
+                    Parent parent = screenControl.getTouchParent(potentialMatchesPane);
+                    GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser, parent);
                     controller.setTarget(selectedUser);
                 }
                 catch (Exception e) {
@@ -806,23 +801,6 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
     }
 
 
-    @Override
-    public void zoomWindow(ZoomEvent zoomEvent) {
-        matchTouchPane.zoomPane(zoomEvent);
-    }
-
-
-    @Override
-    public void rotateWindow(RotateEvent rotateEvent) {
-        matchTouchPane.rotatePane(rotateEvent);
-    }
-
-
-    @Override
-    public void scrollWindow(ScrollEvent scrollEvent) {
-        matchTouchPane.scrollPane(scrollEvent);
-    }
-
 
     @FXML
     public void closeMatchWindow() {
@@ -849,7 +827,7 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
             alert.show();
             alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> populateMap(patients));
         } else {
-            screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser());
+            screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser(), null);
             populateMap(patients);
         }
     }

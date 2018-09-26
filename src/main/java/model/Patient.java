@@ -1,8 +1,5 @@
 package model;
 
-import static java.util.logging.Level.INFO;
-import static utility.UserActionHistory.userActions;
-
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.LatLng;
 import com.univocity.parsers.annotations.Convert;
@@ -23,6 +20,8 @@ import utility.GlobalEnums.Status;
 import utility.MapBridge;
 import utility.PatientActionRecord;
 import utility.Searcher;
+import utility.*;
+import utility.GlobalEnums.*;
 import utility.parsing.DateConverterCSV;
 import utility.parsing.DateTimeConverterCSV;
 import utility.parsing.EnumConverterCSV;
@@ -34,14 +33,14 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
+
+import static java.util.logging.Level.INFO;
+import static utility.UserActionHistory.userActions;
 
 public class Patient extends User {
 
@@ -150,6 +149,8 @@ public class Patient extends User {
     private List<Disease> pastDiseases = new ArrayList<>();
 
     private GlobalEnums.Organ removedOrgan;
+
+    private transient Logger systemLogger = SystemLogger.systemLogger;
 
     /**
      * Used only for importing. Don't use elsewhere.
@@ -783,15 +784,24 @@ public class Patient extends User {
         return this.currentLocation;
     }
 
+    /**
+     * Gets the current location of the patient as a LatLng
+     * Returns the death location if the patient is dead
+     * Returns null if the location could not be geocoded correctly
+     * @return the location of the patient as a latLong
+     * @throws InterruptedException InterruptedException
+     * @throws ApiException ApiException
+     * @throws IOException IOException
+     */
     public LatLng getCurrentLocation() throws InterruptedException, ApiException, IOException {
         if (currentLocation == null) {
             if (this.isDead()) {
-                this.currentLocation = APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getDeathLocationConcat());
+                return APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getDeathLocationConcat());
             } else {
                 if (this.getFormattedAddress().trim().equals("0")) { //if only part of address to google is 0 for default zip
                     return null;
                 }
-                this.currentLocation = APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getFormattedAddress());
+                return APIGoogleMaps.getApiGoogleMaps().geocodeAddress(this.getFormattedAddress());
             }
         }
         return currentLocation;

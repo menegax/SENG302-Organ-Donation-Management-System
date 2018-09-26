@@ -4,6 +4,22 @@ import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
 
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.zip.DataFormatException;
+
+import javafx.scene.Parent;
+import javafx.scene.layout.Pane;
+
+import javafx.event.ActionEvent;
+import javafx.scene.control.*;
+import org.apache.commons.lang3.StringUtils;
+import org.controlsfx.control.RangeSlider;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -23,6 +39,7 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
+import javafx.geometry.Point2D;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import model.Patient;
@@ -38,6 +55,7 @@ import utility.GlobalEnums.FilterOption;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
 import utility.GlobalEnums.UndoableScreen;
+import utility.TouchComboBoxSkin;
 import utility.undoRedo.StatesHistoryScreen;
 
 import java.util.ArrayList;
@@ -51,6 +69,9 @@ import java.util.concurrent.Future;
 import java.util.logging.Level;
 
 public class GUIClinicianSearchPatients extends UndoableController implements IWindowObserver {
+
+	@FXML
+	private GridPane pane;
 
     @FXML
     private TableView<Patient> patientDataTable;
@@ -148,6 +169,19 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
 
         setupUndoRedo();
         updateProfileCount();
+        if (screenControl.isTouch()) {
+            setupComboBoxSkins();
+        }
+    }
+
+    /**
+     * Sets the ComboBox skins for ComboBoxes on this screen
+     */
+    private void setupComboBoxSkins() {
+        new TouchComboBoxSkin(birthGenderFilter, (Pane) screenControl.getTouchParent(pane));
+        new TouchComboBoxSkin(donationFilter, (Pane) screenControl.getTouchParent(pane));
+        new TouchComboBoxSkin(recievingFilter, (Pane) screenControl.getTouchParent(pane));
+        new TouchComboBoxSkin(regionFilter, (Pane) screenControl.getTouchParent(pane));
     }
 
 
@@ -181,7 +215,8 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
                 Patient selected = patientDataTable.getSelectionModel()
                         .getSelectedItem();
                 patientDataService.save(patientDataService.getPatientByNhi(selected.getNhiNumber())); //save to local
-                GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected);
+                Parent parent = screenControl.getTouchParent(pane);
+                GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selected, parent);
                 controller.setTarget(selected);
             }
         });

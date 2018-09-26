@@ -19,10 +19,7 @@ import model.Patient;
 import model.User;
 import org.apache.commons.lang3.StringUtils;
 import tornadofx.control.DateTimePicker;
-import utility.GlobalEnums;
-import utility.SystemLogger;
-import utility.TouchPaneController;
-import utility.TouchscreenCapable;
+import utility.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -36,7 +33,7 @@ import java.util.stream.Collectors;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIRequiredOrganDeregistrationReason extends TargetedController implements TouchscreenCapable{
+public class GUIRequiredOrganDeregistrationReason extends TargetedController{
 
     @FXML
     private DateTimePicker dateOfDeath;
@@ -51,7 +48,7 @@ public class GUIRequiredOrganDeregistrationReason extends TargetedController imp
     private TextField deathCity;
 
     @FXML
-    private ChoiceBox<String> deathRegion;
+    private ComboBox<String> deathRegion;
 
     @FXML
     private ChoiceBox<GlobalEnums.DeregistrationReason> reasons;
@@ -73,7 +70,7 @@ public class GUIRequiredOrganDeregistrationReason extends TargetedController imp
 
     private GlobalEnums.Organ organ;
 
-    private TouchPaneController deregistrationReasonTouchController;
+    private MultiTouchHandler touchHandler;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
@@ -102,14 +99,11 @@ public class GUIRequiredOrganDeregistrationReason extends TargetedController imp
         diseaseCured.setDisable(true);
         diseaseCured.setVisible(false);
         if(screenControl.isTouch()) {
-            deregistrationReasonTouchController = new TouchPaneController(deregistrationReasonPane);
-            deregistrationReasonPane.setOnTouchPressed(event -> {
-                deregistrationReasonPane.toFront();
-            });
-            deregistrationReasonPane.setOnZoom(this::zoomWindow);
-            deregistrationReasonPane.setOnRotate(this::rotateWindow);
-            deregistrationReasonPane.setOnScroll(this::scrollWindow);
+            touchHandler = new MultiTouchHandler();
+            touchHandler.initialiseHandler(deregistrationReasonPane);
+            new TouchComboBoxSkin(deathRegion, deregistrationReasonPane);
         }
+        dateOfDeath.setSkin(new TouchDatePickerSkin(dateOfDeath, deregistrationReasonPane));
     }
 
 
@@ -459,23 +453,4 @@ public class GUIRequiredOrganDeregistrationReason extends TargetedController imp
         }
     }
 
-    @Override
-    public void zoomWindow(ZoomEvent zoomEvent) {
-        deregistrationReasonTouchController.zoomPane(zoomEvent);
-        zoomEvent.consume();
-    }
-
-    @Override
-    public void rotateWindow(RotateEvent rotateEvent) {
-        deregistrationReasonTouchController.rotatePane(rotateEvent);
-        rotateEvent.consume();
-    }
-
-    @Override
-    public void scrollWindow(ScrollEvent scrollEvent) {
-        if (scrollEvent.isDirect()) {
-            deregistrationReasonTouchController.scrollPane(scrollEvent);
-        }
-        scrollEvent.consume();
-    }
 }

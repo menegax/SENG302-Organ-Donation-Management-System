@@ -187,11 +187,56 @@
 
 ### Test 18 - Marker Colors for Alive/Dead Patients
 1. Log in as a clinician
-2. (Given that there are patients in the database) View the map
+2. (Given that there are patients in the database) Go to Search Patient and click view on map
 3. Expected: markers are colored differently depending on if the patient is alive or dead
 
 
+### Test 19 - Circles are created to deceased patients with organs that are not expired yet.
+
+1. Log in as Clinician
+2. Select `Available organs` tab
+3. Select `View on Map` button.
+4. Select a patient marker.
+5. EXPECTED: If the organ is still alive (most likely), a circle should appear.
+
+### Test 20 - Circles are colored in the correct color according to the proportion of time the organ has remaining before expiry.
+
+1. Log in as Clinician
+2. Select `Available organs` tab
+3. Select `View on Map` button.
+4. Select a patient marker.
+5. EXPECTED: Organ circle is colored green if it has a lot of time remaining, orange if it has moderate time remaining and red if it has very little time remaining.
+
+### Test 21 - Circles are shrinking in size (as long as the distance has not maxed out).
+
+1. Log in as Clinician.
+2. Select `Available organs` tab.
+3. Select `View on Map` button.
+4. Select a patient marker.
+5. Select an organ button (avoid bone, go for 'liver or pancreas).
+6. Ensure that the organ is still alive.
+7. EXPECTED: If you zoom in very close to the perimeter of the circle, you can see the circle shrinking every second
+
+### Test 22 - Circles are maxed out at the length of NZ
+
+1. Log in as Clinician.
+2. Select `Available organs` tab.
+3. Select `View on Map` button.
+4. Select a patient marker with a bone available either at the top or bottom of NZ.
+5. Select the `Bone` button.
+6. EXPECTED: The green circle will cover the whole of NZ and no more at the opposite edge.
+
 ## Test History
+
+### 24/09/18 - Joshua
+
+Test 19: PASS
+
+Test 20: PASS
+
+Test 21: PASS
+
+Test 22: PASS
 
 ### 22/09/2018
 
@@ -283,5 +328,30 @@ Test 15: Pass
 Test 16: Pass
 Test 17: Pass 
 Test 18: Pass
+
+### 25/09/18 - Kyle & Hayden
+
+Test 1: Pass
+Test 2: Pass
+Test 3: Pass
+Test 4: Pass
+Test 5: Pass
+Test 6: Pass
+Test 7: Pass
+Test 8: Pass
+Test 9: Pass
+Test 10: Pass
+Test 11: Pass
+Test 12: Pass
+Test 13: Pass
+Test 14: Pass
+Test 15: Pass
+Test 16: Pass
+Test 17: Pass
+Test 18: Pass
+Test 19: Pass
+Test 20: Pass
+Test 21: Pass
+Test 22: Pass
 
 **ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**

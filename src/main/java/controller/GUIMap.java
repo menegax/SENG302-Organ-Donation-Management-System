@@ -3,23 +3,17 @@ package controller;
 import com.sun.javafx.webkit.WebConsoleListener;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.geometry.Point2D;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import model.Patient;
 import netscape.javascript.JSObject;
-import org.jetbrains.annotations.NotNull;
-import service.ClinicianDataService;
-import service.PatientDataService;
 import utility.MapBridge;
 import utility.SystemLogger;
-import utility.UserActionHistory;
 
-import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.net.URL;
-import java.util.*;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Objects;
 import java.util.logging.Level;
 
 /**
@@ -35,11 +29,11 @@ public class GUIMap {
 
     private static JSObject jsBridge;
 
-    private Robot robot;
-
     private MapBridge mapBridge;
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private Double originalDistance;
 
     private Collection<Patient> patients = new ArrayList<>();
 
@@ -63,16 +57,11 @@ public static JSObject getJSBridge() {
      * Initialises the widgets and bridge in the google map
      */
     void loadMap() {
-        UserActionHistory.userActions.log(Level.INFO, "Loading map...", "Attempted to open map");
-
         webEngine = webViewMap1.getEngine();
-        if (!screenControl.getIsCustomSetMap()) {
-             patients = getInitialPatients();
-        }
+        SystemLogger.systemLogger.log(Level.INFO, "Loading map...", "Attempted to open map");
 
         setUpWebEngine();
         setUpJsLogging();
-        setUpTouchControls();
     }
 
 
@@ -94,31 +83,36 @@ public static JSObject getJSBridge() {
                 .getResource("html/map.html"))
                 .toExternalForm());
 
-        try {
-            robot = new Robot();
-        }
-        catch (AWTException e) {
-            SystemLogger.systemLogger.log(Level.SEVERE, "Failed to initialize map bridge: " + e.toString());
-        }
-    }
+        // What to do with console.log statements
+        WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> SystemLogger.systemLogger.log(Level.FINE, message));
 
+        webViewMap1.setOnTouchReleased((event -> {
+            originalDistance = null;
+            //jsBridge.call("setJankaOriginal", null);
+        }));
 
-    /**
-     * Sets scroll and touch events
-     */
-    private void setUpTouchControls() {
-        webViewMap1.setOnScroll(event -> {
+        webViewMap1.setOnTouchMoved((event -> {
+            double ZOOMFACTOR = 0.3;
             if (screenControl.isTouch()) {
                 if (event.getTouchCount() == 2) {
-                    robot.keyPress(KeyEvent.VK_CONTROL);
+                    if(event.getTouchPoints().get(0).getTarget().equals(webViewMap1) &&
+                            event.getTouchPoints().get(1).getTarget().equals(webViewMap1)) {
+                        Point2D touchOne = new Point2D(event.getTouchPoints().get(0).getX(),
+                                event.getTouchPoints().get(0).getY());
+                        Point2D touchTwo = new Point2D(event.getTouchPoints().get(1).getX(),
+                                event.getTouchPoints().get(1).getY());
+                        if (originalDistance == null) {
+                            originalDistance = Math.sqrt(Math.pow(touchOne.getX() - touchTwo.getX(), 2) +
+                                    Math.pow(touchOne.getY() - touchTwo.getY(), 2));
+                            jsBridge.call("setJankaOriginal");
+                        }
+                        double currentDistance = Math.sqrt(Math.pow(touchOne.getX() - touchTwo.getX(), 2) +
+                                Math.pow(touchOne.getY() - touchTwo.getY(), 2));
+                        jsBridge.call("setJankaZoom", Math.pow(currentDistance / originalDistance, ZOOMFACTOR));
+                    }
                 }
             }
-        });
-        webViewMap1.setOnTouchReleased(event -> {
-            if (screenControl.isTouch()) {
-                robot.keyRelease(KeyEvent.VK_CONTROL);
-            }
-        });
+        }));
     }
 
 
@@ -130,13 +124,4 @@ public static JSObject getJSBridge() {
         WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> SystemLogger.systemLogger.log(Level.FINE, message));
     }
 
-
-    /**
-     * Gets a collection of initial patients from the search results to auto-populate the map on startup
-     * @return the results of the default search
-     */
-    @NotNull
-    private List<Patient> getInitialPatients() {
-        return new ArrayList<>(new ClinicianDataService().searchPatients("", null, 50));
-    }
 }

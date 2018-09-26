@@ -29,6 +29,7 @@ public class ProgressTask extends Task<Void> {
 
     private boolean interrupted;
 
+    private String color;
 
     /**
      * Constructor for the ProgressTask
@@ -68,7 +69,7 @@ public class ProgressTask extends Task<Void> {
 
     /**
      * Sets the color of the progress bar
-     * @return
+     * @return the color string of the progress bar (in hex)
      */
     public String getColor() { return color; }
 

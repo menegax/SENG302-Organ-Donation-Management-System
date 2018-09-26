@@ -43,6 +43,7 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 	 * @param address   - The address of the request
      * @param region    - The region of the organ request.
      * @param nhi       - The NHI of the patient requesting an organ.
+	 * @param address   - The address of the patientorgan
      * @return          - Returns true if Collection changed, otherwise false.
      */
 	public boolean add(String name, Organ organ, LocalDate date, Region region, String nhi, String address) {

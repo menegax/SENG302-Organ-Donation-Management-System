@@ -1,10 +1,10 @@
 package controller;
 
-import static java.util.logging.Level.FINEST;
-import static utility.UserActionHistory.userActions;
-
 import data_access.factories.DAOFactory;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
+import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
@@ -24,13 +24,11 @@ import utility.undoRedo.MultiAction;
 import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
+
+import static java.util.logging.Level.FINEST;
+import static utility.UserActionHistory.userActions;
 
 /**
  * This class is the controller for editing a patients required organs only accessible by the clinician
@@ -192,9 +190,9 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
 
     /**
      * Checks if organ is promised or not to a patient already
-     * @param patient
-     * @param organ
-     * @return
+     * @param patient the patient object
+     * @param organ The organ to check
+     * @return whether the organ is promised
      */
     public boolean promised(Patient patient, GlobalEnums.Organ organ) {
         boolean promise = false;
@@ -298,8 +296,9 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
      * @param organ organ being validated for reason of deregistration
      */
     private void openReasonPopup(GlobalEnums.Organ organ) {
+        Parent parent = screenControl.getTouchParent(patientRequirementsPane);
         GUIRequiredOrganDeregistrationReason controller =
-                (GUIRequiredOrganDeregistrationReason) screenControl.show("/scene/deregistrationReason.fxml", false, this, target);
+                (GUIRequiredOrganDeregistrationReason) screenControl.show("/scene/deregistrationReason.fxml", false, this, target, parent);
         controller.setOrgan(organ);
         controller.setTarget(after);
     }
