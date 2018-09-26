@@ -1,21 +1,20 @@
 package utility;
 
 import com.sun.javafx.scene.control.skin.LabeledText;
+import controller.GUIHome;
 import javafx.event.Event;
 import javafx.event.EventTarget;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
-import javafx.scene.control.TableView;
+import javafx.scene.Node;
+import javafx.scene.control.*;
 import javafx.scene.input.*;
 import javafx.scene.layout.Pane;
 import javafx.stage.Screen;
 import org.controlsfx.control.RangeSlider;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -285,17 +284,40 @@ public class MultiTouchHandler {
      * Evaluates whether the current states of touch events meet left click requirements
      */
     private void checkLeftClick(CustomTouchEvent touchEvent, TouchEvent event) {
-        if(!touchEvent.isHasMoved()) {
-            System.out.println(event.getTouchPoint().getPickResult().getIntersectedNode().getClass());
-            System.out.println(event.getTouchPoint().getPickResult().getIntersectedNode().getParent().getClass());
-            System.out.println(event.getTouchPoint().getPickResult().getIntersectedNode().getParent().getParent().getClass());
-            System.out.println(event.getTouchPoint().getPickResult().getIntersectedNode().getParent().getParent().getParent().getClass()); //if tabpaneskin
-            System.out.println(event.getTouchPoint().getPickResult().getIntersectedNode().getParent().getParent().getParent().getParent().getClass());
-            System.out.println(event.getTouchPoint().getPickResult().getIntersectedNode().getParent().getParent().getParent().getParent().getParent().getParent().getClass());
-            System.out.println("\n");
-//            Event.fireEvent(touchEvent.getTarget(), new MouseEvent(MouseEvent.MOUSE_CLICKED, 0,
-//                    0, 0, 0, MouseButton.PRIMARY, 1, true, true, true, true,
-//                    true, true, true, true, true, true, null));
+        System.out.println(this);
+        System.out.println(touchEvent.getTarget().getClass());
+        System.out.println(event.getTouchPoint().getPickResult().getIntersectedNode().getParent().getClass());
+        if(!touchEvent.isHasMoved() && !moving) {
+            if(touchEvent.getTarget() instanceof Button) {
+                ((Button)event.getTouchPoint().getPickResult().getIntersectedNode()).fire();
+            } else if(touchEvent.getTarget() instanceof RadioButton) {
+                ((RadioButton)event.getTouchPoint().getPickResult().getIntersectedNode()).fire();
+            } else if (touchEvent.getTarget() instanceof TextField) {
+                ((TextField)event.getTouchPoint().getPickResult().getIntersectedNode()).selectAll();
+            } else if(touchEvent.getTarget() instanceof CheckBox) {
+                CheckBox c = ((CheckBox)event.getTouchPoint().getPickResult().getIntersectedNode());
+                c.setSelected(!c.isSelected());
+            } else if(touchEvent.getTarget().toString().contains("TabPaneSkin")) {
+                System.out.println("VSIFIHDFADIUGFKHRFV';WAL");
+            } else if (touchEvent.getTarget().getClass().toString().equals("class com.sun.javafx.scene.control.skin.LabeledText")) {
+                Label l = (Label) event.getTouchPoint().getPickResult().getIntersectedNode().getParent();
+                GUIHome.TabName tabName = GUIHome.TabName.getEnumFromString(l.getText());
+                if(tabName != null) {
+                    Node n = l.getParent();
+                    while(!(n instanceof TabPane)) {
+                        n = n.getParent();
+                    }
+                    List<Tab> tabs = ((TabPane) n).getTabs();
+                    for(Tab tab : tabs) {
+                        System.out.println(tab.getText());
+                        if(tab.getText().equals(tabName.toString())) {
+                            ((TabPane) n).getSelectionModel().select(tab);
+                            break;
+                        }
+                    }
+                }
+
+            }
         }
     }
 
