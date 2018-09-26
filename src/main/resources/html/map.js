@@ -702,8 +702,8 @@ function showNotification(numSuccess, numTotal) { //todo rename to showMarkerNot
                 + '<td style=\"font-size: 15px; padding-top: 18px\">' + address + '</td>\n' + '</tr>';
     });
 
-    if (failedPatientArray.length === 0) { //no failed patients -> success
-        $('#marker-notification').html('<span>' + 'Successfully loaded all patients');
+    if (failedPatientArray.length === 0) { //no failed globalPatients -> success
+        $('#marker-notification').html('<span>' + 'Successfully loaded all globalPatients');
 
         setTimeout(function () {
             hideNotification();
@@ -711,7 +711,7 @@ function showNotification(numSuccess, numTotal) { //todo rename to showMarkerNot
     }
     else {
         $('#marker-notification').html('<span>' + modalMessage + '</span>'
-                + '    <a href="#" data-toggle="modal" data-target="#failedPatients">View failed patients</a>\n'
+                + '    <a href="#" data-toggle="modal" data-target="#failedPatients">View failed globalPatients</a>\n'
                 + '    <span class="marker-notification-close" onclick="hideNotification()"> &times;</span>');
         $('#failed-patient-table').html(modalContent);
     }

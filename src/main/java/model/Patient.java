@@ -1,5 +1,8 @@
 package model;
 
+import static java.util.logging.Level.INFO;
+import static utility.UserActionHistory.userActions;
+
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.LatLng;
 import com.univocity.parsers.annotations.Convert;
@@ -20,8 +23,7 @@ import utility.GlobalEnums.Status;
 import utility.MapBridge;
 import utility.PatientActionRecord;
 import utility.Searcher;
-import utility.*;
-import utility.GlobalEnums.*;
+import utility.SystemLogger;
 import utility.parsing.DateConverterCSV;
 import utility.parsing.DateTimeConverterCSV;
 import utility.parsing.EnumConverterCSV;
@@ -33,14 +35,15 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
-
-import static java.util.logging.Level.INFO;
-import static utility.UserActionHistory.userActions;
 
 public class Patient extends User {
 
