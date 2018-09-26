@@ -135,6 +135,11 @@ function attachInfoWindow(patient, marker) {
             maxWidth:550
         });
         buildOrganDropdown(infoWindow);
+    } else if (potentialMatches.size() > 0) {
+        infoWindow = new google.maps.InfoWindow({
+            content: getPotentialMatchesContent(patient),
+            maxWidth:350
+        });
     } else {
         infoWindow = new google.maps.InfoWindow({
             content: getAlivePatientInfoContent(patient),
@@ -193,6 +198,12 @@ function populatePotentialMatches(patientNhi, donor) {
            donorMarker = marker;
        }
     });
+    console.log(infoWindows);
+    infoWindows.forEach(function (infoWindow) {
+        if (infoWindow["nhi"] === donor.getNhiNumber()) {
+            infoWindow["iwindow"].close();
+        }
+    });
     setPatients(potentialMatches);
     if (donorMarker !== undefined) {
         donorMarker.setMap(map);
@@ -221,6 +232,16 @@ function getAlivePatientInfoContent(patient) {
     return '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</h5><span style="font-size: 14px">'
         + patient.getAddressString() + '<br><br>' + organOptions.donating + '<br><br>' + organOptions.receiving
         + '</span><br><input type="button" onclick="openPatientProfile(\'' + patient.getNhiNumber()
+        + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>';
+}
+
+function getPotentialMatchesContent(patient) {
+    var organOptions = getOrganOptions(patient);
+    return '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</h5><span style="font-size: 14px">'
+        + patient.getAddressString() + '<br><br>' + organOptions.donating + '<br><br>' + organOptions.receiving
+        + '</span><br><input type="button" onClick="matchPairs()" class="btn btn-sm btn-primary mt-3" '
+        + 'style="margin: auto" value="Assign \'' + currentOrgan +'\'">'
+        + '<br><input type="button" onclick="openPatientProfile(\'' + patient.getNhiNumber()
         + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>';
 }
 
