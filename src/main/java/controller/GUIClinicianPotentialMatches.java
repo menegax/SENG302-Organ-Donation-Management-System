@@ -37,14 +37,11 @@ import service.APIGoogleMaps;
 import service.ClinicianDataService;
 import service.OrganWaitlist;
 import service.PatientDataService;
-import utility.CachedThreadPool;
-import utility.GlobalEnums;
+import utility.*;
 import utility.GlobalEnums.BirthGender;
 import utility.GlobalEnums.FilterOption;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
-import utility.MultiTouchHandler;
-import utility.TouchComboBoxSkin;
 import utility.undoRedo.IAction;
 import utility.undoRedo.MultiAction;
 
@@ -796,8 +793,9 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
         IAction action = new MultiAction((Patient) target, after1, organReceiver, after2);
         undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.CLINICIANAVAILABLEORGANS);
         userActions.log(Level.INFO, "Assigned organ (" + targetOrgan + ") to patient " + organReceiver.getNhiNumber(), "Attempted to assign organ to patient");
-
         closeMatchWindow();
+        MapBridge mp = new MapBridge();
+        mp.updateInfoWindow((Patient) target);
     }
 
 

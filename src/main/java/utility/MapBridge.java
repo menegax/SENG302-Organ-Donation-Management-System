@@ -169,7 +169,7 @@ public class MapBridge {
                     .call("reloadInfoWindow", patient);
         }
         else {
-            SystemLogger.systemLogger.log(Level.WARNING, "GUIMAP not instantiated - soz for hacky", this);
+            SystemLogger.systemLogger.log(Level.WARNING, "GUIMAP not instantiated", this);
         }
     }
 
