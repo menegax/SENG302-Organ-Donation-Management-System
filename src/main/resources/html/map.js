@@ -347,12 +347,8 @@ function makeAndAttachFilterRectangle() {
 
     // Define a rectangle and set its editable property to true.
     var filterBound = new google.maps.Rectangle({
-        map: map,
-        bounds: getFilterRectangleBounds(),
-        strokeColor: '#c4c6c9', //from bootstrap alert-secondary
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#e2e3e5', //from bootstrap alert-secondary
+        map: map, bounds: getFilterRectangleBounds(), strokeColor: '#c4c6c9', //from bootstrap alert-secondary
+        strokeOpacity: 0.8, strokeWeight: 2, fillColor: '#e2e3e5', //from bootstrap alert-secondary
         fillOpacity: 0.35
     });
     rectangle.push(filterBound);
@@ -693,8 +689,6 @@ function hideNotification() {//todo rename to hideMarkerNotification
 function showNotification(numSuccess, numTotal) { //todo rename to showMarkerNotification
     var modalContent = "";
     var modalMessage = 'Successfully loaded ' + numSuccess + ' out of ' + numTotal + ' patient locations';
-    $('#marker-notification-msg').html();
-    $('#marker-notification').show();
 
     failedPatientArray.forEach(function (patient) {
         var nhi = patient.getNhiNumber();
@@ -710,10 +704,13 @@ function showNotification(numSuccess, numTotal) { //todo rename to showMarkerNot
                 + '</button></th>\n' + '<td style=\"font-size: 15px; padding-top: 18px\">' + patient.getNameConcatenated() + '</td>\n'
                 + '<td style=\"font-size: 15px; padding-top: 18px\">' + address + '</td>\n' + '</tr>';
     });
-    if (failedPatientArray.length === 0) { //no failed patients -> success
 
-        $('#marker-notification').html('<span>' + modalMessage
-                + '</span><span class="marker-notification-close" onclick="hideNotification()"> &times;</span>');
+    if (failedPatientArray.length === 0) { //no failed patients -> success
+        $('#marker-notification').html('<span>' + 'Successfully loaded all patients');
+
+        setTimeout(function () {
+            hideNotification();
+        }, 3000);
     }
     else {
         $('#marker-notification').html('<span>' + modalMessage + '</span>'
@@ -722,9 +719,11 @@ function showNotification(numSuccess, numTotal) { //todo rename to showMarkerNot
         $('#failed-patient-table').html(modalContent);
     }
 
-    // setTimeout(function () {
-    //     hideNotification();
-    // }, 10000);
+    if (numTotal > 0) {
+        $('#marker-notification').show();
+    }
+
+
 }
 
 /**
