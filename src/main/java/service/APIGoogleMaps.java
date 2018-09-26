@@ -17,10 +17,10 @@ public class APIGoogleMaps {
 
     private static GeoApiContext context;
 
-    private static String kyleApiKey = "AIzaSyBDlXgvQkIHbddpwFvEdhzASc2MB13mqLw";
+    private static String ApiKey = "AIzaSyBDlXgvQkIHbddpwFvEdhzASc2MB13mqLw";
 
     private APIGoogleMaps() {
-        context = new GeoApiContext.Builder().apiKey(kyleApiKey)
+        context = new GeoApiContext.Builder().apiKey(ApiKey)
                 .build();
     }
 
@@ -34,7 +34,6 @@ public class APIGoogleMaps {
         }
         return apiGoogleMaps;
     }
-
 
     /**
      * Retrieves the LatLng object from a string address
