@@ -514,7 +514,11 @@ function getDeadPatientInfoContent(patient) {
  * Triggers Java method to find potential matches
  */
 function viewPotentialMatches(patientNhi) {
-    mapBridge.getPotentialMatches(patientNhi, currentOrgan);
+    if (currentOrgan !== undefined) {
+        mapBridge.getPotentialMatches(patientNhi, currentOrgan);
+    } else {
+        showGenericNotification("Please select an organ to view potential matches for.")
+    }
 }
 
 /**
