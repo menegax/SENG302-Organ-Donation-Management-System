@@ -109,7 +109,7 @@
 3. Select 'View on Map'.
 4. Select 'OK' on the popup alert.
 5. Make sure the map is in focus.
-6. EXPECTED: Once all patient's have loaded, a line between your two patients should appear.
+6. EXPECTED: Once all patient's have loaded and you click on the donor or receiver marker, a line between your two patients should appear.
 
 ### Test 13 - No line if donor(or recipient) is on map but recipient(or donor if recipient is on map) is not on map
 
@@ -118,17 +118,7 @@
 3. Select 'View on Map'.
 4. Select 'OK' on the popup alert.
 5. Make sure the map is in focus.
-6. EXPECTED: No line is displayed since both patients are not existant on the map.
-
-### Test 14 - All lines are the correct color (green/orange/red) respective to the remaining time of the organ
-
-1. Follow `Finding a donor and recipient pair of patients`.
-2. Ensure both patients are on the same table in view.
-3. Select 'View on Map'.
-4. Select 'OK' on the popup alert.
-5. Make sure the map is in focus.
-6. EXPECTED: The line is green if it has a lot of time remaining, orange if average time remaining or red if barely no time remaining (just as the progress bars in `Available Organs` tab).
-
+6. EXPECTED: No line is displayed when clicking on the donor or receiver marker since both patients are not existant on the map.
 
 ### Test 12 - Clicking on Dead patients marker -> profile
 
@@ -353,5 +343,10 @@ Test 19: Pass
 Test 20: Pass
 Test 21: Pass
 Test 22: Pass
+
+### 26/09/18 - Kyle
+
+Test 12: Pass
+Test 13: Pass
 
 **ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**
