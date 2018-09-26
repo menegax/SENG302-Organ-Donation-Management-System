@@ -1,6 +1,5 @@
 package utility;
 
-import com.google.maps.model.LatLng;
 import controller.GUIHome;
 import controller.GUIMap;
 import controller.ScreenControl;
@@ -10,7 +9,11 @@ import model.PatientOrgan;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 import java.util.logging.Level;
 
 /**
