@@ -373,7 +373,7 @@ function addMarkers(i, id) {
         showNotification(successCount, patients.size());
         $('#loading-overlay').hide();
         markers.forEach(function (marker) {
-            mapBridge.checkOrganMatch(marker.position, marker.nhi);
+            mapBridge.checkOrganMatch(marker.nhi);
         });
         return;
     }
