@@ -14,7 +14,6 @@ var SOUTHBOUND = -48;
 var EASTBOUND = 180;
 var WESTBOUND = 165;
 var rectangle = [];
-var dropDownDonations = [];
 var originalZoom;
 var iconBase = '../image/markers/';
 var icons = {
@@ -110,7 +109,6 @@ function setUpViewAvailableOrgansButton() {
     google.maps.event.addListenerOnce(map, 'idle', function () {
         setMapDragEnd();
         document.getElementById('availableOrgansView').addEventListener('click', function () {
-            map.setCenter({lat: -40.59225, lng: 173.51012});
             validCount = 0;
             failedPatientArray = [];
             markers.forEach(function (marker) {
@@ -145,7 +143,6 @@ function filterArea(area) {
  */
 function setUpLegend() {
 
-    //todo make the legend not be all buggy and move around the map on startup @Andrew @Kyle
     var legend = document.getElementById('legend');
     for (var key in icons) {
         var type = icons[key];
@@ -155,8 +152,6 @@ function setUpLegend() {
         div.innerHTML = name + '<img src="' + icon + '" style="float: right; margin-top: 3px">';
         legend.appendChild(div);
     }
-
-    //map.controls[google.maps.ControlPosition.RIGHT_TOP].push(legend);
 }
 
 /**
@@ -167,10 +162,13 @@ function clearFilterArea() {
         google.maps.event.removeListener(filterByAreaListener);
         filterByAreaListener = undefined;
     }
+
     filterAreaSet = false;
+
     markers.forEach(function (marker) {
         marker.setMap(map);
     });
+
     $('#clearFilterAreaBtn').hide();
     $('#filterAreaBtn').show();
     showGenericNotification('Area filters have been cleared');
@@ -236,13 +234,7 @@ function isPatientInArea(marker, area) {
     return true;
 }
 
-/**
- * Create the filtered area of the search
- */
-function makeAndAttachFilterRectangle() {
-    var left;
-    var right;
-    var north, south, east, west;
+function validateFilterBounds() {
     if (filterStart.lng() < WESTBOUND) {
         if (filterStart.lng() < 0) {
             filterStart = new google.maps.LatLng({lat: filterStart.lat(), lng: EASTBOUND})
@@ -271,11 +263,12 @@ function makeAndAttachFilterRectangle() {
     else if (filterEnd.lat() < SOUTHBOUND) {
         filterEnd = new google.maps.LatLng({lat: SOUTHBOUND, lng: filterEnd.lng()});
     }
-    // console.log("Start: " + filterStart.lat() + ", " + filterStart.lng());
-    // console.log("End: " + filterEnd.lat() + ", " + filterEnd.lng());
+}
+
+function getFilterRectangleBounds() {
+
+    var north, south, east, west;
     if (filterStart.lng() > filterEnd.lng()) {
-        right = filterStart;
-        left = filterEnd;
         if (filterStart.lat() > filterEnd.lat()) {
             // filterStart: top right & filterEnd: bottom left
             north = parseFloat(filterStart.lat());
@@ -292,8 +285,6 @@ function makeAndAttachFilterRectangle() {
         }
     }
     else {
-        right = filterEnd;
-        left = filterStart;
         if (filterStart.lat() > filterEnd.lat()) {
             // filterStart: top left & filterEnd: bottom right
             north = parseFloat(filterStart.lat());
@@ -309,17 +300,20 @@ function makeAndAttachFilterRectangle() {
             west = parseFloat(filterStart.lng());
         }
     }
+    return {north: north, south: south, east: east, west: west};
+}
 
-    var bounds = {
-        north: north, south: south, east: east, west: west
-    };
+/**
+ * Create the filtered area of the search
+ */
+function makeAndAttachFilterRectangle() {
 
-    console.log(bounds);
+    validateFilterBounds();
 
     // Define a rectangle and set its editable property to true.
     var filterBound = new google.maps.Rectangle({
         map: map,
-        bounds: bounds,
+        bounds: getFilterRectangleBounds(),
         strokeColor: '#c4c6c9', //from bootstrap alert-secondary
         strokeOpacity: 0.8,
         strokeWeight: 2,
@@ -385,7 +379,8 @@ function addMarker(patient) {
         var index = failedPatientArray.indexOf(patient);
         if (index !== -1) {
             failedPatientArray[index] = patient;
-        }else {
+        }
+        else {
             failedPatientArray.push(patient);
         }
         console.log('Geocoding failed because: ' + status);
@@ -671,7 +666,8 @@ function showNotification(numSuccess, numTotal) { //todo rename to showMarkerNot
         var address;
         if (patient.isDead()) {
             address = patient.getDeathLocationConcat();
-        } else {
+        }
+        else {
             address = patient.getFormattedAddress();
         }
         modalContent += '<tr>\n' + '<th scope=\"row\"><button  onclick="openPatientProfile(\'' + nhi
@@ -680,7 +676,6 @@ function showNotification(numSuccess, numTotal) { //todo rename to showMarkerNot
                 + '<td style=\"font-size: 15px; padding-top: 18px\">' + address + '</td>\n' + '</tr>';
     });
     if (failedPatientArray.length === 0) { //no failed patients -> success
-
 
         $('#marker-notification').html('<span>' + modalMessage
                 + '</span><span class="marker-notification-close" onclick="hideNotification()"> &times;</span>');

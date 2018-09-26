@@ -12,7 +12,6 @@ import service.interfaces.IPatientDataService;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -27,6 +26,8 @@ public class MapBridge {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    private int LENGTHOFNZ = 1500000;
+
 
     /**
      * Opens the patient profile in a new window
@@ -40,8 +41,6 @@ public class MapBridge {
         controller.setTarget(patient);
     }
 
-    private int LENGTHOFNZ = 1500000;
-
     /**
      * Calculates marker radii
      */
@@ -53,9 +52,6 @@ public class MapBridge {
         double metersPerSec = 1000 / (double) 3600;
         double heloTravelSpeedMps = heloTravelSpeedKmh * metersPerSec;
         double radius = 0;
-
-        Random rand = new Random();
-        int value = rand.nextInt(LENGTHOFNZ);
 
         PatientOrgan targetPatientOrgan = new PatientOrgan(patient, organ);
         targetPatientOrgan.startTask();
@@ -96,6 +92,11 @@ public class MapBridge {
         });
     }
 
+
+    /**
+     * Retrieves the active donations of the given patient and adds it to the master data
+     * @param nhi the NHI of the patient
+     */
     public void getPatientActiveDonations(String nhi) {
         List<PatientOrgan> masterData = new ArrayList<>();
         List<Patient> deadPatients = patientDataService.getDeadDonors();
@@ -147,14 +148,24 @@ public class MapBridge {
     }
 
 
+    /**
+     * Refreshes the patient's info window
+     * @param patient the patient to refresh
+     */
     public void updateInfoWindow(Patient patient){
         if (GUIMap.getJSBridge() != null) {
             GUIMap.getJSBridge().call("reloadInfoWindow", patient);
         } else {
-            SystemLogger.systemLogger.log(Level.WARNING, "GUIMAP not instantiated - soz for hacky", this);
+            SystemLogger.systemLogger.log(Level.WARNING, "GuiMap not instantiated", this);
         }
     }
 
+
+    /**
+     * Gets a patient by the nhi
+     * @param nhi the nhi to get
+     * @return the patient
+     */
     public Patient getPatientByNhi(String nhi) {
         return patientDataService.getPatientByNhi(nhi);
     }
