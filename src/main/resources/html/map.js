@@ -172,18 +172,7 @@ function setUpViewAvailableOrgansButton() {
         });
         document.getElementById('cancelAssignmentBtn').addEventListener('click', function () {
             isViewingPotentialMatches = false;
-            infos = infoWindows;
-            infoWindows = [];
-            console.log(patients);
-            patients.forEach(function (patient) {
-                console.log(patient.getNhiNumber());
-                infos.forEach(function (infoWindow) {
-                    console.log(infoWindow["nhi"]);
-                    if (patient.getNhiNumber() === infoWindow["nhi"]) {
-                        makeAndAttachInfoWindow(patient, marker);
-                    }
-                });
-            });
+            mapBridge.populateLastSetOfPatients();
             $('#cancelAssignmentBtn').hide();
             $('#dropdown').prop('disable', false);
         });
@@ -298,6 +287,10 @@ function isPatientInArea(marker, area) {
     return true;
 }
 
+/**
+ * validates that the filter option touches have taken geolocations within the max bounds of nz, otherwise sets the
+ * out of bounds lat or lng to the max
+ */
 function validateFilterBounds() {
     if (filterStart.lng() < WESTBOUND) {
         if (filterStart.lng() < 0) {
@@ -329,8 +322,12 @@ function validateFilterBounds() {
     }
 }
 
+/**
+ * Calculates the north, south, east, west bounds for the google maps rectangle with the start and end filter touch
+ * geolocations
+ * @returns - Bounds in the format: {{north: *, south: *, east: *, west: *}}
+ */
 function getFilterRectangleBounds() {
-
     var north, south, east, west;
     if (filterStart.lng() > filterEnd.lng()) {
         if (filterStart.lat() > filterEnd.lat()) {
@@ -467,19 +464,16 @@ function makeMarker(patient, location) {
 function makeAndAttachInfoWindow(patient, marker) {
     var infoWindow;
     if (patient.isDead()) {
-        console.log("isDead");
         infoWindow = new google.maps.InfoWindow({
             content: getDeadPatientInfoContent(patient), maxWidth: 550
         });
         buildOrganDropdown(infoWindow);
-    } else if (potentialMatches !== []) {
-        console.log("isPotentialMatches");
+    } else if (potentialMatches !== [] && isViewingPotentialMatches) {
         infoWindow = new google.maps.InfoWindow({
             content: getPotentialMatchesContent(patient),
             maxWidth:350
         });
     } else {
-        console.log("isReceiver");
         infoWindow = new google.maps.InfoWindow({
             content: getAlivePatientInfoContent(patient), maxWidth: 350
         });
@@ -552,7 +546,6 @@ function populatePotentialMatches(patientNhi, donor) {
         markers.push(donorMarker);
         patients.add(donor);
         makeAndAttachInfoWindow(donor, donorMarker);
-        console.log("disableeeeee");
     }
 
     showGenericNotification(patients.size() + " potential match(es) found.");
@@ -600,9 +593,12 @@ function getPotentialMatchesContent(patient) {
         + '</span><br><input type="button" onclick="openPatientProfile(\'' + receiverPatientNhi
         + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/> '
         + '<input type="button" class="btn btn-sm btn-success mt-3" '
-        + 'style="margin: auto" value="Assign \'' + currentOrgan +'\'" data-toggle="modal" data-target="#assignOrganModal">';
+        + 'style="margin: auto" value="Assign ' + currentOrgan + '" data-toggle="modal" data-target="#assignOrganModal">';
 }
 
+/**
+ * Triggers Java method to assign the organ to a recipient and match the two donor, receivers on their profiles
+ */
 function assignOrgan() {
     mapBridge.assignOrgan(donorPatientNhi, receiverPatientNhi, currentOrgan);
     $('#cancelAssignmentBtn').hide();
@@ -717,8 +713,8 @@ function setPatients(newPatients) {
     infoWindows = [];
     markerSetId++;
     filterAreaSet = false;
-    addMarkers(patients.size(), markerSetId);
     potentialMatches = [];
+    addMarkers(patients.size(), markerSetId);
     $('#cancelAssignmentBtn').hide();
 }
 

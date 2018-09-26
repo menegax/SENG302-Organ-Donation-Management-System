@@ -36,6 +36,10 @@ public class MapBridge {
     private UserControl userControl = UserControl.getUserControl();
     private int LENGTHOFNZ = 1500000;
 
+    public void populateLastSetOfPatients() {
+        List lastSetOfPatients = GUIMap.getLastSetOfPatientsParsed();
+        GUIMap.getJSBridge().call("setPatients", lastSetOfPatients);
+    }
 
     /**
      * Opens the patient profile in a new window
@@ -158,6 +162,7 @@ public class MapBridge {
         for (PatientOrgan aMasterData : masterData) {
             uniqueSetOfPatients.add(aMasterData.getPatient());
         }
+        GUIMap.setLastSetOfPatientsParsed(new ArrayList<>(uniqueSetOfPatients));
         return new ArrayList<>(uniqueSetOfPatients);
     }
 
@@ -184,6 +189,12 @@ public class MapBridge {
         return patientDataService.getPatientByNhi(nhi);
     }
 
+    /**
+     * Uses the donor nhi number to find potential matches to the organ parsed through in the parameter to trigger either
+     * a populatePotentialMatches method or noPotentialMatchesFound method for assigning organs via map
+     * @param patientNhi - string format of donor nhi to get the donor Patient object
+     * @param organStr - String format of the organ to potentially match
+     */
     public void getPotentialMatches(String patientNhi, String organStr) {
         GlobalEnums.Organ organ = GlobalEnums.Organ.getEnumFromString(organStr);
         PotentialMatchFinder potentialMatchFinder = new PotentialMatchFinder();
@@ -224,6 +235,12 @@ public class MapBridge {
         }
     }
 
+    /**
+     * Method to assign an organ to a receiver from a donor. To match the donor/receiver pair via the organ
+     * @param donorNhiStr - string format of the donor nhi
+     * @param receiverNhiStr - string format of the receiver nhi
+     * @param organStr - string format of the organ
+     */
     @SuppressWarnings("unused")
     public void assignOrgan(String donorNhiStr, String receiverNhiStr, String organStr) {
         GlobalEnums.Organ organ = GlobalEnums.Organ.getEnumFromString(organStr);
