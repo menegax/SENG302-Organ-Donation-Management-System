@@ -15,6 +15,8 @@ var EASTBOUND = 180;
 var WESTBOUND = 165;
 var rectangle = [];
 var originalZoom;
+var defaultZoom = 6;
+var defaultCenterPos = {lat: -40.59225, lng: 173.51012};
 var iconBase = '../image/markers/';
 var icons = {
     deceased: {
@@ -36,12 +38,31 @@ function init() {
 }
 
 /**
+ * Resets the map
+ */
+function resetMap() {
+    centerAndZoomMap();
+    clearFilterArea();
+    clearMarkers();
+    clearCircles();
+    clearRectangle();
+}
+
+/**
+ * Sets the map to default center position and zoom
+ */
+function centerAndZoomMap() {
+    map.setCenter(defaultCenterPos); //defs good
+    map.setZoom(defaultZoom);
+}
+
+/**
  * Sets up the map with styling and etc.
  */
 function setUpMap() {
     map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: -40.59225, lng: 173.51012},
-        zoom: 6,
+        center: defaultCenterPos,
+        zoom: defaultZoom,
         minZoom: 6, //zooming out, lower, the further you can zoom out
         maxZoom: 12,
         disableDefaultUI: true,
@@ -109,7 +130,7 @@ function setUpViewAvailableOrgansButton() {
     google.maps.event.addListenerOnce(map, 'idle', function () {
         setMapDragEnd();
         document.getElementById('availableOrgansView').addEventListener('click', function () {
-            validCount = 0;
+            resetMap();
             failedPatientArray = [];
             markers.forEach(function (marker) {
                 marker.setMap(null);
