@@ -20,6 +20,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
+import javafx.scene.web.WebView;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import model.User;
@@ -28,6 +29,7 @@ import service.UserDataService;
 import utility.TouchComboBoxSkin;
 import utility.undoRedo.UndoableWrapper;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -36,9 +38,6 @@ import java.util.Map;
 import java.util.logging.Level;
 
 class ScreenControlTouch extends ScreenControl {
-
-	/* Defines the size of the initial pane */
-    private final double INITIAL_PANE_SIZE = 0.85;
 	
 	private Stage touchStage;
 	
@@ -47,6 +46,8 @@ class ScreenControlTouch extends ScreenControl {
     private Region rootPane;
 
     private Pane touchPane = null;
+    
+    private final double INITIALPANESIZE = 0.55;
 
     private static ScreenControlTouch screenControlTouch;
 
@@ -169,8 +170,10 @@ class ScreenControlTouch extends ScreenControl {
      * @param pane The map pane
      */
     private void setMapPanePosition(Region pane) {
-    	pane.setPrefWidth(touchStage.getWidth());
-    	pane.setPrefHeight(touchStage.getHeight());
+    	pane.setMaxWidth(screenBounds.getWidth());
+    	pane.setMaxHeight(screenBounds.getHeight() - 25);
+        pane.setMinWidth(screenBounds.getWidth());
+        pane.setMinHeight(screenBounds.getHeight() - 25);
     	pane.setTranslateX(0);
     	pane.setTranslateY(0);
         pane.setLayoutX(0);
@@ -209,8 +212,8 @@ class ScreenControlTouch extends ScreenControl {
     private void setInitialPaneSize(Region pane) {
     	pane.setTranslateX((touchStage.getWidth() - pane.getPrefWidth()) / 2);
     	pane.setTranslateY((touchStage.getHeight() - pane.getPrefWidth()) / 2);
-    	pane.setScaleX(INITIAL_PANE_SIZE);
-    	pane.setScaleY(INITIAL_PANE_SIZE);
+    	pane.setScaleX(INITIALPANESIZE);
+    	pane.setScaleY(INITIALPANESIZE);
     }
     
     /**

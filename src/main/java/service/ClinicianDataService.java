@@ -1,5 +1,7 @@
 package service;
 
+import static utility.SystemLogger.systemLogger;
+
 import data_access.factories.DAOFactory;
 import data_access.interfaces.IClinicianDataAccess;
 import data_access.interfaces.IPatientDataAccess;
@@ -9,13 +11,16 @@ import service.interfaces.IClinicianDataService;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
-
-import static utility.SystemLogger.systemLogger;
 
 public class ClinicianDataService implements IClinicianDataService {
 
