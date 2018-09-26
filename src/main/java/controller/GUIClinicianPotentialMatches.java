@@ -36,14 +36,11 @@ import service.APIGoogleMaps;
 import service.ClinicianDataService;
 import service.OrganWaitlist;
 import service.PatientDataService;
-import utility.CachedThreadPool;
-import utility.GlobalEnums;
+import utility.*;
 import utility.GlobalEnums.BirthGender;
 import utility.GlobalEnums.FilterOption;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
-import utility.MultiTouchHandler;
-import utility.TouchComboBoxSkin;
 import utility.undoRedo.IAction;
 import utility.undoRedo.MultiAction;
 

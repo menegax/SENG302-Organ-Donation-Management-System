@@ -51,7 +51,6 @@ function init() {
  * Resets the map
  */
 function resetMap() {
-
     centerAndZoomMap();
     clearFilterArea();
     clearMarkers();
@@ -177,11 +176,12 @@ function setUpViewAvailableOrgansButton() {
                 infos.forEach(function (infoWindow) {
                     console.log(infoWindow["nhi"]);
                     if (patient.getNhiNumber() === infoWindow["nhi"]) {
-                        attachInfoWindow(patient, marker);
+                        makeAndAttachInfoWindow(patient, marker);
                     }
                 });
             });
             $('#cancelAssignmentBtn').hide();
+            $('#dropdown').prop('disable', false);
         });
     });
 }
@@ -539,14 +539,20 @@ function populatePotentialMatches(patientNhi, donor) {
             infoWindow["iwindow"].close();
         }
     });
-    setPatients(patients);
     if (donorMarker !== undefined) {
+        successCount = 0;
+        infoWindows = [];
+        markerSetId++;
+        addMarkers(patients.size(), markerSetId);
+        potentialMatches = [];
         donorMarker.setMap(map);
         markers.push(donorMarker);
         patients.add(donor);
-        attachInfoWindow(donor, donorMarker);
+        makeAndAttachInfoWindow(donor, donorMarker);
+        console.log("disableeeeee");
     }
-    // showGenericNotification(potentialMatches.size() + " potential matches found.");
+
+    showGenericNotification(potentialMatches.size() + " potential matches found.");
 }
 
 /**
@@ -555,7 +561,7 @@ function populatePotentialMatches(patientNhi, donor) {
 function noPotentialMatchesFound(numberOfPotentialMatches){
     isViewingPotentialMatches = false;
     $('#cancelAssignmentBtn').hide();
-    // showGenericNotification(numberOfPotentialMatches + " potential matches found.");
+    showGenericNotification(numberOfPotentialMatches + " potential matches found.");
 }
 
 /**
@@ -597,6 +603,7 @@ function getPotentialMatchesContent(patient) {
 function assignOrgan() {
     mapBridge.assignOrgan(donorPatientNhi, receiverPatientNhi, currentOrgan);
     $('#cancelAssignmentBtn').hide();
+    $('#dropdown').prop('disabled', false);
     receiverPatientNhi = undefined;
 }
 
@@ -703,16 +710,13 @@ function getOrganOptions(patient) {
 function setPatients(newPatients) {
     patients = newPatients;
     resetMap();
-    console.log(patients);
-    hideNotification();
-    clearMarkers();
-    clearCircles();
     successCount = 0;
     infoWindows = [];
     markerSetId++;
     filterAreaSet = false;
     addMarkers(patients.size(), markerSetId);
     potentialMatches = [];
+    $('#cancelAssignmentBtn').hide();
 }
 
 /**
@@ -968,4 +972,8 @@ function loadActiveDonations(patientOrgans) {
     if (currentOrgan !== undefined) {
         $('#dropdown').val(currentOrgan);
     }
+    if (isViewingPotentialMatches) {
+        $('#dropdown').prop('disabled', true);
+    }
+
 }
