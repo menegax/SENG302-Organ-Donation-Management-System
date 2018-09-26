@@ -8,9 +8,11 @@ import model.Patient;
 import model.PatientOrgan;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
-import javafx.geometry.Point2D;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.logging.Level;
 
 /**
@@ -23,6 +25,8 @@ public class MapBridge {
     private IPatientDataService patientDataService = new PatientDataService();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
+
+    private int LENGTHOFNZ = 1500000;
 
 
     /**
@@ -37,8 +41,6 @@ public class MapBridge {
         controller.setTarget(patient);
     }
 
-    private int LENGTHOFNZ = 1500000;
-
     /**
      * Calculates marker radii
      */
@@ -50,9 +52,6 @@ public class MapBridge {
         double metersPerSec = 1000 / (double) 3600;
         double heloTravelSpeedMps = heloTravelSpeedKmh * metersPerSec;
         double radius = 0;
-
-        Random rand = new Random();
-        int value = rand.nextInt(LENGTHOFNZ);
 
         PatientOrgan targetPatientOrgan = new PatientOrgan(patient, organ);
         targetPatientOrgan.startTask();
@@ -99,6 +98,11 @@ public class MapBridge {
         });
     }
 
+
+    /**
+     * Retrieves the active donations of the given patient and adds it to the master data
+     * @param nhi the NHI of the patient
+     */
     public void getPatientActiveDonations(String nhi) {
         List<PatientOrgan> masterData = new ArrayList<>();
         List<Patient> deadPatients = patientDataService.getDeadDonors();
@@ -122,7 +126,8 @@ public class MapBridge {
     /**
      * Collects the patient list from available organs list
      */
-    public void getAvailableOrgans() {
+    @SuppressWarnings("unused")
+    public List getAvailableOrgans() {
         List<PatientOrgan> masterData = new ArrayList<PatientOrgan>();
         List<Patient> deadPatients = patientDataService.getDeadDonors();
         for (Patient patient : deadPatients) {
@@ -141,22 +146,32 @@ public class MapBridge {
         }
 
         Set<Patient> uniqueSetOfPatients = new HashSet<Patient>();
-        for (int i = 0; i < masterData.size(); i++) {
-            uniqueSetOfPatients.add(masterData.get(i).getPatient());
+
+        for (PatientOrgan aMasterData : masterData) {
+            uniqueSetOfPatients.add(aMasterData.getPatient());
         }
-        List<Patient> patients = new ArrayList<Patient>(uniqueSetOfPatients);
-        GUIMap.getJSBridge().call("setPatients",patients);
+        return new ArrayList<>(uniqueSetOfPatients);
     }
 
 
+    /**
+     * Refreshes the patient's info window
+     * @param patient the patient to refresh
+     */
     public void updateInfoWindow(Patient patient){
         if (GUIMap.getJSBridge() != null) {
             GUIMap.getJSBridge().call("reloadInfoWindow", patient);
         } else {
-            SystemLogger.systemLogger.log(Level.WARNING, "GUIMAP not instantiated - soz for hacky", this);
+            SystemLogger.systemLogger.log(Level.WARNING, "GuiMap not instantiated", this);
         }
     }
 
+
+    /**
+     * Gets a patient by the nhi
+     * @param nhi the nhi to get
+     * @return the patient
+     */
     public Patient getPatientByNhi(String nhi) {
         return patientDataService.getPatientByNhi(nhi);
     }

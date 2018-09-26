@@ -1,5 +1,8 @@
 package controller;
 
+import static java.util.logging.Level.INFO;
+import static utility.UserActionHistory.userActions;
+
 import data_access.factories.DAOFactory;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -22,9 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
-
-import static java.util.logging.Level.INFO;
-import static utility.UserActionHistory.userActions;
 
 public class GUIPatientUpdateDonations extends UndoableController {
 
