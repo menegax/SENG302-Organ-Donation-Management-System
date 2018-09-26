@@ -81,12 +81,12 @@ function setUpFilterAreaButton() {
             clearRectangle();
             clearFilterArea();
             if (filterStart === undefined) {
-                showGenericNotification('Press two points on the map to filter.');
+                showGenericNotification('Press two points on the map to filter');
             }
             filterByAreaListener = google.maps.event.addListener(map, 'click', function (e) {
                 if (filterStart === undefined) {
                     filterStart = e.latLng;
-                    showGenericNotification('Press a second point on the map.');
+                    showGenericNotification('Press a second point on the map');
                 }
                 else {
                     filterEnd = e.latLng;
@@ -169,7 +169,7 @@ function clearFilterArea() {
     markers.forEach(function (marker) {
         marker.setMap(map);
     });
-    showGenericNotification('Area filters have been cleared.');
+    showGenericNotification('Area filters have been cleared');
 }
 
 /**
