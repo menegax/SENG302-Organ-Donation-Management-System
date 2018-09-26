@@ -82,6 +82,7 @@ function setUpFilterAreaButton() {
     google.maps.event.addListenerOnce(map, 'idle', function () {
         document.getElementById('filterAreaBtn').addEventListener('click', function () {
             clearRectangle();
+            clearFilterArea();
             console.log("Filter area button clicked!");
             filterByAreaListener = google.maps.event.addListener(map, 'click', function (e) {
                 if (filterStart === undefined) {
@@ -129,6 +130,8 @@ function filterArea(area) {
     markers.forEach(function (marker) {
         if (!isPatientInArea(marker, area)) {
             marker.setMap(null);
+        } else {
+            marker.setMap(map);
         }
     });
 }

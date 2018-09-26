@@ -17,7 +17,7 @@ public class APIGoogleMaps {
 
     private static GeoApiContext context;
 
-    private static String kyleApiKey = "AIzaSyCTrWWBWfYPGFsHvv8sr4tkfpeubCiDIE0";
+    private static String kyleApiKey = "AIzaSyBDlXgvQkIHbddpwFvEdhzASc2MB13mqLw";
 
     private APIGoogleMaps() {
         context = new GeoApiContext.Builder().apiKey(kyleApiKey)
