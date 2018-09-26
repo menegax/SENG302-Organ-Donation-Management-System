@@ -51,6 +51,8 @@ function resetMap() {
     clearMarkers();
     clearCircles();
     clearRectangle();
+    hideGenericNotification();
+    hideNotification()
 }
 
 /**
