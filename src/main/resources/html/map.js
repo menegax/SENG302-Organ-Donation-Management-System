@@ -717,7 +717,7 @@ function showNotification(numSuccess, numTotal) { //todo rename to showMarkerNot
     }
     else {
         $('#marker-notification').html('<span>' + modalMessage + '</span>'
-                + '    <a href="#" data-toggle="modal" data-target="#failedPatients">View failed globalPatients</a>\n'
+                + '    <a href="#" data-toggle="modal" data-target="#failedPatients">View failed patients</a>\n'
                 + '    <span class="marker-notification-close" onclick="hideNotification()"> &times;</span>');
         $('#failed-patient-table').html(modalContent);
     }
