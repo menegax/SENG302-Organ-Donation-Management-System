@@ -1,11 +1,9 @@
 package utility;
 
-import controller.GUIHome;
-import controller.GUIMap;
-import controller.ScreenControl;
-import controller.UndoRedoControl;
+import controller.*;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ProgressBar;
+import model.Clinician;
 import model.Patient;
 import model.PatientOrgan;
 import org.mockito.internal.matchers.Or;
@@ -32,6 +30,7 @@ public class MapBridge {
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    private UserControl userControl = UserControl.getUserControl();
 
     /**
      * Opens the patient profile in a new window
@@ -213,7 +212,13 @@ public class MapBridge {
         after1.getDonations().put(organ, after2.getNhiNumber());
         after2.getRequiredOrgans().get(organ).setDonorNhi(after1.getNhiNumber());
         IAction action = new MultiAction(donor, after1, receiver, after2);
-        UndoRedoControl.getUndoRedoControl().addAction(action, GlobalEnums.UndoableScreen.CLINICIANAVAILABLEORGANS);
+        GlobalEnums.UndoableScreen undoableScreen;
+        if (userControl.getLoggedInUser() instanceof Clinician) {
+            undoableScreen = GlobalEnums.UndoableScreen.CLINICIANPROFILE;
+        } else {
+            undoableScreen = GlobalEnums.UndoableScreen.ADMINISTRATORPROFILE;
+        }
+        UndoRedoControl.getUndoRedoControl().addAction(action, undoableScreen);
         userActions.log(Level.INFO, "Assigned organ (" + organ + ") to patient " + receiver.getNhiNumber(), "Attempted to assign organ to patient");
     }
 }

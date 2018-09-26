@@ -2,6 +2,7 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import model.Administrator;
@@ -12,11 +13,12 @@ import utility.undoRedo.IAction;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.UndoableWrapper;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIAdministratorProfile extends TargetedController{
+public class GUIAdministratorProfile extends UndoableController{
     @FXML
     private GridPane adminProfilePane;
 
@@ -51,6 +53,8 @@ public class GUIAdministratorProfile extends TargetedController{
         }
         Administrator adminToLoad = administratorDataService.getAdministratorByUsername(((Administrator) target).getUsername());
         loadProfile(adminToLoad);
+        controls = new ArrayList<Control>(){{add(nameTxt);}};
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.ADMINISTRATORPROFILE, target);
     }
 
     /**
