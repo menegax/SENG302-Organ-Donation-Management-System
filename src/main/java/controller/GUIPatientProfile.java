@@ -10,6 +10,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
+import model.Administrator;
 import model.Medication;
 import model.Patient;
 import org.apache.commons.lang3.StringUtils;
@@ -427,7 +428,13 @@ public class GUIPatientProfile extends TargetedController {
 	public void deleteProfile() {
 		IAction action = new SingleAction(target, null);
 		new AdministratorDataService().deleteUser(target);
-		undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS);
+		GlobalEnums.UndoableScreen undoableScreen;
+		if (userControl.getLoggedInUser() instanceof Administrator) {
+			undoableScreen = GlobalEnums.UndoableScreen.ADMINISTRATORPROFILE;
+		} else {
+			undoableScreen = GlobalEnums.UndoableScreen.CLINICIANPROFILE;
+		}
+		undoRedoControl.addAction(action, undoableScreen);
 		userActions.log(Level.INFO, "Successfully deleted patient profile",
 				new String[] { "Attempted to delete patient profile", ((Patient) target).getNhiNumber() });
 		screenControl.closeWindow(patientProfilePane);

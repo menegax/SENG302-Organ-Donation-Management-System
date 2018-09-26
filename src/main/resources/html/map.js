@@ -10,7 +10,9 @@ var filterAreaSet = false;
 var potentialMatches = [];
 var donations = [];
 var currentMarker;
-var currentOrgan = undefined;
+var currentOrgan;
+var donorPatientNhi;
+var receiverPatientNhi;
 var NORTHBOUND = -33;
 var SOUTHBOUND = -48;
 var EASTBOUND = 180;
@@ -34,6 +36,8 @@ var icons = {
         name: 'Alive', icon: iconBase + 'green.png'
     }
 };
+
+var isViewingPotentialMatches = false;
 
 /**
  * Initialize method
@@ -505,14 +509,13 @@ function makeAndAttachInfoWindow(patient, marker) {
 function getDeadPatientInfoContent(patient) {
     var addressString = patient.getDeathLocationConcat();
     var nhi = patient.getNhiNumber();
-    return '<button onclick="openPatientProfile(\'' + nhi + '\')" type="button" class="btn btn-link" style="font-size: 24px; margin-left: -10px">' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</button>' + '<br>'
-        + '<span class="info-window-address">' + addressString + '</span><br>'
-        + '<label>Blood Group: ' + patient.getBloodGroup() + '</label><br>'
-        + '<label>Age: ' + patient.getAge() + '</label><br>'
-        + '<label>Birth Gender: ' + patient.getBirthGender() + '</label><br>'
-        + '<label style="padding-top: 5px;">Organ to Assign</label>'
-        + '<select id="dropdown" style="margin-left: 5%; float: right; height: 25px"></select>'
-        + '<input type="button" onclick="viewPotentialMatches(\'' + nhi + '\')" class="btn btn-sm btn-block btn-primary mt-3 float-left" value="View Potential Matches" style="margin-top: 20px"/>';
+    return '<button onclick="openPatientProfile(\'' + nhi + '\')" type="button" class="btn btn-link" style="font-size: 24px; margin-left: -10px">'
+            + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</button>' + '<br>' + '<span class="info-window-address">'
+            + addressString + '</span><br>' + '<label>Blood Group: ' + patient.getBloodGroup() + '</label><br>' + '<label>Age: ' + patient.getAge()
+            + '</label><br>' + '<label>Birth Gender: ' + patient.getBirthGender() + '</label><br>'
+            + '<label style="padding-top: 5px;">Organ to Assign:</label>'
+            + '<select id="dropdown" style="margin-left: 5%; float: right; height: 25px"></select>'
+            + '<input type="button" onclick="viewPotentialMatches(\'' + nhi + '\')" class="btn btn-sm btn-block btn-primary mt-3 float-left" value="View Potential Matches" style="margin-top: 20px"/>';
 }
 
 /**

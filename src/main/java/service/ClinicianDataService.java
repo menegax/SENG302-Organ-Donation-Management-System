@@ -1,26 +1,22 @@
 package service;
 
-import static utility.SystemLogger.systemLogger;
-
 import data_access.factories.DAOFactory;
 import data_access.interfaces.IClinicianDataAccess;
 import data_access.interfaces.IPatientDataAccess;
+import data_access.interfaces.IUserDataAccess;
 import model.Clinician;
 import model.Patient;
 import service.interfaces.IClinicianDataService;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 import java.util.logging.Level;
+
+import static utility.SystemLogger.systemLogger;
 
 public class ClinicianDataService implements IClinicianDataService {
 
@@ -71,6 +67,7 @@ public class ClinicianDataService implements IClinicianDataService {
         IPatientDataAccess dbPatientDataAccess = mysqlFactory.getPatientDataAccess();
         IPatientDataAccess localPatientDataAccess = localDbFactory.getPatientDataAccess();
         Map<Integer, List<Patient>> localResults = localPatientDataAccess.searchPatients(searchTerm, filters, numResults);
+        IUserDataAccess userDataAccess = localDbFactory.getUserDataAccess();
 
         CachedThreadPool pool = CachedThreadPool.getCachedThreadPool();
         ExecutorService service = pool.getThreadService();
@@ -80,6 +77,7 @@ public class ClinicianDataService implements IClinicianDataService {
             //Remove users in dbResults that are already in local storage
             for (List<Patient> userList : dbResults.values()) {
                 userList.removeAll(localPatients);
+                userList.removeAll(userDataAccess.getDeletedUsers());
             }
             //Place the results in one final Map
             Map<Integer, List<Patient>> resultMap = new HashMap<>(localResults);
