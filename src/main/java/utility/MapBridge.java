@@ -1,5 +1,6 @@
 package utility;
 
+import com.google.maps.errors.ApiException;
 import controller.*;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ProgressBar;
@@ -7,6 +8,7 @@ import model.Clinician;
 import model.Patient;
 import model.PatientOrgan;
 import org.mockito.internal.matchers.Or;
+import service.APIGoogleMaps;
 import service.OrganWaitlist;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
@@ -14,12 +16,15 @@ import javafx.geometry.Point2D;
 import utility.undoRedo.IAction;
 import utility.undoRedo.MultiAction;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import static utility.MathUtilityMethods.deg2rad;
 import static utility.UserActionHistory.userActions;
 
 /**
@@ -29,12 +34,16 @@ public class MapBridge {
 
     private ProgressTask radiiTask;
 
+    private double rad;
+
     private IPatientDataService patientDataService = new PatientDataService();
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private UserControl userControl = UserControl.getUserControl();
     private int LENGTHOFNZ = 1500000;
+
+    private Logger systemLogger = SystemLogger.systemLogger;
 
     public void populateLastSetOfPatients() {
         List lastSetOfPatients = GUIMap.getLastSetOfPatientsParsed();
@@ -90,7 +99,6 @@ public class MapBridge {
         radiiTask.messageProperty().addListener((observable, oldValue, newValue) -> {
             if (!oldValue.equals("")) { // first circle always gives green
                 double rem = 0;
-                double rad;
                 String[] time = newValue.split(":");
                 rem += Integer.parseInt(time[0]) * 3600;
                 rem += Integer.parseInt(time[1]) * 60;
@@ -204,7 +212,9 @@ public class MapBridge {
         List<OrganWaitlist.OrganRequest> requests = new ArrayList<OrganWaitlist.OrganRequest>(allRequests);
         List<Patient> patients = new ArrayList<>();
         for(OrganWaitlist.OrganRequest request : requests) {
-            patients.add(request.getReceiver());
+            if (patientWithinCircle(patient, request.getReceiver())) {
+                patients.add(request.getReceiver());
+            }
         }
         if (patients.size() > 0) {
             GUIMap.getJSBridge().setMember("patients", patients);
@@ -214,6 +224,30 @@ public class MapBridge {
             GUIMap.getJSBridge().call("populatePotentialMatches", patientNhi, patient);
         } else {
             GUIMap.getJSBridge().call("noPotentialMatchesFound");
+        }
+    }
+
+    /**
+     * Gets whether the current receiver is within the circle radius currently displayed on the map
+     * @param donor the donor at the center of the circle
+     * @param receiver the receiver to calculate the distance to
+     * @return whether the receiver is within the circle or not
+     */
+    private boolean patientWithinCircle(Patient donor, Patient receiver) {
+        try {
+            double R = 6371; // Radius of the earth in km
+            double distanceLat = deg2rad(donor.getCurrentLocation().lat - receiver.getCurrentLocation().lat);
+            double distanceLon = deg2rad(donor.getCurrentLocation().lng - receiver.getCurrentLocation().lng);
+            double a = Math.sin(distanceLat / 2) * Math.sin(distanceLat / 2) +
+                            Math.cos(deg2rad(donor.getCurrentLocation().lat)) * Math.cos(deg2rad(receiver.getCurrentLocation().lat)) *
+                                    Math.sin(distanceLon / 2) * Math.sin(distanceLon / 2);
+            double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+            double d = R * c * 1000; // Distance in m
+
+            return (d <= rad);
+        } catch (InterruptedException | ApiException | IOException e) {
+            systemLogger.log(Level.WARNING, "Unable to geolocate patient", "Attempted to geolocate patient while calculating distances");
+            return false;
         }
     }
 

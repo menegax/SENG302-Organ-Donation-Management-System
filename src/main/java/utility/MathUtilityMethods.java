@@ -45,4 +45,13 @@ public class MathUtilityMethods {
     public static double calculateDisplacement(Point2D start, Point2D end) {
         return Math.sqrt(Math.pow(start.getX() - end.getX(), 2) + Math.pow(start.getY() - end.getY(), 2));
     }
+
+    /**
+     * Converts a double from degrees to radians
+     * @param deg the amount of degrees t convert
+     * @return the degrees in radians
+     */
+    public static double deg2rad(Double deg){
+        return deg*(Math.PI/180);
+    }
 }
