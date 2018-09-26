@@ -243,8 +243,6 @@ function isPatientInArea(marker, area) {
         minLat = area.start.lat();
     }
 
-    // console.log("Finding if patient is in area: " + area.start.lng() + " " + area.start.lat() + " " + area.end.lng() + " " + area.end.lat());
-
     if ((minLng < 0 && maxLng < 0) || (minLng > 0 && maxLng > 0)) { // not crossing lng border from -179 to 179
         if (current.lng() < minLng) {
             return false;
@@ -436,7 +434,6 @@ function makeMarker(patient, location) {
     var finalLoc = new google.maps.LatLng(location.lat + randx, location.lng + randy); //todo can remove randomizer? replace `finalLoc` with `results`?
 
     if (patient.isDead() && !patient.getDonations().isEmpty()) {
-        console.log("orgs: " + patient.getDonations());
         return new google.maps.Marker({
             map: map, position: finalLoc, title: name, animation: google.maps.Animation.DROP, nhi: patient.getNhiNumber(), icon: icons.deadDonor.icon
         });
