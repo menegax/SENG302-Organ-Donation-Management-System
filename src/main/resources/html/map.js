@@ -37,6 +37,7 @@ function init() {
         });
     });
 }
+
 /**
  * Sets the viewable area of the map
  */
@@ -44,31 +45,13 @@ function setMapDragEnd() {
     // Bounds for the World
     var allowedBounds = new google.maps.LatLngBounds(new google.maps.LatLng(-56.831005, 140.304953), new google.maps.LatLng(-22.977599, -165.689951));
 
-    // Listen for the dragend event
+    // Listen for the drag end event
     google.maps.event.addListener(map, 'dragend', function () {
-        if (allowedBounds.contains(map.getCenter())) {
-            return;
-        }
 
-        // Out of bounds - Move the map back within the bounds
-
-        var c = map.getCenter(), x = c.lng(), y = c.lat(), maxX = allowedBounds.getNorthEast().lng(), maxY = allowedBounds.getNorthEast().lat(),
-                minX = allowedBounds.getSouthWest().lng(), minY = allowedBounds.getSouthWest().lat();
-
-        if (x < minX) {
-            x = minX;
+        if (!allowedBounds.contains(map.getCenter())) {
+            // Out of bounds - Move the map back to center
+            map.setCenter({lat: -40.59225, lng: 173.51012}); //todo replace with recenter map method in BP6
         }
-        if (x > maxX) {
-            x = maxX;
-        }
-        if (y < minY) {
-            y = minY;
-        }
-        if (y > maxY) {
-            y = maxY;
-        }
-
-        map.setCenter(new google.maps.LatLng(y, x));
     });
 }
 
