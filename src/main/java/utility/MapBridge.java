@@ -68,6 +68,9 @@ public class MapBridge {
             remaining += Integer.parseInt(times[2]);
 
             remaining = remaining - organLoadTime - organUnloadtime;
+            if (remaining < 0) {
+                remaining = 0;
+            }
             radius = remaining * heloTravelSpeedMps;
             GUIMap.getJSBridge().call("createMarkerRadii", radius, radiiTask.getColor(), organ.toString());
         } else {
@@ -82,6 +85,9 @@ public class MapBridge {
                 rem += Integer.parseInt(time[1]) * 60;
                 rem += Integer.parseInt(time[2]);
                 rem = rem - organLoadTime - organUnloadtime;
+                if (rem < 0) {
+                    rem = 0;
+                }
                 rad = rem * heloTravelSpeedMps;
 
                 if (rad > LENGTHOFNZ) {
