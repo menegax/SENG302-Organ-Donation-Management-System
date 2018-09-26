@@ -9,6 +9,7 @@ var donations = [];
 var currentMarker;
 var currentOrgan = undefined;
 var dropDownDonations = [];
+var loadingBar;
 
 var originalZoom;
 
@@ -32,6 +33,7 @@ function init() {
             mapBridge.getAvailableOrgans();
         });
     });
+    loadingBar = new ldBar("#loadingBar")
 }
 /**
  * Sets the viewable area of the map
@@ -74,7 +76,7 @@ function setMapDragEnd() {
  */
 function addMarker(patient) {
     var address;
-    if (patient.getDeathDate() != null) {
+    if (patient.isDead()) {
         address = patient.getDeathLocationConcat();
     } else {
         address = patient.getFormattedAddress();
@@ -107,7 +109,7 @@ function makeMarker(patient, results) {
             map: map,
             position: finalLoc,
             title: name,
-            animation: google.maps.Animation.DROP,
+            //animation: google.maps.Animation.DROP,
             // label: 'D',
             nhi: patient.getNhiNumber(),
             icon: '../image/markers/blue.png'
@@ -118,7 +120,7 @@ function makeMarker(patient, results) {
             map: map,
             position: finalLoc,
             title: name,
-            animation: google.maps.Animation.DROP,
+            //animation: google.maps.Animation.DROP,
             // label: 'A',
             nhi: patient.getNhiNumber(),
             icon: '../image/markers/green.png'
@@ -344,8 +346,13 @@ function getOrganOptions(patient) {
  * @param _patients
  */
 function setPatients(_patients) {
+    if (_patients.size() === 0) {
+        return;
+    }
     patients = _patients;
     hideNotification();
+    $('#loading-overlay').show();
+    loadingBar.set(0);
     clearMarkers();
     clearCircles();
     clearLines();
@@ -362,7 +369,9 @@ function setPatients(_patients) {
  */
 function addMarkers(i, id) {
     if (i < 1) {
+        loadingBar.set(100);
         showNotification(successCount, patients.size());
+        $('#loading-overlay').hide();
         markers.forEach(function (marker) {
             mapBridge.checkOrganMatch(marker.position, marker.nhi);
         });
@@ -371,10 +380,11 @@ function addMarkers(i, id) {
     if (id !== markerSetId) {
         return; //break task
     }
+    loadingBar.set((patients.size() - i) * 100 / patients.size());
     addMarker(patients.get(i-1));
     setTimeout(function() {
         addMarkers(--i, id);
-    }, 700);
+    }, 0);
 }
 
 /**
