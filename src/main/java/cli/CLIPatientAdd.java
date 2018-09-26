@@ -1,5 +1,7 @@
 package cli;
 
+import static utility.UserActionHistory.userActions;
+
 import model.Patient;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -9,8 +11,6 @@ import service.interfaces.IPatientDataService;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.logging.Level;
-
-import static utility.UserActionHistory.userActions;
 
 @SuppressWarnings("unused")
 @Command(name = "add", description = "used to add new patients")

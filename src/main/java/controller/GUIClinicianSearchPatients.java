@@ -1,41 +1,38 @@
 package controller;
 
-import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
-
-import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.zip.DataFormatException;
-
-import javafx.scene.Parent;
-import javafx.scene.layout.Pane;
-
-import javafx.event.ActionEvent;
-import javafx.scene.control.*;
-import org.apache.commons.lang3.StringUtils;
-import org.controlsfx.control.RangeSlider;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
-import javafx.geometry.Point2D;
+import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import model.Patient;
+import org.apache.commons.lang3.StringUtils;
+import org.controlsfx.control.RangeSlider;
 import service.ClinicianDataService;
 import service.PatientDataService;
 import service.TextWatcher;
-import service.UserDataService;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
 import utility.GlobalEnums.BirthGender;
@@ -45,6 +42,16 @@ import utility.GlobalEnums.Region;
 import utility.GlobalEnums.UndoableScreen;
 import utility.TouchComboBoxSkin;
 import utility.undoRedo.StatesHistoryScreen;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
 
 public class GUIClinicianSearchPatients extends UndoableController implements IWindowObserver {
 

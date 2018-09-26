@@ -1,5 +1,10 @@
 package controller;
 
+import static java.lang.Math.abs;
+import static java.time.temporal.ChronoUnit.DAYS;
+import static utility.SystemLogger.systemLogger;
+import static utility.UserActionHistory.userActions;
+
 import com.google.maps.model.LatLng;
 import data_access.localDAO.PatientLocalDAO;
 import javafx.beans.property.ObjectProperty;
@@ -33,12 +38,12 @@ import service.OrganWaitlist;
 import service.PatientDataService;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
-import utility.MultiTouchHandler;
-import utility.*;
 import utility.GlobalEnums.BirthGender;
 import utility.GlobalEnums.FilterOption;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
+import utility.MultiTouchHandler;
+import utility.TouchComboBoxSkin;
 import utility.undoRedo.IAction;
 import utility.undoRedo.MultiAction;
 
@@ -51,11 +56,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-
-import static java.lang.Math.abs;
-import static java.time.temporal.ChronoUnit.DAYS;
-import static utility.SystemLogger.systemLogger;
-import static utility.UserActionHistory.userActions;
 
 public class GUIClinicianPotentialMatches extends UndoableController implements IWindowObserver {
 
