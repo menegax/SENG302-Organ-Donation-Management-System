@@ -5,7 +5,7 @@ var infoWindows = [];
 var failedPatientArray = [];
 var markerSetId = 0;
 var filterByAreaListener, filterStart, filterEnd;
-var interruptMarkers = false;
+var filterAreaSet = false;
 var donations = [];
 var currentMarker;
 var currentOrgan = undefined;
@@ -16,7 +16,6 @@ var WESTBOUND = 165;
 var rectangle = [];
 var dropDownDonations = [];
 
-var iconBase = '../image/markers/';
 var originalZoom;
 var iconBase = '../image/markers/';
 var icons = {
@@ -29,6 +28,17 @@ var icons = {
         icon: iconBase + 'green.png'
     }
 };
+
+/**
+ * Initialize method
+ */
+function init() {
+    setUpMap();
+    setUpLegend(icons);
+    setUpViewAvailableOrgansButton();
+    setUpFilterAreaButton();
+    setUpFilterClearAreaButton();
+}
 
 function setUpMap() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -46,17 +56,6 @@ function setUpMap() {
         gestureHandling: 'cooperative',
         styles: getMapCustomStyle()
     });
-}
-
-/**
- * Initialize method
- */
-function init() {
-    setUpMap();
-    setUpLegend(icons);
-    setUpViewAvailableOrgansButton();
-    setUpFilterAreaButton();
-    setUpFilterClearAreaButton();
 }
 
 /**
@@ -125,7 +124,7 @@ function setUpViewAvailableOrgansButton() {
  * Gets globalPatients who are within the area and resets the markers on the map to be them
  */
 function filterArea(area) {
-    interruptMarkers = true;
+    filterAreaSet = true;
     markers.forEach(function (marker) {
         if (!isPatientInArea(marker, area)) {
             marker.setMap(null);
@@ -156,6 +155,7 @@ function setUpLegend() {
  * Reconnects every marker back to the map
  */
 function clearFilterArea() {
+    filterAreaSet = false;
     markers.forEach(function (marker) {
             marker.setMap(map);
     });
@@ -300,8 +300,6 @@ function filterAreaRectangle() {
         bounds: bounds
     });
     rectangle.push(filterBound);
-    filterStart = undefined;
-    filterEnd = undefined;
     google.maps.event.removeListener(filterByAreaListener);
 }
 
@@ -345,24 +343,27 @@ function setMapDragEnd() {
  * @param patient
  */
 function addMarker(patient) {
-    if (!interruptMarkers) {
-        console.log("Adding marker to map for patient " + patient.getNhiNumber());
-        var latLong = patient.getCurrentLocation();
-        if (latLong !== null) {
-            successCount++;
-            var marker = makeMarker(patient, latLong); //set up markers
-            makeAndAttachInfoWindow(patient, marker);
-            markers.push(marker);
+    console.log("Adding marker to map for patient " + patient.getNhiNumber());
+    var latLong = patient.getCurrentLocation();
+    if (latLong !== null) {
+        successCount++;
+        var marker = makeMarker(patient, latLong); //set up markers
+        console.log(filterStart);
+        console.log(filterEnd);
+        if (filterAreaSet && !isPatientInArea(marker, {start: filterStart, end: filterEnd})) {
+            marker.setMap(null);
         }
-        else {
-            var index = failedPatientArray.indexOf(patient);
-            if (index !== -1) {
-                failedPatientArray[index] = patient;
-            }else {
-                failedPatientArray.push(patient);
-            }
-            console.log('Geocoding failed because: ' + status);
+        makeAndAttachInfoWindow(patient, marker);
+        markers.push(marker);
+    }
+    else {
+        var index = failedPatientArray.indexOf(patient);
+        if (index !== -1) {
+            failedPatientArray[index] = patient;
+        }else {
+            failedPatientArray.push(patient);
         }
+        console.log('Geocoding failed because: ' + status);
     }
 }
 
@@ -572,10 +573,12 @@ function setPatients(newPatients) {
     hideNotification();
     clearMarkers();
     clearCircles();
+    clearFilterArea();
+    clearRectangle();
     successCount = 0;
     infoWindows = [];
     markerSetId++;
-    interruptMarkers = false;
+    filterAreaSet = false;
     addMarkers(globalPatients.size(), markerSetId);
 }
 
@@ -705,7 +708,7 @@ function reloadInfoWindow(patient) {
         });
         if (matchedMarkers.length > 0) {
             matchedMarkers[0].setOptions({
-                icon: '../image/markers/blue.png'
+                icon: icons.deceased
             });
         }
     }
