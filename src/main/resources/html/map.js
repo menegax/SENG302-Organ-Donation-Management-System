@@ -198,7 +198,7 @@ function isPatientInArea(marker, area) {
         minLat = area.start.lat();
     }
 
-    console.log("Finding if patient is in area: " + area.start.lng() + " " + area.start.lat() + " " + area.end.lng() + " " + area.end.lat());
+    // console.log("Finding if patient is in area: " + area.start.lng() + " " + area.start.lat() + " " + area.end.lng() + " " + area.end.lat());
 
     if ((minLng < 0 && maxLng < 0) || (minLng > 0 && maxLng > 0)) { // not crossing lng border from -179 to 179
         if (current.lng() < minLng) {
@@ -264,8 +264,8 @@ function makeAndAttachFilterRectangle() {
     else if (filterEnd.lat() < SOUTHBOUND) {
         filterEnd = new google.maps.LatLng({lat: SOUTHBOUND, lng: filterEnd.lng()});
     }
-    console.log("Start: " + filterStart.lat() + ", " + filterStart.lng());
-    console.log("End: " + filterEnd.lat() + ", " + filterEnd.lng());
+    // console.log("Start: " + filterStart.lat() + ", " + filterStart.lng());
+    // console.log("End: " + filterEnd.lat() + ", " + filterEnd.lng());
     if (filterStart.lng() > filterEnd.lng()) {
         right = filterStart;
         left = filterEnd;
@@ -396,12 +396,12 @@ function makeMarker(patient, location) {
 
     if (patient.isDead()) {
         return new google.maps.Marker({
-            map: map, position: finalLoc, title: name, animation: google.maps.Animation.DROP, nhi: patient.getNhiNumber(), icon: icons.deceased
+            map: map, position: finalLoc, title: name, animation: google.maps.Animation.DROP, nhi: patient.getNhiNumber(), icon: icons.deceased.icon
         });
     }
     else if (!patient.isDead()) {
         return new google.maps.Marker({
-            map: map, position: finalLoc, title: name, animation: google.maps.Animation.DROP, nhi: patient.getNhiNumber(), icon: icons.alive
+            map: map, position: finalLoc, title: name, animation: google.maps.Animation.DROP, nhi: patient.getNhiNumber(), icon: icons.alive.icon
         });
     }
 
