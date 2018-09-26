@@ -751,7 +751,7 @@ function clearRectangle() {
 /**
  * Hides the marker notification
  */
-function hideNotification() {//todo rename to hideMarkerNotification
+function hideNotification() {
     $('#marker-notification').hide();
 }
 
@@ -760,7 +760,7 @@ function hideNotification() {//todo rename to hideMarkerNotification
  * @param numSuccess successfully loaded patients
  * @param numTotal total patients to load
  */
-function showNotification(numSuccess, numTotal) { //todo rename to showMarkerNotification
+function showNotification(numSuccess, numTotal) {
     var modalContent = "";
     failedPatientArray.forEach(function (patient) {
 
@@ -950,4 +950,11 @@ function loadActiveDonations(patientOrgans) {
     if (currentOrgan !== undefined) {
         $('#dropdown').val(currentOrgan);
     }
+}
+
+function showAssignments(nhi, patients) {
+    patients.forEach(function(el) {
+        addMarkers();
+        createMatchedOrganArrow();
+    });
 }

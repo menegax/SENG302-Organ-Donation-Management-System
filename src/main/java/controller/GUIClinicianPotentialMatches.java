@@ -794,8 +794,6 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
         undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.CLINICIANAVAILABLEORGANS);
         userActions.log(Level.INFO, "Assigned organ (" + targetOrgan + ") to patient " + organReceiver.getNhiNumber(), "Attempted to assign organ to patient");
         closeMatchWindow();
-        MapBridge mp = new MapBridge();
-        mp.updateInfoWindow((Patient) target);
     }
 
 

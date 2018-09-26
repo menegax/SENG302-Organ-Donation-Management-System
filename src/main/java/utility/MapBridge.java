@@ -5,6 +5,7 @@ import controller.GUIHome;
 import controller.GUIMap;
 import controller.ScreenControl;
 import javafx.scene.control.ProgressBar;
+import model.OrganReceival;
 import model.Patient;
 import model.PatientOrgan;
 import service.PatientDataService;
@@ -240,5 +241,39 @@ public class MapBridge {
         if (patient.getDonations().containsKey(organ)) {
             updateMarkerRadii(patient, organ);
         }
+    }
+
+
+    /**
+     *
+     * @param patientNhi -
+     */
+    public void getReceiversFromNhi(String patientNhi) {
+        List<Patient> patients = new ArrayList<>();
+        Patient patient = patientDataService.getPatientByNhi(patientNhi);
+        Map<GlobalEnums.Organ, String> organs = patient.getDonations();
+        for (String nhi : organs.values()) {
+            if (nhi != null) {
+                patients.add(patientDataService.getPatientByNhi(patientNhi));
+            }
+        }
+        GUIMap.getJSBridge().call("showAssignments", patientNhi, patients);
+    }
+
+
+    /**
+     *
+     * @param patientNhi -
+     */
+    public void getDonatorsFromNhi(String patientNhi) {
+        List<Patient> patients = new ArrayList<>();
+        Patient patient = patientDataService.getPatientByNhi(patientNhi);
+        Map<GlobalEnums.Organ, OrganReceival> organs = patient.getRequiredOrgans();
+        for (OrganReceival organReceival : organs.values()) {
+            if (organReceival.getDonorNhi() != null) {
+                patients.add(patientDataService.getPatientByNhi(organReceival.getDonorNhi()));
+            }
+        }
+        GUIMap.getJSBridge().call("showAssignments", patientNhi, patients);
     }
 }
