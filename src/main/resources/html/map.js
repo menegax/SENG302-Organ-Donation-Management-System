@@ -266,6 +266,7 @@ function getPotentialMatchesContent(patient) {
 
 function assignOrgan() {
     mapBridge.assignOrgan(donorPatientNhi, receiverPatientNhi, currentOrgan);
+    $('#cancelAssignmentBtn').hide();
     receiverPatientNhi = undefined;
 }
 
