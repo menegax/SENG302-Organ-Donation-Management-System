@@ -21,6 +21,7 @@ public interface IAdministratorDataService {
 
     /**
      * Import records into the system
+     * @param filePath The filepath for the import csv
      */
     void importRecords(String filePath);
 

@@ -1,9 +1,15 @@
 var map, geocoder, patients, mapBridge, successCount;
+var circles = [];
 var markers = [];
 var infoWindows = [];
 var failedPatientArray = [];
 var markerSetId = 0;
 var potentialMatches;
+var donations = [];
+var currentMarker;
+var currentOrgan = undefined;
+var dropDownDonations = [];
+
 var originalZoom;
 
 var isViewingPotentialMatches = false;
@@ -25,20 +31,10 @@ function init() {
         setMapDragEnd();
         document.getElementById('availableOrgansView').addEventListener('click', function () {
             map.setCenter({lat: -40.59225, lng: 173.51012});
-            validCount = 0;
-            failedPatientArray = [];
-            markers.forEach(function (marker) {
-                marker.setMap(null);
-            });
-            markers = [];
-            patients = mapBridge.getAvailableOrgans();
-            successCount = 0;
-            markerSetId++;
-            addMarkers(patients.size(), markerSetId);
+            mapBridge.getAvailableOrgans();
         });
     });
 }
-
 /**
  * Sets the viewable area of the map
  */
@@ -146,6 +142,8 @@ function attachInfoWindow(patient, marker) {
     }
     mapInfoWindowToPatient(infoWindow, patient);
     marker.addListener('click', function () { // when clicking on the marker, all other markers' info windows close
+        currentMarker = marker;
+        currentOrgan = undefined;
         infoWindows.forEach(function (iw) {
             if (iw["iwindow"] !== infoWindow) {
                 iw["iwindow"].close();
@@ -215,6 +213,58 @@ function getAlivePatientInfoContent(patient) {
         + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>';
 }
 
+
+/**
+ * Creates a circle radii for current organ marker selected
+ */
+function createMarkerRadii(radius, color, organ) {
+    var markerCircle;
+
+    // Add the circle for this organ to the map.
+    markerCircle = new google.maps.Circle({
+        map: null,
+        strokeColor: "#484848",
+        strokeOpacity: 0.8,
+        strokeWeight: 2,
+        fillColor: color,
+        fillOpacity: 0.6,
+        center: currentMarker.position,
+        radius: radius,
+        organ: organ
+    });
+    circles.push(markerCircle);
+}
+
+/**
+ * Sets the current organ to the organ selected to view or the first one in a patient profile if no organ is selected
+ * @param organ - String format of organ to set currentOrgan to
+ */
+function setCurrentOrgan(organ) {
+    clearCircles();
+    if (organ === undefined) {
+        currentOrgan = undefined;
+        return;
+    }
+    currentOrgan = organ.trim();
+    mapBridge.loadCircle(currentMarker.nhi, currentOrgan);
+}
+
+/**
+ * Updates the circle radii and colour for current marker selected
+ */
+function updateMarkerRadii(radius, color, organ) {
+    circles.forEach(function (circle) {
+        if (circle.organ === currentOrgan) {
+            if (circle.organ === organ) {
+                circle.setOptions({radius: radius, fillColor: color, map: map});
+            }
+        }
+        else {
+            circle.setOptions({map: null});
+        }
+    });
+}
+
 /**
  * Opens patient profile when the button from the infoWindow is clicked on
  */
@@ -229,9 +279,9 @@ function openPatientProfile(patientNhi) {
  */
 function getOrganOptions(patient) {
     var donations = patient.getDonations().toString();
-    var donationStr, reg, string, result;
+    var donationStr, string, result;
+    var reg = /([\w\s]+)=\w+,?/g;
     if (donations !== '{}') {
-        reg = /(\w+)=\w+,?/g;
         donationStr = '<b>Donations:</b><br>';
         var donationsArray = [];
         string = donations.substring(1, donations.length - 1);
@@ -245,7 +295,6 @@ function getOrganOptions(patient) {
     }
     var required = patient.getRequiredOrgans().toString();
     if (required !== '{}') {
-        reg = /(\w+)=\w+,?/g;
         reqsArray = [];
         requiredStr = '<b>Required:</b><br>';
         string = required.substring(1, required.length - 1);
@@ -268,6 +317,7 @@ function setPatients(_patients) {
     patients = _patients;
     hideNotification();
     clearMarkers();
+    clearCircles();
     successCount = 0;
     infoWindows = [];
     markerSetId++;
@@ -305,6 +355,18 @@ function clearMarkers() {
 }
 
 /**
+ * Clear circles from the map
+ */
+function clearCircles() {
+    if (circles.length > 0) {
+        circles.forEach(function (circle){
+            circle.setMap(null);
+        });
+    }
+    circles = [];
+}
+
+/**
  * Hides the notification
  */
 function hideNotification() {
@@ -338,11 +400,11 @@ function showNotification(numSuccess, numTotal) {
            '<td style=\"font-size: 15px; padding-top: 18px\">' + address + '</td>\n' +
            '</tr>';
     });
-    if (failedPatientArray.length ===  0){
+    if (failedPatientArray.length ===  0){ //no failed patients -> success
         $('#marker-notification').html('<span>' + modalMessage + '</span><span class="marker-notification-close" onclick="hideNotification()"> &times;</span>');
     } else {
         $('#marker-notification').html('<span>' + modalMessage + '</span>' +
-            '    <a href="#" data-toggle="modal" data-target="#failedPatients">View failed patients</a>\n' +
+            '    <a href="#" data-toggle="modal" data-target="#failedPatients" style="color: yellow">View failed patients</a>\n' +
             '    <span class="marker-notification-close" onclick="hideNotification()"> &times;</span>');
         $('#failed-patient-table').html(modalContent);
     }
@@ -357,21 +419,8 @@ function buildOrganDropdown(infowindow) {
     google.maps.event.addListener(infowindow, "domready", function() {
         infoWindows.forEach(function(iw) {
             if (iw["iwindow"] === infowindow) {
-                var patient2 = mapBridge.getPatientByNhi(iw["nhi"]);
-                $('#dropdown').html('');
-                $('#dropdown').html('<option value="organs">None</option>');
-                var reg = /(\w+)=\w+,?/g;
-                var donationsArray = [];
-                var result;
-                while (result = reg.exec(patient2.getDonations().toString().slice(1, -1))) {
-                    donationsArray.push(result[1]);
-                }
-                for (var i = 0; i< donationsArray.length; i++) {
-                    $('#dropdown').append($('<option>', {
-                        value: i + 1,
-                        text: donationsArray[i]
-                    }));
-                }
+                $('#dropdown').html('<option>None</option>');
+                mapBridge.getPatientActiveDonations(iw["nhi"]);
             }
         });
     }, false);
@@ -403,6 +452,8 @@ function reloadInfoWindow(patient) {
             }
         }
     }
+    clearCircles();
+    mapBridge.loadCircle(patient.getNhiNumber(), currentOrgan);
 }
 
 
@@ -428,10 +479,47 @@ function mapInfoWindowToPatient(infoWindow, patient) {
     }
 }
 
+
+/**
+ * Sets the zoom on the map
+ * @param newZoom - new zoom to set
+ */
 function setJankaZoom(newZoom) {
     map.setZoom(newZoom * originalZoom);
 }
 
+/**
+ * Sets the original zoom
+ */
 function setJankaOriginal() {
     originalZoom = map.getZoom();
+}
+
+
+/**
+ * Loads active organs and populates the dropdown in the DOM
+ * @param patientOrgans - organs that are active
+ */
+function loadActiveDonations(patientOrgans) {
+    var donations = [];
+    for (var i = 0; i<patientOrgans.size(); i++) {
+        donations.push(patientOrgans.get(i).getOrgan());
+    }
+    for (var i = 0; i< donations.length; i++) {
+        $('#dropdown').append($('<option>', {
+            value: donations[i],
+            text: donations[i]
+        }));
+    }
+    $('#dropdown').change(function() {
+        var selected = $('#dropdown :selected').text();
+        if (selected.toLowerCase() !== 'none') {
+            setCurrentOrgan(selected);
+        } else {
+            setCurrentOrgan(undefined);
+        }
+    });
+    if (currentOrgan !== undefined) {
+        $('#dropdown').val(currentOrgan);
+    }
 }
