@@ -174,7 +174,7 @@ function setUpViewAvailableOrgansButton() {
             isViewingPotentialMatches = false;
             mapBridge.populateLastSetOfPatients();
             $('#cancelAssignmentBtn').hide();
-            $('#dropdown').prop('disable', false);
+            $('#dropdown').prop('disabled', false);
         });
     });
 }
@@ -707,6 +707,7 @@ function getOrganOptions(patient) {
  * @param newPatients
  */
 function setPatients(newPatients) {
+    $('#dropdown').prop('disabled', true);
     patients = newPatients;
     resetMap();
     successCount = 0;
