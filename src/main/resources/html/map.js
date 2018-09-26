@@ -152,11 +152,11 @@ function setUpLegend() {
         var name = type.name;
         var icon = type.icon;
         var div = document.createElement('div');
-        div.innerHTML = '<img src="' + icon + '">' + name;
+        div.innerHTML = name + '<img src="' + icon + '" style="float: right; margin-top: 3px">';
         legend.appendChild(div);
     }
 
-    map.controls[google.maps.ControlPosition.RIGHT_TOP].push(legend);
+    //map.controls[google.maps.ControlPosition.RIGHT_TOP].push(legend);
 }
 
 /**
