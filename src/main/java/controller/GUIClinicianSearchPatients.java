@@ -127,7 +127,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
 
 
     /**
-     * Initialises the data within the table to all globalPatients
+     * Initialises the data within the table to all patients
      */
     public void loadController() {
         displayY.setText("Display all " + count + " profiles");
@@ -219,7 +219,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
     /**
      * Sets the table columns to pull the correct data from the patient objects
      *
-     * @return a filtered list of globalPatients
+     * @return a filtered list of patients
      */
     private void setupTableColumnsAndData() {
         // initialize columns
@@ -319,7 +319,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
 
 
     /**
-     * Displays only the first X profiles to the search globalPatients table if more than X results from search
+     * Displays only the first X profiles to the search patients table if more than X results from search
      */
     @FXML
     private void displayAllResults() {
@@ -530,8 +530,8 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
     }
 
     /**
-     * View globalPatients from table on the map
-     * Sets the globalPatients list in the JavaScript to custom set
+     * View patients from table on the map
+     * Sets the patients list in the JavaScript to custom set
      * Opens the map and loads
      */
     @FXML
@@ -552,8 +552,8 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
     }
 
     /**
-     * Populates the map with the provided collection of globalPatients
-     * @param patients the globalPatients to populate the map with
+     * Populates the map with the provided collection of patients
+     * @param patients the patients to populate the map with
      */
     private void populateMap(Collection<Patient> patients) {
         screenControl.setIsCustomSetMap(true);

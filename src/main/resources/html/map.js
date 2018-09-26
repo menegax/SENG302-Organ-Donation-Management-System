@@ -1,4 +1,4 @@
-var map, globalPatients, mapBridge, successCount;
+var map, patients, mapBridge, successCount;
 var circles = [];
 var markers = [];
 var infoWindows = [];
@@ -150,17 +150,17 @@ function setUpViewAvailableOrgansButton() {
                 marker.setMap(null);
             });
             markers = [];
-            globalPatients = mapBridge.getAvailableOrgans();
+            patients = mapBridge.getAvailableOrgans();
             successCount = 0;
             markerSetId++;
-            addMarkers(globalPatients.size(), markerSetId);
+            addMarkers(patients.size(), markerSetId);
             showGenericNotification('Populating map...');
         });
     });
 }
 
 /**
- * Gets globalPatients who are within the area and resets the markers on the map to be them
+ * Gets patients who are within the area and resets the markers on the map to be them
  */
 function filterArea(area) {
     filterAreaSet = true;
@@ -478,7 +478,7 @@ function makeAndAttachInfoWindow(patient, marker) {
 }
 
 /**
- * Gets the dead globalPatients html content for the info window
+ * Gets the dead patients html content for the info window
  * @param patient - patient to attach to info window
  * @returns {string}
  */
@@ -495,7 +495,7 @@ function getDeadPatientInfoContent(patient) {
 }
 
 /**
- * Gets the alive globalPatients html content for the info window
+ * Gets the alive patients html content for the info window
  * @param patient - patient to attach to info window
  * @returns {string}
  */
@@ -604,17 +604,17 @@ function getOrganOptions(patient) {
 }
 
 /**
- * Sets the globalPatients for the map and adds the markers to the map
+ * Sets the patients for the map and adds the markers to the map
  * @param newPatients
  */
 function setPatients(newPatients) {
-    globalPatients = newPatients;
+    patients = newPatients;
     resetMap();
     successCount = 0;
     infoWindows = [];
     markerSetId++;
     filterAreaSet = false;
-    addMarkers(globalPatients.size(), markerSetId);
+    addMarkers(patients.size(), markerSetId);
 }
 
 /**
@@ -624,13 +624,13 @@ function setPatients(newPatients) {
  */
 function addMarkers(i, id) {
     if (i < 1) {
-        showNotification(successCount, globalPatients.size());
+        showNotification(successCount, patients.size());
         return;
     }
     if (id !== markerSetId) {
         return; //break task
     }
-    addMarker(globalPatients.get(i - 1));
+    addMarker(patients.get(i - 1));
     setTimeout(function () {
         addMarkers(--i, id);
     }, 700);
@@ -679,9 +679,9 @@ function hideNotification() {//todo rename to hideMarkerNotification
 }
 
 /**
- * Shows number of successfully loaded globalPatients
- * @param numSuccess successfully loaded globalPatients
- * @param numTotal total globalPatients to load
+ * Shows number of successfully loaded patients
+ * @param numSuccess successfully loaded patients
+ * @param numTotal total patients to load
  */
 function showNotification(numSuccess, numTotal) { //todo rename to showMarkerNotification
     var modalContent = "";
@@ -702,8 +702,8 @@ function showNotification(numSuccess, numTotal) { //todo rename to showMarkerNot
                 + '<td style=\"font-size: 15px; padding-top: 18px\">' + address + '</td>\n' + '</tr>';
     });
 
-    if (failedPatientArray.length === 0) { //no failed globalPatients -> success
-        $('#marker-notification').html('<span>' + 'Successfully loaded all globalPatients');
+    if (failedPatientArray.length === 0) { //no failed patients -> success
+        $('#marker-notification').html('<span>' + 'Successfully loaded all patients');
 
         setTimeout(function () {
             hideNotification();
@@ -711,7 +711,7 @@ function showNotification(numSuccess, numTotal) { //todo rename to showMarkerNot
     }
     else {
         $('#marker-notification').html('<span>' + modalMessage + '</span>'
-                + '    <a href="#" data-toggle="modal" data-target="#failedPatients">View failed globalPatients</a>\n'
+                + '    <a href="#" data-toggle="modal" data-target="#failedPatients">View failed patients</a>\n'
                 + '    <span class="marker-notification-close" onclick="hideNotification()"> &times;</span>');
         $('#failed-patient-table').html(modalContent);
     }
@@ -766,7 +766,7 @@ function buildOrganDropdown(infowindow) {
 }
 
 /**
- * Intended to be able to reload globalPatients info window,
+ * Intended to be able to reload patients info window,
  * to be called from JAVA
  * @param patient - patient whose info window is to be updated
  */

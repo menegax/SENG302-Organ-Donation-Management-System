@@ -11,7 +11,7 @@ public interface IRequiredOrganDataAccess {
     /**
      * Updates the patient required organs with the given nhi
      *
-     * @param nhi     The globalPatients nhi
+     * @param nhi     The patients nhi
      * @param requiredOrgan The organs that is being updated
      * @param date The new date for the date of the organ registration
      * @return The success code of the update

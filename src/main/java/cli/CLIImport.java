@@ -27,12 +27,12 @@ public class CLIImport implements Runnable {
                 Reader reader = new FileReader(fileName);
                 ParseCSV parseCSV = new ParseCSV();
                 parseCSV.parse(reader);
-                userActions.log(Level.INFO, "Successfully imported", "Attempted to import globalPatients");
+                userActions.log(Level.INFO, "Successfully imported", "Attempted to import patients");
             } catch (FileNotFoundException e) {
-                userActions.log(Level.SEVERE, "File doesn't exist", "Attempted to import globalPatients");
+                userActions.log(Level.SEVERE, "File doesn't exist", "Attempted to import patients");
             }
         } else {
-            userActions.log(Level.SEVERE, "Unsupported file type", "Attempted to import globalPatients");
+            userActions.log(Level.SEVERE, "Unsupported file type", "Attempted to import patients");
         }
     }
 

@@ -8,7 +8,7 @@ import utility.ProgressTask;
 import java.time.LocalDateTime;
 
 /**
- * Simple holder for globalPatients and organ so that it is known which organ belongs to whom.
+ * Simple holder for patients and organ so that it is known which organ belongs to whom.
  */
 public class PatientOrgan {
     private Patient patient;

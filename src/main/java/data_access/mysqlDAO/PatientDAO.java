@@ -133,7 +133,7 @@ public class PatientDAO implements IPatientDataAccess {
             }
         }
         catch (SQLException e) {
-            systemLogger.log(Level.SEVERE, "Could not save globalPatients to MySQL database");
+            systemLogger.log(Level.SEVERE, "Could not save patients to MySQL database");
         }
     }
 
@@ -282,7 +282,7 @@ public class PatientDAO implements IPatientDataAccess {
             return resultMap;
         }
         catch (Exception e) {
-            systemLogger.log(Level.SEVERE, "Could not search globalPatients from MYSQL DB", this);
+            systemLogger.log(Level.SEVERE, "Could not search patients from MYSQL DB", this);
         }
         return null;
     }
@@ -322,7 +322,7 @@ public class PatientDAO implements IPatientDataAccess {
             return patients;
         }
         catch (SQLException e) {
-            systemLogger.log(Level.SEVERE, "Could not get dead globalPatients from MYSQL db", this);
+            systemLogger.log(Level.SEVERE, "Could not get dead patients from MYSQL db", this);
         }
         return new ArrayList<>();
     }

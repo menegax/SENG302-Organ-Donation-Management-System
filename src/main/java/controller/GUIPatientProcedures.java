@@ -93,7 +93,7 @@ public class GUIPatientProcedures extends UndoableController implements IWindowO
         if (userControl.getLoggedInUser() instanceof Patient) {
             this.patientClone = (Patient) this.target.deepClone();
             setupTables();
-            //Disable any add, edit, or delete functionality for globalPatients
+            //Disable any add, edit, or delete functionality for patients
             addProcedureButton.setVisible(false);
             editProcedureButton.setVisible(false);
             deleteProcedureButton.setVisible(false);

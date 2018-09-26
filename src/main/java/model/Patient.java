@@ -604,7 +604,7 @@ public class Patient extends User {
     }
 
     /**
-     * Calculates the globalPatients current age. If the patient is living, it is the difference between the current datetime
+     * Calculates the patients current age. If the patient is living, it is the difference between the current datetime
      * and their date of birth, else if they are dead it is the difference between their date of death and date of birth
      *
      * @return Their calculated age
@@ -912,7 +912,7 @@ public class Patient extends User {
     /**
      * Add organs to patient donations list
      *
-     * @param organ - organ to add to the globalPatients donation list
+     * @param organ - organ to add to the patients donation list
      * @return string of message
      */
     public String addDonation(Organ organ) {
@@ -948,9 +948,9 @@ public class Patient extends User {
     }
 
     /**
-     * Remove organs from globalPatients donations list
+     * Remove organs from patients donations list
      *
-     * @param organ - organ to remove from the globalPatients donations list
+     * @param organ - organ to remove from the patients donations list
      * @return string of message
      */
     public String removeDonation(Organ organ) {
@@ -960,14 +960,14 @@ public class Patient extends User {
             userActions.log(INFO, "Removed " + organ + " from patient donations", "Attempted to remove donation from a patient");
             return "Successfully removed " + organ + " from donations";
         } else {
-            return "Organ " + organ + " is not part of the globalPatients donations, so could not be removed.";
+            return "Organ " + organ + " is not part of the patients donations, so could not be removed.";
         }
     }
 
     /**
-     * Remove organs from globalPatients required organs list
+     * Remove organs from patients required organs list
      *
-     * @param organ - organ to remove from the globalPatients required organs list
+     * @param organ - organ to remove from the patients required organs list
      * @return string of message
      */
     public String removeRequired(Organ organ) {

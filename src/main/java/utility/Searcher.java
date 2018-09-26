@@ -133,7 +133,7 @@ public class Searcher {
     }
 
     /**
-     * Creates a full index of all globalPatients currently loaded into the app.
+     * Creates a full index of all patients currently loaded into the app.
      */
     public void createFullIndex() {
         Set<Patient> patients = database.getPatients();
@@ -181,7 +181,7 @@ public class Searcher {
     }
 
     /**
-     * Add indices of globalPatients via the index writer.
+     * Add indices of patients via the index writer.
      *
      * @param patient patient to be indexed.
      */
@@ -220,12 +220,12 @@ public class Searcher {
     }
 
     /**
-     * Removes all indices of all globalPatients via the index writer.
+     * Removes all indices of all patients via the index writer.
      */
     public void clearIndex() {
         try {
             indexWriter.deleteAll();
-            systemLogger.log(Level.INFO, "Successfully cleared patient search index", "Attempted to delete all globalPatients search indices");
+            systemLogger.log(Level.INFO, "Successfully cleared patient search index", "Attempted to delete all patients search indices");
         } catch (IOException e) {
             systemLogger.log(Level.SEVERE, "Unable to clear patient index", "Attempted to clear patient index");
         }

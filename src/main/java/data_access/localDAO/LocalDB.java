@@ -75,7 +75,7 @@ public class LocalDB {
     }
 
     /**
-     * Finds the index of the patient with matching nhi in the globalPatients list.
+     * Finds the index of the patient with matching nhi in the patients list.
      * - If the patient exists, the old patient object
      * is replaced with the new patient object.
      * - If not, the new patient is added to the list

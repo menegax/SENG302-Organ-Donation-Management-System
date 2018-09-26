@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 /**
- * Controller class to manage organ waiting list for globalPatients who require an organ.
+ * Controller class to manage organ waiting list for patients who require an organ.
  */
 public class GUIClinicianWaitingList extends TargetedController implements IWindowObserver{
 
@@ -121,7 +121,7 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
     }
 
     /**
-     * Populates waiting list table with all globalPatients waiting to receive an organ
+     * Populates waiting list table with all patients waiting to receive an organ
      */
     private void populateTable() {
         // initialize columns
@@ -216,8 +216,8 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
     private UserControl userControl = UserControl.getUserControl();
 
     /**
-     * View globalPatients from table on the map
-     * Sets the globalPatients list in the JavaScript to custom set
+     * View patients from table on the map
+     * Sets the patients list in the JavaScript to custom set
      * Opens the map and loads
      */
     @FXML
@@ -252,8 +252,8 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
     }
 
     /**
-     * Populates the map with the provided collection of globalPatients
-     * @param patients the globalPatients to populate the map with
+     * Populates the map with the provided collection of patients
+     * @param patients the patients to populate the map with
      */
     private void populateMap(Collection<Patient> patients) {
         screenControl.setIsCustomSetMap(true);

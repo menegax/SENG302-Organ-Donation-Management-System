@@ -235,8 +235,8 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
     }
 
     /**
-     * View globalPatients from table on the map
-     * Sets the globalPatients list in the JavaScript to custom set
+     * View patients from table on the map
+     * Sets the patients list in the JavaScript to custom set
      * Opens the map and loads
      */
     @FXML
@@ -263,8 +263,8 @@ public class GUIAdministratorSearchUsers extends UndoableController implements I
     }
 
     /**
-     * Populates the map with the provided collection of globalPatients
-     * @param patients the globalPatients to populate the map with
+     * Populates the map with the provided collection of patients
+     * @param patients the patients to populate the map with
      */
     private void populateMap(Collection<Patient> patients) {
         screenControl.setIsCustomSetMap(true);

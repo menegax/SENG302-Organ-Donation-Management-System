@@ -20,8 +20,8 @@ public interface IPatientDataService {
     public void save(Patient patient);
 
     /**
-     * Save a list of globalPatients to db
-     * @param patientList - list of globalPatients to save
+     * Save a list of patients to db
+     * @param patientList - list of patients to save
      */
     public void save(List<Patient> patientList);
 

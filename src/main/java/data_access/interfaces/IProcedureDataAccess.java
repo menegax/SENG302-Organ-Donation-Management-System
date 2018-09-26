@@ -9,7 +9,7 @@ public interface IProcedureDataAccess {
     /**
      * Updates the given procedure for the patient with the given nhi
      *
-     * @param nhi       The globalPatients nhi
+     * @param nhi       The patients nhi
      * @param procedure The procedure that is being updated
      * @return The success code of the update
      */

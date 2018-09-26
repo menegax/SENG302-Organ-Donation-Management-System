@@ -88,7 +88,7 @@ public class ClinicianDataService implements IClinicianDataService {
                     resultMap.get(i).add(p);
                 }
             }
-            //Select the top <numResults> globalPatients
+            //Select the top <numResults> patients
             int count = 0;
             for (List<Patient> userList : resultMap.values()) {
                 for (Patient u : userList) {

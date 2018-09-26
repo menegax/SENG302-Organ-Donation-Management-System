@@ -9,7 +9,7 @@ public interface IContactDataAccess {
     /**
      * Updates the contact details for the given patient
      *
-     * @param patient The globalPatients to update
+     * @param patient The patients to update
      * @return The success code of the update
      */
     boolean updateContact(Patient patient);
@@ -17,7 +17,7 @@ public interface IContactDataAccess {
     /**
      * Returns the contact details of the patient with the given nhi
      *
-     * @param nhi The globalPatients nhi to fetch contact details from
+     * @param nhi The patients nhi to fetch contact details from
      * @return The List of strings representing the contact details
      */
     List<String> getContactByNhi(String nhi);
@@ -25,7 +25,7 @@ public interface IContactDataAccess {
     /**
      * Deletes contact details for the patient with the given nhi
      *
-     * @param nhi The globalPatients nhi to delete contact details from
+     * @param nhi The patients nhi to delete contact details from
      */
     void deleteContactByNhi(String nhi);
 

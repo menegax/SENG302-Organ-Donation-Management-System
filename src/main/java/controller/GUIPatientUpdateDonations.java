@@ -195,7 +195,7 @@ public class GUIPatientUpdateDonations extends UndoableController {
                 }
             }
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "The following organs are already promised " +
-                    "to other globalPatients: " + alertMessage + "Please undo these changes if this was an error.", ButtonType.OK);
+                    "to other patients: " + alertMessage + "Please undo these changes if this was an error.", ButtonType.OK);
             alert.show();
             if (receiver != null) {
                 action = new MultiAction((Patient) target, after, receiver, receiverAfter);

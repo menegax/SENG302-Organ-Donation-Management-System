@@ -23,7 +23,7 @@ public class Main extends Application {
         ScreenControl screenControl = ScreenControl.getScreenControl();
         screenControl.show("/scene/login.fxml", false, null, null, null);
 
-        Searcher.getSearcher().createFullIndex(); // index globalPatients for search, needs to be after importing or adding any globalPatients
+        Searcher.getSearcher().createFullIndex(); // index patients for search, needs to be after importing or adding any patients
         systemLogger.log(INFO, "Finished the start method for the app. Beginning app...");
         new UserDataService().prepareApplication();
     }

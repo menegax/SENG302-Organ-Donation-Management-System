@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 @SuppressWarnings("unused")
-@Command(name = "add", description = "used to add new globalPatients")
+@Command(name = "add", description = "used to add new patients")
 class CLIPatientAdd implements Runnable {
 
     @Option(names = {"-h", "--help"}, usageHelp = true, description = "Displays this help message.")

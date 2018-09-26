@@ -41,7 +41,7 @@ import java.util.Set;
 import java.util.logging.Level;
 
 /**
- * Controller class to manage organ waiting list for globalPatients who require an organ.
+ * Controller class to manage organ waiting list for patients who require an organ.
  */
 public class GUIAvailableOrgans extends UndoableController implements IWindowObserver {
 
@@ -175,7 +175,7 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
 
 
     /**
-     * Populates waiting list table with all globalPatients waiting to receive an organ
+     * Populates waiting list table with all patients waiting to receive an organ
      */
     private void populateTable() {
         sortedData = new SortedList<>(masterData);
@@ -311,8 +311,8 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
     private UserControl userControl = UserControl.getUserControl();
 
     /**
-     * View globalPatients from table on the map
-     * Sets the globalPatients list in the JavaScript to custom set
+     * View patients from table on the map
+     * Sets the patients list in the JavaScript to custom set
      * Opens the map and loads
      */
     @FXML
@@ -337,8 +337,8 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
     }
 
     /**
-     * Populates the map with the provided collection of globalPatients
-     * @param patients the globalPatients to populate the map with
+     * Populates the map with the provided collection of patients
+     * @param patients the patients to populate the map with
      */
     private void populateMap(Collection<Patient> patients) {
         screenControl.setIsCustomSetMap(true);

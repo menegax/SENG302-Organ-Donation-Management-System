@@ -34,7 +34,7 @@ import java.util.Set;
 import java.util.logging.Level;
 
 /**
- * This class is the controller for editing a globalPatients required organs only accessible by the clinician
+ * This class is the controller for editing a patients required organs only accessible by the clinician
  */
 public class GUIPatientUpdateRequirements extends UndoableController implements IWindowObserver {
 
@@ -128,7 +128,7 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
 
 
     /**
-     * Load the globalPatients details
+     * Load the patients details
      *
      * @param nhi of the current patient being viewed
      */

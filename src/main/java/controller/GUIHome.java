@@ -489,7 +489,7 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
         userControl.rmLoggedInUserCache();
         userActions.log(INFO, "Successfully logged out the user ", "Attempted to log out");
         new UserDataService().clear();
-        Searcher.getSearcher().createFullIndex(); // index globalPatients for search, needs to be after importing or adding any globalPatients
+        Searcher.getSearcher().createFullIndex(); // index patients for search, needs to be after importing or adding any patients
     }
 
     /**
@@ -518,7 +518,7 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
 
         if (userControl.getLoggedInUser() instanceof Administrator) {
             Menu subMenuImport = new Menu("Import"); // import submenu
-            MenuItem menu2Item2 = new MenuItem("Import globalPatients...");
+            MenuItem menu2Item2 = new MenuItem("Import patients...");
             if(!screenControl.isTouch()) {
                 menu2Item2.setAccelerator(screenControl.getImportt());
             }
