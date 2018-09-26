@@ -13,10 +13,6 @@ import service.interfaces.IPatientDataService;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.logging.Level;
 
 /**
@@ -182,8 +178,7 @@ public class MapBridge {
      * @throws ApiException - if geocode fails
      * @throws IOException - if geocode fails
      */
-    @SuppressWarnings("unused") // used in corresponding javascript
-    public void checkOrganMatch(String patientNhi) throws InterruptedException, ApiException, IOException {
+    /*public void checkOrganMatch(String patientNhi) throws InterruptedException, ApiException, IOException {
         Patient patient = patientDataService.getPatientByNhi(patientNhi);
         Set<GlobalEnums.Organ> donations = patient.getDonations()
                 .keySet();
@@ -214,7 +209,7 @@ public class MapBridge {
             }
         }
 
-    }
+    }*/
 
     /**
      * Gets a patient by the nhi
@@ -243,37 +238,23 @@ public class MapBridge {
         }
     }
 
-
-    /**
-     *
-     * @param patientNhi -
-     */
-    public void getReceiversFromNhi(String patientNhi) {
+    public void getAssignmentsFromNhi(String patientNhi) {
         List<Patient> patients = new ArrayList<>();
         Patient patient = patientDataService.getPatientByNhi(patientNhi);
-        Map<GlobalEnums.Organ, String> organs = patient.getDonations();
-        for (String nhi : organs.values()) {
+        Map<GlobalEnums.Organ, String> donatingOrgans = patient.getDonations();
+        for (String nhi : donatingOrgans.values()) {
             if (nhi != null) {
-                patients.add(patientDataService.getPatientByNhi(patientNhi));
+                patients.add(patientDataService.getPatientByNhi(nhi));
             }
         }
-        GUIMap.getJSBridge().call("showAssignments", patientNhi, patients);
-    }
-
-
-    /**
-     *
-     * @param patientNhi -
-     */
-    public void getDonatorsFromNhi(String patientNhi) {
-        List<Patient> patients = new ArrayList<>();
-        Patient patient = patientDataService.getPatientByNhi(patientNhi);
-        Map<GlobalEnums.Organ, OrganReceival> organs = patient.getRequiredOrgans();
-        for (OrganReceival organReceival : organs.values()) {
-            if (organReceival.getDonorNhi() != null) {
-                patients.add(patientDataService.getPatientByNhi(organReceival.getDonorNhi()));
+        if (!patient.isDead()) {
+            Map<GlobalEnums.Organ, OrganReceival> receivingOrgans = patient.getRequiredOrgans();
+            for (OrganReceival organReceival : receivingOrgans.values()) {
+                if (organReceival.getDonorNhi() != null) {
+                    patients.add(patientDataService.getPatientByNhi(organReceival.getDonorNhi()));
+                }
             }
         }
-        GUIMap.getJSBridge().call("showAssignments", patientNhi, patients);
+        GUIMap.getJSBridge().call("showAssignments", patients);
     }
 }
