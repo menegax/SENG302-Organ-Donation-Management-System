@@ -1,4 +1,5 @@
-var map, patients, mapBridge, successCount;
+var map, mapBridge, successCount;
+var patients = [];
 var circles = [];
 var markers = [];
 var infoWindows = [];
@@ -7,14 +8,19 @@ var markerSetId = 0;
 var matchedOrganLines = [];
 var filterByAreaListener, filterStart, filterEnd;
 var filterAreaSet = false;
+var potentialMatches = [];
 var donations = [];
 var currentMarker;
-var currentOrgan = undefined;
+var currentOrgan;
 var NORTHBOUND = -33;
 var SOUTHBOUND = -48;
 var EASTBOUND = 180;
 var WESTBOUND = 165;
 var rectangle = [];
+var donorPatientNhi;
+var receiverPatientNhi;
+var isViewingPotentialMatches = false;
+var circleIsViewed = false;
 var originalZoom;
 var defaultZoom = 6;
 var defaultCenterPos = {lat: -40.59225, lng: 173.51012};
@@ -22,8 +28,7 @@ var iconBase = '../image/markers/';
 var icons = {
     deadDonor: {
         name: 'Dead Donor', icon: iconBase + 'orange.png'
-    },
-    deceased: {
+    }, deceased: {
         name: 'Deceased', icon: iconBase + 'blue.png'
     }, alive: {
         name: 'Alive', icon: iconBase + 'green.png'
@@ -35,37 +40,11 @@ var icons = {
  */
 function init() {
     setUpMap();
-    setUpLegend(icons);
+    setUpLegend();
     setUpViewAvailableOrgansButton();
     setUpFilterAreaButton();
     setUpFilterClearAreaButton();
     setUpResetMapButton();
-}
-
-/**
- * Resets the map
- */
-function resetMap() {
-    currentMarker = undefined;
-    centerAndZoomMap();
-    clearFilterArea();
-    clearMarkers();
-    clearCircles();
-    clearRectangle();
-    hideGenericNotification();
-    hideNotification();
-    matchedOrganLines.forEach(function(line) {
-        line.setMap(null);
-    });
-    matchedOrganLines = [];
-}
-
-/**
- * Sets the map to default center position and zoom
- */
-function centerAndZoomMap() {
-    map.setCenter(defaultCenterPos); //defs good
-    map.setZoom(defaultZoom);
 }
 
 /**
@@ -87,6 +66,34 @@ function setUpMap() {
         gestureHandling: 'cooperative',
         styles: getMapCustomStyle()
     });
+}
+
+/**
+ * Resets the map
+ */
+function resetMap() {
+    currentMarker = undefined;
+    centerAndZoomMap();
+    clearFilterArea();
+    clearMarkers();
+    clearCircles();
+    clearRectangle();
+    hideGenericNotification();
+    hideNotification()
+    $('#cancelAssignmentBtn').hide();
+    hideNotification();
+    matchedOrganLines.forEach(function (line) {
+        line.setMap(null);
+    });
+    matchedOrganLines = [];
+}
+
+/**
+ * Sets the map to default center position and zoom
+ */
+function centerAndZoomMap() {
+    map.setCenter(defaultCenterPos);
+    map.setZoom(defaultZoom);
 }
 
 /**
@@ -154,17 +161,13 @@ function setUpViewAvailableOrgansButton() {
     google.maps.event.addListenerOnce(map, 'idle', function () {
         setMapDragEnd();
         document.getElementById('availableOrgansView').addEventListener('click', function () {
-            resetMap();
-            failedPatientArray = [];
-            markers.forEach(function (marker) {
-                marker.setMap(null);
-            });
-            markers = [];
-            patients = mapBridge.getAvailableOrgans();
-            successCount = 0;
-            markerSetId++;
-            addMarkers(patients.size(), markerSetId);
-            showGenericNotification('Populating map...');
+            mapBridge.getAvailableOrgans();
+        });
+        document.getElementById('cancelAssignmentBtn').addEventListener('click', function () {
+            isViewingPotentialMatches = false;
+            mapBridge.populateLastSetOfPatients();
+            $('#cancelAssignmentBtn').hide();
+            $('#dropdown').prop('disabled', false);
         });
     });
 }
@@ -277,6 +280,10 @@ function isPatientInArea(marker, area) {
     return true;
 }
 
+/**
+ * validates that the filter option touches have taken geolocations within the max bounds of nz, otherwise sets the
+ * out of bounds lat or lng to the max
+ */
 function validateFilterBounds() {
     if (filterStart.lng() < WESTBOUND) {
         if (filterStart.lng() < 0) {
@@ -308,8 +315,12 @@ function validateFilterBounds() {
     }
 }
 
+/**
+ * Calculates the north, south, east, west bounds for the google maps rectangle with the start and end filter touch
+ * geolocations
+ * @returns - Bounds in the format: {{north: *, south: *, east: *, west: *}}
+ */
 function getFilterRectangleBounds() {
-
     var north, south, east, west;
     if (filterStart.lng() > filterEnd.lng()) {
         if (filterStart.lat() > filterEnd.lat()) {
@@ -370,31 +381,13 @@ function setMapDragEnd() {
     // Bounds for the World
     var allowedBounds = new google.maps.LatLngBounds(new google.maps.LatLng(-56.831005, 140.304953), new google.maps.LatLng(-22.977599, -165.689951));
 
-    // Listen for the dragend event
+    // Listen for the drag end event
     google.maps.event.addListener(map, 'dragend', function () {
-        if (allowedBounds.contains(map.getCenter())) {
-            return;
-        }
 
-        // Out of bounds - Move the map back within the bounds
-
-        var c = map.getCenter(), x = c.lng(), y = c.lat(), maxX = allowedBounds.getNorthEast().lng(), maxY = allowedBounds.getNorthEast().lat(),
-                minX = allowedBounds.getSouthWest().lng(), minY = allowedBounds.getSouthWest().lat();
-
-        if (x < minX) {
-            x = minX;
+        if (!allowedBounds.contains(map.getCenter())) {
+            // Out of bounds - Move the map back to center
+            centerAndZoomMap();
         }
-        if (x > maxX) {
-            x = maxX;
-        }
-        if (y < minY) {
-            y = minY;
-        }
-        if (y > maxY) {
-            y = maxY;
-        }
-
-        map.setCenter(new google.maps.LatLng(y, x));
     });
 }
 
@@ -406,7 +399,8 @@ function addMarker(patient) {
     var address;
     if (patient.isDead()) {
         address = patient.getDeathLocationConcat();
-    } else {
+    }
+    else {
         address = patient.getFormattedAddress();
     }
     var name = patient.getNameConcatenated();
@@ -416,9 +410,10 @@ function addMarker(patient) {
         successCount++;
         var marker = makeMarker(patient, latLong); //set up markers
         if (currentMarker !== undefined) {
-            if ($.inArray(marker.nhi, currentMarker.donations) > -1) {
+            if ($.inArray(marker.nhi, currentMarker.donations) > -1 && !isViewingPotentialMatches) {
                 drawLine(currentMarker, marker);
-            } else if ($.inArray(currentMarker.nhi, marker.donations) > -1) {
+            }
+            else if ($.inArray(currentMarker.nhi, marker.donations) > -1 && !isViewingPotentialMatches) {
                 drawLine(marker, currentMarker);
             }
         }
@@ -452,23 +447,41 @@ function makeMarker(patient, location) {
     var finalLoc = new google.maps.LatLng(location.lat, location.lng);
     var javaDonations = patient.getDonationNhis();
     var donationsNhis = [];
-    for (var i=0; i< javaDonations.size(); i++) {
+    for (var i = 0; i < javaDonations.size(); i++) {
         donationsNhis.push(javaDonations.get(i));
     }
 
     if (patient.isDead() && !patient.getDonations().isEmpty()) {
         return new google.maps.Marker({
-            map: map, position: finalLoc, title: name, animation: google.maps.Animation.DROP, nhi: patient.getNhiNumber(), icon: icons.deadDonor.icon, donations: donationsNhis
+            map: map,
+            position: finalLoc,
+            title: name,
+            animation: google.maps.Animation.DROP,
+            nhi: patient.getNhiNumber(),
+            icon: icons.deadDonor.icon,
+            donations: donationsNhis
         });
     }
     else if (patient.isDead()) {
         return new google.maps.Marker({
-            map: map, position: finalLoc, title: name, animation: google.maps.Animation.DROP, nhi: patient.getNhiNumber(), icon: icons.deceased.icon, donations: []
+            map: map,
+            position: finalLoc,
+            title: name,
+            animation: google.maps.Animation.DROP,
+            nhi: patient.getNhiNumber(),
+            icon: icons.deceased.icon,
+            donations: []
         });
     }
     else if (!patient.isDead()) {
         return new google.maps.Marker({
-            map: map, position: finalLoc, title: name, animation: google.maps.Animation.DROP, nhi: patient.getNhiNumber(), icon: icons.alive.icon, donations: []
+            map: map,
+            position: finalLoc,
+            title: name,
+            animation: google.maps.Animation.DROP,
+            nhi: patient.getNhiNumber(),
+            icon: icons.alive.icon,
+            donations: []
         });
     }
 }
@@ -486,6 +499,11 @@ function makeAndAttachInfoWindow(patient, marker) {
         });
         buildOrganDropdown(infoWindow);
     }
+    else if (potentialMatches !== [] && isViewingPotentialMatches) {
+        infoWindow = new google.maps.InfoWindow({
+            content: getPotentialMatchesContent(patient), maxWidth: 350
+        });
+    }
     else {
         infoWindow = new google.maps.InfoWindow({
             content: getAlivePatientInfoContent(patient), maxWidth: 350
@@ -494,7 +512,9 @@ function makeAndAttachInfoWindow(patient, marker) {
     mapInfoWindowToPatient(infoWindow, patient);
     marker.addListener('click', function () { // when clicking on the marker, all other markers' info windows close
         currentMarker = marker;
-        currentOrgan = undefined;
+        if (!isViewingPotentialMatches) {
+            currentOrgan = undefined;
+        }
         infoWindows.forEach(function (iw) {
             if (iw["iwindow"] !== infoWindow) {
                 iw["iwindow"].close();
@@ -503,21 +523,24 @@ function makeAndAttachInfoWindow(patient, marker) {
                 iw["iwindow"].open(map, marker);
             }
         });
-        matchedOrganLines.forEach(function(line) {
+        matchedOrganLines.forEach(function (line) {
             line.setMap(null);
         });
         matchedOrganLines = [];
-        markers.forEach(function(_marker) {
-            if (_marker.nhi === currentMarker.nhi) {
-                return;
-            }
-            if ($.inArray(currentMarker.nhi, _marker.donations) > -1) {
-                drawLine(_marker, currentMarker);
-            } else if ($.inArray(_marker.nhi, currentMarker.donations) > -1) {
-                drawLine(currentMarker, _marker);
-            }
-        });
-        mapBridge.getAssignmentsFromNhi(marker.nhi);
+        if (!isViewingPotentialMatches) {
+            markers.forEach(function (_marker) {
+                if (_marker.nhi === currentMarker.nhi) {
+                    return;
+                }
+                if ($.inArray(currentMarker.nhi, _marker.donations) > -1) {
+                    drawLine(_marker, currentMarker);
+                }
+                else if ($.inArray(_marker.nhi, currentMarker.donations) > -1) {
+                    drawLine(currentMarker, _marker);
+                }
+            });
+            mapBridge.getAssignmentsFromNhi(marker.nhi);
+        }
     });
 }
 
@@ -535,7 +558,86 @@ function getDeadPatientInfoContent(patient) {
             + '</label><br>' + '<label>Birth Gender: ' + patient.getBirthGender() + '</label><br>'
             + '<label style="padding-top: 5px;">Organ to Assign:</label>'
             + '<select id="dropdown" style="margin-left: 5%; float: right; height: 25px"></select>'
-            + '<input type="button" onclick="assignOrgan()" class="btn btn-sm btn-block btn-primary mt-3 float-left" value="Assign Organ" style="margin-top: 20px"/>';
+            + '<input type="button" onclick="viewPotentialMatches(\'' + nhi
+            + '\')" class="btn btn-sm btn-block btn-primary mt-3 float-left" value="View Potential Matches" style="margin-top: 20px"/>';
+}
+
+/**
+ * Triggers Java method to find potential matches
+ */
+function viewPotentialMatches(patientNhi) {
+    if (currentOrgan !== undefined) {
+        if (circleIsViewed) {
+            showGenericNotification("Loading potential matches");
+            mapBridge.getPotentialMatches(patientNhi, currentOrgan);
+        }
+        else {
+            showGenericNotification("Please wait for expiry distance to load");
+        }
+    }
+    else {
+        showGenericNotification("Please select an organ to view potential matches for")
+    }
+
+}
+
+/**
+ * Populates map with potential matches
+ */
+function populatePotentialMatches(patientNhi, donor, patientList) {
+    $('#cancelAssignmentBtn').show();
+    isViewingPotentialMatches = true;
+    var donorMarker;
+    patients = [];
+    for (var i = 0; i < patientList.size(); i++) {
+        patients.push(patientList.get(i));
+    }
+    clearLines();
+    markers.forEach(function (marker) {
+        if (marker.nhi === patientNhi) {
+            donorMarker = marker;
+        }
+        else {
+            marker.setMap(null);
+        }
+    });
+    markers = [];
+    infoWindows.forEach(function (infoWindow) {
+        if (infoWindow["nhi"] === donor.getNhiNumber()) {
+            infoWindow["iwindow"].close();
+        }
+    });
+    if (donorMarker !== undefined) {
+        successCount = 0;
+        infoWindows = [];
+        markerSetId++;
+        console.log(patients);
+        addMarkers(patients.length, markerSetId);
+
+        if (patients.length == 0) {
+            showGenericNotification("No potential matches found");
+        }
+        else if (patients.length == 1) {
+            showGenericNotification(patients.length + " potential match found");
+        }
+        else if (patients.length > 1) {
+            showGenericNotification(patients.length + " potential matches found");
+        }
+        potentialMatches = [];
+        donorMarker.setMap(map);
+        markers.push(donorMarker);
+        patients.add(donor);
+        makeAndAttachInfoWindow(donor, donorMarker);
+    }
+}
+
+/**
+ * no potential matches found
+ */
+function noPotentialMatchesFound() {
+    isViewingPotentialMatches = false;
+    $('#cancelAssignmentBtn').hide();
+    showGenericNotification(0 + " potential matches found");
 }
 
 /**
@@ -545,10 +647,42 @@ function getDeadPatientInfoContent(patient) {
  */
 function getAlivePatientInfoContent(patient) {
     var organOptions = getOrganOptions(patient);
-    return '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</h5><span style="font-size: 14px">'
-            + patient.getAddressString() + '<br><br>' + organOptions.donating + '<br><br>' + organOptions.receiving
-            + '</span><br><input type="button" onclick="openPatientProfile(\'' + patient.getNhiNumber()
-            + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>';
+    var nhi = patient.getNhiNumber()
+    return '<button onclick="openPatientProfile(\'' + nhi + '\')" type="button" class="btn btn-link" style="font-size: 24px; margin-left: -10px">'
+            + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</button>' + '<br>' + '<span class="info-window-address">'
+            + patient.getAddressString() + '</span><br><br>' + organOptions.donating + '<br><br>' + organOptions.receiving + '</span>';
+}
+
+/**
+ * Create the information window content for a patient that is a potential match for the organ searched for
+ * @param patient
+ * @returns {string}
+ */
+function getPotentialMatchesContent(patient) {
+    var organOptions = getOrganOptions(patient);
+    var modalContent = '';
+    receiverPatientNhi = patient.getNhiNumber();
+    modalContent += '<tr>\n' + '<td style=\"font-size: 15px; padding-top: 18px\">' + donorPatientNhi + '</td>\n'
+            + '<td style=\"font-size: 15px; padding-top: 18px\">' + receiverPatientNhi + '</td>\n'
+            + '<td style=\"font-size: 15px; padding-top: 18px\">' + currentOrgan + '</td>\n' + '</tr>';
+    $('#assignOrganTableBody').html(modalContent);
+    return '<h5>' + receiverPatientNhi + ' - ' + patient.getNameConcatenated() + '</h5><span style="font-size: 14px">' + patient.getAddressString()
+            + '<br><br>' + organOptions.donating + '<br><br>' + organOptions.receiving
+            + '</span><br><input type="button" onclick="openPatientProfile(\'' + receiverPatientNhi
+            + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/> '
+            + '<input type="button" class="btn btn-sm btn-success mt-3" ' + 'style="margin: auto" value="Assign ' + currentOrgan
+            + '" data-toggle="modal" data-target="#assignOrganModal">';
+}
+
+/**
+ * Triggers Java method to assign the organ to a recipient and match the two donor, receivers on their profiles
+ */
+function assignOrgan() {
+    mapBridge.assignOrgan(donorPatientNhi, receiverPatientNhi, currentOrgan);
+    mapBridge.populateLastSetOfPatients();
+    showGenericNotification("Successfully assigned " + currentOrgan + " from " + donorPatientNhi + " to " + receiverPatientNhi);
+    receiverPatientNhi = undefined;
+    isViewingPotentialMatches = false;
 }
 
 /**
@@ -564,7 +698,7 @@ function createMarkerRadii(radius, color, organ) {
         strokeOpacity: 0.8,
         strokeWeight: 2,
         fillColor: color,
-        fillOpacity: 0.6,
+        fillOpacity: 0.3,
         center: currentMarker.position,
         radius: radius,
         organ: organ
@@ -594,6 +728,7 @@ function updateMarkerRadii(radius, color, organ) {
         if (circle.organ === currentOrgan) {
             if (circle.organ === organ) {
                 circle.setOptions({radius: radius, fillColor: color, map: map});
+                circleIsViewed = true;
             }
         }
         else {
@@ -604,22 +739,15 @@ function updateMarkerRadii(radius, color, organ) {
 
 function drawLine(source, destination) {
     var line = new google.maps.Polyline({
-        map: map,
-        icons: [{
+        map: map, icons: [{
             icon: {
                 path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
-            },
-            offset: '100%'
-        }],
-        path: [{
+            }, offset: '100%'
+        }], path: [{
             lat: source.getPosition().lat(), lng: source.getPosition().lng()
-        },{
+        }, {
             lat: destination.getPosition().lat(), lng: destination.getPosition().lng()
-        }],
-        geodesic: true,
-        strokeColor: '#0000FF',
-        strokeOpacity: 1.0,
-        strokeWeight: 2
+        }], geodesic: true, strokeColor: '#0000FF', strokeOpacity: 1.0, strokeWeight: 2
     });
     matchedOrganLines.push(line);
 }
@@ -628,7 +756,7 @@ function drawLine(source, destination) {
  * Triggered via java if there is a match to create a line
  */
 function createMatchedOrganArrow(donorLoc, recipientLoc, donorNhi, recipientNhi, organ) {
-    if (!markers.some(function(marker) {
+    if (!markers.some(function (marker) {
         return marker.nhi === recipientNhi;
     })) {
         return;
@@ -636,7 +764,7 @@ function createMatchedOrganArrow(donorLoc, recipientLoc, donorNhi, recipientNhi,
 
     var matchedOrganPath = [{
         lat: donorLoc.lat, lng: donorLoc.lng
-    },{
+    }, {
         lat: recipientLoc.lat, lng: recipientLoc.lng
     }];
 
@@ -645,8 +773,7 @@ function createMatchedOrganArrow(donorLoc, recipientLoc, donorNhi, recipientNhi,
         icons: [{
             icon: {
                 path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
-            },
-            offset: '100%'
+            }, offset: '100%'
         }],
         path: matchedOrganPath,
         geodesic: true,
@@ -710,11 +837,15 @@ function getOrganOptions(patient) {
  * @param newPatients
  */
 function setPatients(newPatients) {
+    $('#dropdown').prop('disabled', true);
     if (newPatients.size() === 0) {
         return;
     }
     currentMarker = undefined;
-    patients = newPatients;
+    patients = [];
+    for (var i = 0; i < newPatients.size(); i++) {
+        patients.push(newPatients.get(i));
+    }
     hideNotification();
     resetMap();
     clearMarkers();
@@ -724,7 +855,9 @@ function setPatients(newPatients) {
     infoWindows = [];
     markerSetId++;
     filterAreaSet = false;
-    addMarkers(patients.size(), markerSetId);
+    potentialMatches = [];
+    addMarkers(patients.length, markerSetId);
+    $('#cancelAssignmentBtn').hide();
 }
 
 /**
@@ -734,7 +867,7 @@ function setPatients(newPatients) {
  */
 function addMarkers(i, id) {
     if (i < 1) {
-        showNotification(successCount, patients.size());
+        showNotification(successCount, patients.length);
         // markers.forEach(function (marker) {
         //     mapBridge.checkOrganMatch(marker.nhi);
         // });
@@ -743,10 +876,11 @@ function addMarkers(i, id) {
     if (id !== markerSetId) {
         return; //break task
     }
-    addMarker(patients.get(i - 1));
+    addMarker(patients[i - 1]);
+
     setTimeout(function () {
         addMarkers(--i, id);
-    }, 700);
+    }, 700); // google maps delay when placing markers
 }
 
 /**
@@ -764,12 +898,11 @@ function clearMarkers() {
  * Clear circles from the map
  */
 function clearCircles() {
-    if (circles.length > 0) {
-        circles.forEach(function (circle) {
-            circle.setMap(null);
-        });
-    }
+    circles.forEach(function (circle) {
+        circle.setMap(null);
+    });
     circles = [];
+    circleIsViewed = false;
 }
 
 /**
@@ -899,7 +1032,7 @@ function reloadInfoWindow(patient) {
         });
         if (matchedMarkers.length > 0) {
             matchedMarkers[0].setOptions({
-                icon: icons.deceased
+                icon: icons.deceased.icon
             });
         }
     }
@@ -928,8 +1061,7 @@ function reloadInfoWindow(patient) {
  */
 function mapInfoWindowToPatient(infoWindow, patient) {
     var hasExistingInfoWindow = false;
-    var i;
-    for (i = 0; i < infoWindows.length; i++) {
+    for (var i = 0; i < infoWindows.length; i++) {
         if (infoWindows[i]["nhi"] === patient.getNhiNumber()) {
             hasExistingInfoWindow = true;
             break;
@@ -977,11 +1109,12 @@ function setJankaOriginal() {
 function loadActiveDonations(patientOrgans) {
     var donations = [];
     for (var i = 0; i < patientOrgans.size(); i++) {
-        donations.push(patientOrgans.get(i).getOrgan());
+        donations.push(patientOrgans.get(i).getOrgan().toString());
     }
     for (var i = 0; i < donations.length; i++) {
         $('#dropdown').append($('<option>', {
-            value: donations[i], text: donations[i]
+            value: donations[i].substring(0, 1).toUpperCase() + donations[i].substring(1),
+            text: donations[i].substring(0, 1).toUpperCase() + donations[i].substring(1)
         }));
     }
     $('#dropdown').change(function () {
@@ -996,17 +1129,32 @@ function loadActiveDonations(patientOrgans) {
     if (currentOrgan !== undefined) {
         $('#dropdown').val(currentOrgan);
     }
+    if (isViewingPotentialMatches) {
+        $('#dropdown').prop('disabled', true);
+    }
+
 }
 
+
+/**
+ * Called by Java. adds markers for any patients that are not already loaded on the map
+ * @param _patients
+ */
 function showAssignments(_patients) {
-    var __patients = _patients;
+    var __patients = [];
     for (var i=0; i< _patients.size(); i++) {
-        if (markers.some(function(marker) {
-            return marker.nhi === _patients.get(i).getNhiNumber();
-        })) {
-            __patients.remove(_patients.get(i))
+        __patients.push(_patients.get(i));
+    }
+    for (var i=0; i < _patients.size(); i++) {
+        for (var o=0; o< markers.length; o++) {
+            if (markers[o].nhi === _patients.get(i).getNhiNumber()) {
+                __patients = __patients.filter(function(value, index, arr) {
+                    return value.getNhiNumber() !== _patients.get(i).getNhiNumber();
+                });
+            }
         }
     }
     patients = __patients;
-    addMarkers(patients.size(), ++markerSetId);
+    addMarkers(__patients.length, ++markerSetId);
 }
+

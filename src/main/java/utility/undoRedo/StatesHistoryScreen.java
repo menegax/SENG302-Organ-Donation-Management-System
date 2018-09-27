@@ -425,7 +425,11 @@ public class StatesHistoryScreen {
      * @return the current state of that control
      */
     public Object getStateOfControl(int index){
-        return stateHistories.get(index).getCurrentState();
+        if (index < stateHistories.size()) {
+            return stateHistories.get(index).getCurrentState();
+        } else {
+            return null; // Fake control was added giving empty stateHistory
+        }
     }
 
     /**
