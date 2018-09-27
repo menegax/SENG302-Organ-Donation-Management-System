@@ -5,10 +5,13 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.control.Label?>
 <GridPane fx:id="potentialMatchesPane" prefHeight="725.0" prefWidth="951.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianPotentialMatches">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" maxWidth="501.0" minWidth="10.0" prefWidth="443.0" />
@@ -47,15 +50,15 @@
                <GridPane.margin>
                   <Insets left="20.0" />
                </GridPane.margin></ComboBox>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Region" wrappingWidth="135.48205262422562" GridPane.columnIndex="2" GridPane.halignment="LEFT">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="Region" wrappingWidth="135.48205262422562" GridPane.columnIndex="2" GridPane.halignment="LEFT">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin></Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Birth Gender" wrappingWidth="127.48205262422562" GridPane.columnIndex="3" GridPane.halignment="RIGHT">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="Birth Gender" wrappingWidth="127.48205262422562" GridPane.columnIndex="3" GridPane.halignment="RIGHT">
                <GridPane.margin>
                   <Insets right="22.0" />
                </GridPane.margin></Text>
-            <Text fx:id="ageSliderLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="0-100" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+            <Text fx:id="ageSliderLabel" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="0-100" GridPane.columnIndex="3" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
              <Button fx:id="infoWindowBtn" mnemonicParsing="false" onAction="#openInfoWindow" text="Info" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
          </children>
       </GridPane>
@@ -87,22 +90,22 @@
             <RowConstraints minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Blood Type:" styleClass="TEXT" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="Blood Type:" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Organ:" styleClass="TEXT" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="Organ:" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text fx:id="bloodTypeLabel" strokeType="OUTSIDE" styleClass="TEXT" strokeWidth="0.0" text="A+" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+            <Text fx:id="bloodTypeLabel" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="A+" GridPane.columnIndex="3" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text fx:id="organLabel" strokeType="OUTSIDE" styleClass="TEXT" strokeWidth="0.0" text="Liver" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+            <Text fx:id="organLabel" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="Liver" GridPane.columnIndex="3" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="15.0" />
                </font>
@@ -112,7 +115,7 @@
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text fx:id="nameLabel" strokeType="OUTSIDE" styleClass="TEXT" strokeWidth="0.0" text="Joe Middle Bloggs" GridPane.columnIndex="3" GridPane.valignment="BOTTOM">
+            <Text fx:id="nameLabel" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="Joe Middle Bloggs" GridPane.columnIndex="3" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="15.0" />
                </font>
@@ -122,7 +125,7 @@
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text fx:id="ageLabel" strokeType="OUTSIDE" styleClass="TEXT" strokeWidth="0.0" text="13" GridPane.columnIndex="3" GridPane.rowIndex="3">
+            <Text fx:id="ageLabel" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="13" GridPane.columnIndex="3" GridPane.rowIndex="3">
                <font>
                   <Font size="15.0" />
                </font>
@@ -155,12 +158,12 @@
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text fx:id="deathLocationLabel" strokeType="OUTSIDE" styleClass="TEXT" strokeWidth="0.0" text="Death Street" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+            <Text fx:id="deathLocationLabel" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="Death Street" GridPane.columnIndex="2" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text fx:id="regionLabel" strokeType="OUTSIDE" styleClass="TEXT" strokeWidth="0.0" text="Canterbury" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+            <Text fx:id="regionLabel" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="Canterbury" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="15.0" />
                </font>
@@ -170,7 +173,7 @@
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text fx:id="nhiLabel" strokeType="OUTSIDE" styleClass="TEXT" strokeWidth="0.0" text="ABC1234" GridPane.columnIndex="2" GridPane.valignment="BOTTOM">
+            <Text fx:id="nhiLabel" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="ABC1234" GridPane.columnIndex="2" GridPane.valignment="BOTTOM">
                <font>
                   <Font size="15.0" />
                </font>
@@ -180,14 +183,14 @@
                   <Font size="15.0" />
                </font>
             </Text>
-            <Text fx:id="expiryTimeLabel" strokeType="OUTSIDE" styleClass="TEXT" strokeWidth="0.0" text="11:11:11" GridPane.columnIndex="2" GridPane.rowIndex="3">
+            <Text fx:id="expiryTimeLabel" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="TEXT" text="11:11:11" GridPane.columnIndex="2" GridPane.rowIndex="3">
                <font>
                   <Font size="15.0" />
                </font>
             </Text>
          </children>
       </GridPane>
-      <Button minHeight="-Infinity" mnemonicParsing="false" onAction="#viewOnMap" prefHeight="31.0" prefWidth="109.0" text="View on Map" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
+      <Button minHeight="-Infinity" mnemonicParsing="false" onAction="#viewOnMap" prefHeight="31.0" prefWidth="139.5" text="View on Map" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
          <GridPane.margin>
             <Insets bottom="20.0" right="60.0" />
          </GridPane.margin>
@@ -205,5 +208,10 @@
             <Insets bottom="20.0" left="60.0" />
          </GridPane.margin>
       </Button>
+      <Label styleClass="label title" text="Potential Matches" GridPane.columnSpan="2" GridPane.halignment="CENTER">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
    </children>
 </GridPane>
