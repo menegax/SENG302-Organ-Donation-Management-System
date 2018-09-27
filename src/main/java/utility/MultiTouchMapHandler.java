@@ -131,23 +131,23 @@ public class MultiTouchMapHandler extends MultiTouchHandler {
     }
 
     private void calculateDistanceChange(Double[] ne, Double[] sw, CustomTouchEvent previous, CustomTouchEvent current) {
-        Double width = ne[1] - sw[1];
+        System.out.println(ne[0] + ", " + ne[1]);
+        System.out.println(sw[0] + ", " + sw[1]);
+        Double width = Math.abs(sw[1]) - Math.abs(ne[1]);
         Double height = ne[0] - sw[0];
+        System.out.println(width);
+        System.out.println(height);
         Double widthPx = webViewMap1.getWidth();
         Double heightPx = webViewMap1.getHeight();
-//        Point2D displacement = previous.getCoordinates().subtract(current.getCoordinates());
         Point2D displacement = new Point2D(current.getCoordinates().getX() - previous.getCoordinates().getX(),
                 current.getCoordinates().getY() - previous.getCoordinates().getY());
-        System.out.println(displacement);
-//        double displacement = MathUtilityMethods.calculateDisplacement(previous.getCoordinates(),
-//                current.getCoordinates());
         double displacementRatioX = displacement.getX() / widthPx;
         double displacementRatioY = displacement.getY() / heightPx;
-        Point2D newPoint = new Point2D(displacementRatioX * width / 10, displacementRatioY * height);
-        System.out.println(displacementRatioX);
-        System.out.println(displacementRatioY);
-        System.out.println(newPoint);
+        Point2D newPoint = new Point2D(displacementRatioX * width, displacementRatioY * height);
         System.out.println();
+        if(Math.round(width) >= 331 && Math.round(height) >= 10 ) {
+            newPoint = new Point2D(0,0);
+        }
         GUIMap.getJSBridge().call("translateMap", newPoint.getX(), newPoint.getY());
     }
 
