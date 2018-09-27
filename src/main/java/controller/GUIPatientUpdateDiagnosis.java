@@ -168,8 +168,7 @@ public class GUIPatientUpdateDiagnosis extends TargetedController {
      * @param targetDisease The targetDisease to add the class to
      */
     private boolean setInvalid(Control targetDisease) {
-        targetDisease.getStyleClass()
-                .add("invalid");
+        targetDisease.getStyleClass().add("invalid");
         return false;
     }
 
@@ -180,10 +179,8 @@ public class GUIPatientUpdateDiagnosis extends TargetedController {
      * @param targetDisease The targetDisease to remove the class from
      */
     private void setValid(Control targetDisease) {
-        if (targetDisease.getStyleClass()
-                .contains("invalid")) {
-            targetDisease.getStyleClass()
-                    .remove("invalid");
+        if (targetDisease.getStyleClass().contains("invalid")) {
+            targetDisease.getStyleClass().remove("invalid");
         }
     }
 

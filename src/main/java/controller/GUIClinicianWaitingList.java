@@ -232,7 +232,6 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
                 if (patient.getNhiNumber().equals(aMasterData.getReceiverNhi())) {
                     found = true;
                     break;
-
                 }
             }
             if (!found) {
