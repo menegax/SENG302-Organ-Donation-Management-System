@@ -20,6 +20,7 @@ var rectangle = [];
 var donorPatientNhi;
 var receiverPatientNhi;
 var isViewingPotentialMatches = false;
+var circleIsViewed = false;
 var originalZoom;
 var defaultZoom = 6;
 var defaultCenterPos = {lat: -40.59225, lng: 173.51012};
@@ -556,10 +557,16 @@ function getDeadPatientInfoContent(patient) {
  */
 function viewPotentialMatches(patientNhi) {
     if (currentOrgan !== undefined) {
-        mapBridge.getPotentialMatches(patientNhi, currentOrgan);
+        if (circleIsViewed) {
+            showGenericNotification("Loading potential matches");
+            mapBridge.getPotentialMatches(patientNhi, currentOrgan);
+        } else {
+            showGenericNotification("Please wait for expiry distance to load");
+        }
     } else {
-        showGenericNotification("Please select an organ to view potential matches for.")
+        showGenericNotification("Please select an organ to view potential matches for")
     }
+
 }
 
 /**
@@ -656,6 +663,7 @@ function getPotentialMatchesContent(patient) {
 function assignOrgan() {
     mapBridge.assignOrgan(donorPatientNhi, receiverPatientNhi, currentOrgan);
     mapBridge.populateLastSetOfPatients();
+    showGenericNotification("Successfully assigned " + currentOrgan + " from " + donorPatientNhi + " to " + receiverPatientNhi);
     receiverPatientNhi = undefined;
     isViewingPotentialMatches = false;
     showGenericNotification("Successfully assigned " + currentOrgan + " from " + donorPatientNhi + " to " + receiverPatientNhi);
@@ -704,6 +712,7 @@ function updateMarkerRadii(radius, color, organ) {
         if (circle.organ === currentOrgan) {
             if (circle.organ === organ) {
                 circle.setOptions({radius: radius, fillColor: color, map: map});
+                circleIsViewed = true;
             }
         }
         else {
@@ -883,6 +892,7 @@ function clearCircles() {
         });
     }
     circles = [];
+    circleIsViewed = false;
 }
 
 /**
@@ -1012,7 +1022,7 @@ function reloadInfoWindow(patient) {
         });
         if (matchedMarkers.length > 0) {
             matchedMarkers[0].setOptions({
-                icon: icons.deceased
+                icon: icons.deceased.icon
             });
         }
     }
