@@ -265,9 +265,7 @@ public class MapBridge {
         List<OrganWaitlist.OrganRequest> requests = new ArrayList<OrganWaitlist.OrganRequest>(allRequests);
         List<Patient> patients = new ArrayList<>();
         for(OrganWaitlist.OrganRequest request : requests) {
-            System.out.println("patient...");
             if (patientWithinCircle(patient, request.getReceiver())) {
-                System.out.println("found potential match");
                 patients.add(request.getReceiver());
             }
         }

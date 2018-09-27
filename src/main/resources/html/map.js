@@ -419,9 +419,9 @@ function addMarker(patient) {
         successCount++;
         var marker = makeMarker(patient, latLong); //set up markers
         if (currentMarker !== undefined) {
-            if ($.inArray(marker.nhi, currentMarker.donations) > -1) {
+            if ($.inArray(marker.nhi, currentMarker.donations) > -1 && !isViewingPotentialMatches) {
                 drawLine(currentMarker, marker);
-            } else if ($.inArray(currentMarker.nhi, marker.donations) > -1) {
+            } else if ($.inArray(currentMarker.nhi, marker.donations) > -1 && !isViewingPotentialMatches) {
                 drawLine(marker, currentMarker);
             }
         }
@@ -516,17 +516,21 @@ function makeAndAttachInfoWindow(patient, marker) {
             line.setMap(null);
         });
         matchedOrganLines = [];
-        markers.forEach(function(_marker) {
-            if (_marker.nhi === currentMarker.nhi) {
-                return;
-            }
-            if ($.inArray(currentMarker.nhi, _marker.donations) > -1) {
-                drawLine(_marker, currentMarker);
-            } else if ($.inArray(_marker.nhi, currentMarker.donations) > -1) {
-                drawLine(currentMarker, _marker);
-            }
-        });
-        mapBridge.getAssignmentsFromNhi(marker.nhi);
+        console.log(isViewingPotentialMatches);
+        if (!isViewingPotentialMatches) {
+            console.log("drawing line");
+            markers.forEach(function (_marker) {
+                if (_marker.nhi === currentMarker.nhi) {
+                    return;
+                }
+                if ($.inArray(currentMarker.nhi, _marker.donations) > -1) {
+                    drawLine(_marker, currentMarker);
+                } else if ($.inArray(_marker.nhi, currentMarker.donations) > -1) {
+                    drawLine(currentMarker, _marker);
+                }
+            });
+            mapBridge.getAssignmentsFromNhi(marker.nhi);
+        }
     });
 }
 
@@ -565,6 +569,7 @@ function populatePotentialMatches(patientNhi, donor) {
     $('#cancelAssignmentBtn').show();
     isViewingPotentialMatches = true;
     var donorMarker;
+    clearLines();
     markers.forEach(function (marker) {
         if (marker.nhi === patientNhi) {
            donorMarker = marker;
@@ -572,6 +577,7 @@ function populatePotentialMatches(patientNhi, donor) {
             marker.setMap(null);
         }
     });
+    markers = [];
     infoWindows.forEach(function (infoWindow) {
         if (infoWindow["nhi"] === donor.getNhiNumber()) {
             infoWindow["iwindow"].close();
