@@ -11,6 +11,8 @@ import javafx.scene.web.WebView;
 public class MultiTouchMapHandler extends MultiTouchHandler {
 
     private Double originalDistance;
+    
+    private double MAPZOOMFACTOR = 0.3;
 
     @Override
     protected void processPaneMomentum() {
@@ -54,6 +56,30 @@ public class MultiTouchMapHandler extends MultiTouchHandler {
         //do nothing
     }
 
+    @Override
+    protected void processTwoTouchMovement(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) throws NullPointerException {
+    	Point2D touchOne = previousEvent.getCoordinates();
+        Point2D touchTwo = currentEvent.getCoordinates();
+        if (originalDistance == null) {
+            originalDistance = Math.sqrt(Math.pow(touchOne.getX() - touchTwo.getX(), 2) +
+                Math.pow(touchOne.getY() - touchTwo.getY(), 2));
+        GUIMap.getJSBridge().call("setJankaOriginal");
+        }
+        double currentDistance = Math.sqrt(Math.pow(touchOne.getX() - touchTwo.getX(), 2) +
+            Math.pow(touchOne.getY() - touchTwo.getY(), 2));
+        GUIMap.getJSBridge().call("setJankaZoom", Math.pow(currentDistance / originalDistance, MAPZOOMFACTOR));
+    }
+    
+    @Override
+    protected void checkTouchRelease(CustomTouchEvent touchEvent, TouchEvent event) {
+    	originalDistance = null;
+    }
+    
+    @Override
+    protected void processOneTouchMovement(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) {
+    	//do noth8ng
+    }
+    
     @Override
     protected void executeZoom(double distance) {
         if (originalDistance == null) {

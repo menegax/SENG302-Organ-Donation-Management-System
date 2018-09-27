@@ -151,7 +151,7 @@ public class MultiTouchHandler {
         else {
             if (previousEvent != null && event.getEventType()
                     .equals(TouchEvent.TOUCH_RELEASED)) {
-                checkLeftClick(touchEvent, event);
+                checkTouchRelease(touchEvent, event);
                 originCoordinates[findIndexOfTouchEvent(touchEvent.getId())] = null;
                 touches[findIndexOfTouchEvent(touchEvent.getId())] = null;
                 processPaneMomentum();
@@ -286,7 +286,7 @@ public class MultiTouchHandler {
     /**
      * Evaluates whether the current states of touch events meet left click requirements
      */
-    protected void checkLeftClick(CustomTouchEvent touchEvent, TouchEvent event) {
+    protected void checkTouchRelease(CustomTouchEvent touchEvent, TouchEvent event) {
         if(!touchEvent.isHasMoved() && !moving) {
             if(touchEvent.getTarget() instanceof Button) {
                 ((Button)event.getTouchPoint().getPickResult().getIntersectedNode()).fire();
