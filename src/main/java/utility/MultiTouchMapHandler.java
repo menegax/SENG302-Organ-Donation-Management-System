@@ -72,12 +72,27 @@ public class MultiTouchMapHandler extends MultiTouchHandler {
     
     @Override
     protected void checkTouchRelease(CustomTouchEvent touchEvent, TouchEvent event) {
-    	originalDistance = null;
+    	boolean noTouches = true;
+    	for(CustomTouchEvent e : touches) {
+    		if(e != null && !e.equals(touchEvent)) {
+    			noTouches = false;
+    		}
+    	}
+    	if(noTouches) {
+    		originalDistance = null;
+    	}
     }
     
     @Override
     protected void processOneTouchMovement(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) {
-    	//do noth8ng
+    	//get pixel position of touch
+    	//get lat long of corners
+    	//get lat long of point touched
+    	//get scale of screen kind of
+    	//get distance moved
+    	//calc new lat long of point
+    	//get lat long displacement
+    	//move center by displacement
     }
     
     @Override
