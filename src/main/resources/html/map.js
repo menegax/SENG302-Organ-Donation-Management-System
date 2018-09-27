@@ -529,9 +529,11 @@ function populatePotentialMatches(patientNhi, donor) {
     isViewingPotentialMatches = true;
     var donorMarker;
     markers.forEach(function (marker) {
-       if (marker.nhi === patientNhi) {
+        if (marker.nhi === patientNhi) {
            donorMarker = marker;
-       }
+        } else {
+            marker.setMap(null);
+        }
     });
     infoWindows.forEach(function (infoWindow) {
         if (infoWindow["nhi"] === donor.getNhiNumber()) {
