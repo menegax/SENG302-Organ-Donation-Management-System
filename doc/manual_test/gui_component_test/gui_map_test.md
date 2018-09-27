@@ -218,7 +218,7 @@
 3. Select the appropriate organ from the dropdown
 4. Select view potential matches 
 5. EXPECTED: A pop-up dialog should be displayed that no potential matches were found
-6. EXPECTED: The map should show the most recent set of patients loaded (available organs)
+6. EXPECTED: The map should show just the donor
 
 ## Test History
 
