@@ -62,6 +62,7 @@ function resetMap() {
     clearRectangle();
     hideGenericNotification();
     hideNotification()
+    $('#cancelAssignmentBtn').hide();
 }
 
 /**
@@ -539,24 +540,22 @@ function populatePotentialMatches(patientNhi, donor) {
         infoWindows = [];
         markerSetId++;
         addMarkers(patients.size(), markerSetId);
+        showGenericNotification(patients.size() + " potential match(es) found");
         potentialMatches = [];
         donorMarker.setMap(map);
         markers.push(donorMarker);
         patients.add(donor);
         makeAndAttachInfoWindow(donor, donorMarker);
     }
-
-    showGenericNotification(patients.size() - 1 + " potential match(es) found.");
 }
 
 /**
  * no potential matches found
  */
 function noPotentialMatchesFound(){
-    mapBridge.populateLastSetOfPatients();
     isViewingPotentialMatches = false;
     $('#cancelAssignmentBtn').hide();
-    showGenericNotification(0 + " potential matches found.");
+    showGenericNotification(0 + " potential matches found");
 }
 
 /**
@@ -602,6 +601,7 @@ function assignOrgan() {
     mapBridge.assignOrgan(donorPatientNhi, receiverPatientNhi, currentOrgan);
     mapBridge.populateLastSetOfPatients();
     receiverPatientNhi = undefined;
+    showGenericNotification("Successfully assigned " + currentOrgan + " from " + donorPatientNhi + " to " + receiverPatientNhi);
 }
 
 /**
@@ -617,7 +617,7 @@ function createMarkerRadii(radius, color, organ) {
         strokeOpacity: 0.8,
         strokeWeight: 2,
         fillColor: color,
-        fillOpacity: 0.6,
+        fillOpacity: 0.3,
         center: currentMarker.position,
         radius: radius,
         organ: organ
@@ -951,11 +951,12 @@ function setJankaOriginal() {
 function loadActiveDonations(patientOrgans) {
     var donations = [];
     for (var i = 0; i < patientOrgans.size(); i++) {
-        donations.push(patientOrgans.get(i).getOrgan());
+        donations.push(patientOrgans.get(i).getOrgan().toString());
     }
     for (var i = 0; i < donations.length; i++) {
         $('#dropdown').append($('<option>', {
-            value: donations[i], text: donations[i]
+            value: donations[i].substring(0,1).toUpperCase() + donations[i].substring(1),
+            text: donations[i].substring(0,1).toUpperCase() + donations[i].substring(1)
         }));
     }
     $('#dropdown').change(function () {
