@@ -119,8 +119,5 @@ public class GUIMap {
         WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> SystemLogger.systemLogger.log(Level.FINE, message));
     }
 
-    public MapBridge getMapBridge() {
-        return mapBridge;
-    }
 
 }

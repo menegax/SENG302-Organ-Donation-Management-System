@@ -10,6 +10,9 @@ import javafx.scene.web.WebView;
 
 import java.util.logging.Level;
 
+/**
+ * Multi touch handler for the map pane
+ */
 public class MultiTouchMapHandler extends MultiTouchHandler {
 
     private WebView webViewMap1;
@@ -25,39 +28,21 @@ public class MultiTouchMapHandler extends MultiTouchHandler {
         //do nothing
     }
 
+    /**
+     * Initialises webview multitouch handler by filtering out native zoom and rotate events, and handling touch
+     * events
+     * @param webViewMap1 map webview
+     */
     public void initialiseHandler(WebView webViewMap1) {
-//        ZOOMFACTOR = 0.3;
         this.webViewMap1 = webViewMap1;
         webViewMap1.addEventFilter(TouchEvent.ANY, this::handleTouch);
         webViewMap1.addEventFilter(ZoomEvent.ANY, Event::consume);
         webViewMap1.addEventFilter(RotateEvent.ANY, Event::consume);
-
-//        webViewMap1.setOnTouchReleased((event -> {
-//            originalDistance = null;
-//            //jsBridge.call("setJankaOriginal", null);
-//        }));
-//
-//        webViewMap1.setOnTouchMoved((event -> {
-//            if (event.getTouchCount() == 2) {
-//                if(event.getTouchPoints().get(0).getTarget().equals(webViewMap1) &&
-//                        event.getTouchPoints().get(1).getTarget().equals(webViewMap1)) {
-//                    Point2D touchOne = new Point2D(event.getTouchPoints().get(0).getX(),
-//                            event.getTouchPoints().get(0).getY());
-//                    Point2D touchTwo = new Point2D(event.getTouchPoints().get(1).getX(),
-//                            event.getTouchPoints().get(1).getY());
-//                    if (originalDistance == null) {
-//                        originalDistance = Math.sqrt(Math.pow(touchOne.getX() - touchTwo.getX(), 2) +
-//                                Math.pow(touchOne.getY() - touchTwo.getY(), 2));
-//                        GUIMap.getJSBridge().call("setJankaOriginal");
-//                    }
-//                    double currentDistance = Math.sqrt(Math.pow(touchOne.getX() - touchTwo.getX(), 2) +
-//                            Math.pow(touchOne.getY() - touchTwo.getY(), 2));
-//                    GUIMap.getJSBridge().call("setJankaZoom", Math.pow(currentDistance / originalDistance, MAPZOOMFACTOR));
-//                }
-//            }
-//        }));
     }
 
+    /**
+     * Does not bring map pane to front when tapped
+     */
     @Override
     protected void setPaneFocused() {
         //do nothing
@@ -65,7 +50,7 @@ public class MultiTouchMapHandler extends MultiTouchHandler {
 
     /**
      * Checks what type of movement the touch events represent
-     * and performs the appropriate actions
+     * and performs the appropriate actions for a map pane
      *
      * @param previousEvent the previous touch event before movement
      * @param currentEvent  the current touch event after movement
@@ -87,6 +72,12 @@ public class MultiTouchMapHandler extends MultiTouchHandler {
         touches[findIndexOfTouchEvent(previousEvent.getId())] = currentEvent;
     }
 
+    /**
+     * Processes zoom events on map by calling javascript methods to reset zoom based on distance between points
+     * @param previousEvent the previous touch event before movement
+     * @param currentEvent  the current touch event after movement
+     * @throws NullPointerException events are null
+     */
     @Override
     protected void processTwoTouchMovement(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) throws NullPointerException {
     	Point2D touchOne = previousEvent.getCoordinates();
@@ -100,24 +91,27 @@ public class MultiTouchMapHandler extends MultiTouchHandler {
             Math.pow(touchOne.getY() - touchTwo.getY(), 2));
         GUIMap.getJSBridge().call("setJankaZoom", Math.pow(currentDistance / originalDistance, MAPZOOMFACTOR));
     }
-    
+
+    /**
+     * Sets original distance to null to reset zoom events
+     * @param touchEvent custom touch event
+     * @param event touch event
+     */
     @Override
     protected void checkTouchRelease(CustomTouchEvent touchEvent, TouchEvent event) {
         originalDistance = null;
     }
-    
+
+    /**
+     * Processes a translate movement by getting the bounds and then calling calculate distance.
+     * Catches NullPointer exception if map is touched before instantiation
+     * Catches NumberFormatException if doubles do not parse correctly
+     * @param previousEvent previous event
+     * @param currentEvent  current event
+     */
     @Override
     protected void processOneTouchMovement(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) {
-    	//get pixel position of touch
-    	//get lat long of corners
-    	//get lat long of point touched
-    	//get scale of screen kind of
-    	//get distance moved
-    	//calc new lat long of point
-    	//get lat long displacement
-    	//move center by displacement
-//        webViewMap1.get
-        try {
+    	try {
             GUIMap.getJSBridge().call("getMapBounds");
             Double[] NE = {Double.parseDouble(bounds[0]), Double.parseDouble(bounds[1])};
             Double[] SW = {Double.parseDouble(bounds[2]), Double.parseDouble(bounds[3])};
@@ -130,6 +124,15 @@ public class MultiTouchMapHandler extends MultiTouchHandler {
 
     }
 
+    /**
+     * Calculates change in distance from previous and current events, scales them to the pane and find the
+     * difference in lat and long values. This then calls a javascript method to translate the map center
+     * by the displacement.
+     * @param ne north east corner coordinates
+     * @param sw south west corner coordinates
+     * @param previous previous touch event
+     * @param current current touch event
+     */
     private void calculateDistanceChange(Double[] ne, Double[] sw, CustomTouchEvent previous, CustomTouchEvent current) {
         System.out.println(ne[0] + ", " + ne[1]);
         System.out.println(sw[0] + ", " + sw[1]);
@@ -151,6 +154,10 @@ public class MultiTouchMapHandler extends MultiTouchHandler {
         GUIMap.getJSBridge().call("translateMap", newPoint.getX(), newPoint.getY());
     }
 
+    /**
+     *Sets bounds of map shown
+     * @param strings strings of coordinates
+     */
     public static void setBounds(String[] strings) {
         bounds = strings;
     }

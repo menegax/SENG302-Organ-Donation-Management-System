@@ -391,6 +391,11 @@ public class MapBridge {
                 .call("showAssignments", new ArrayList<>(patients));
     }
 
+    /**
+     * Gets lat/long coordinates of corners of map bounds, and sets static variable in MultiTouchMapHandler
+     * to updated coordinates
+     * @param coords map bounds
+     */
     public void setBounds(String coords) {
         coords = coords.replaceAll("\\{|\\}|\\[|\\]|\"lng\":|\"lat\":", "");
         String[] strings = coords.split(",");

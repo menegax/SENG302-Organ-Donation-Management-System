@@ -1158,6 +1158,9 @@ function showAssignments(_patients) {
     addMarkers(__patients.length, ++markerSetId);
 }
 
+/**
+ * Gets longitude and latitude of map bounds (NE and SW corners) and passes them to a java method
+ */
 function getMapBounds() {
     var bounds = map.getBounds();
     var ne = bounds.getNorthEast(); // LatLng of the north-east corner
@@ -1165,6 +1168,11 @@ function getMapBounds() {
     mapBridge.setBounds(JSON.stringify([ne, sw]));
 }
 
+/**
+ * Translates map center by the given latitude and longitude, and sets map center to new value
+ * @param long longitude
+ * @param lat latitude
+ */
 function translateMap(long, lat) {
     var centre = map.getCenter();
     var newLat = centre.lat() + lat;
