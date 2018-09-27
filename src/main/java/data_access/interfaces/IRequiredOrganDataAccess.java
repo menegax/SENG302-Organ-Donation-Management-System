@@ -28,7 +28,7 @@ public interface IRequiredOrganDataAccess {
 
     /**
      * Removes a required organ for a certain patient (given by the nhi)
-     *
+     * @param organ the required organ
      * @param nhi The nhi for the patient to remove required organs from
      * @param organ The organ to delete
      */

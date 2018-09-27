@@ -1,5 +1,7 @@
 package data_access.localDAO;
 
+import static utility.GlobalEnums.NONE_ID;
+
 import data_access.factories.LocalDatabaseFactory;
 import data_access.interfaces.IPatientDataAccess;
 import model.Patient;
@@ -8,10 +10,13 @@ import utility.GlobalEnums;
 import utility.GlobalEnums.FilterOption;
 import utility.Searcher;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
-
-import static utility.GlobalEnums.NONE_ID;
 
 
 public class PatientLocalDAO implements IPatientDataAccess {

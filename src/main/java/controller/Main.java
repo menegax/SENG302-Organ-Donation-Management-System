@@ -6,13 +6,9 @@ import static utility.SystemLogger.systemLogger;
 import javafx.application.Application;
 import javafx.stage.Stage;
 import service.UserDataService;
-import utility.GlobalEnums;
 import utility.Searcher;
 import utility.SystemLogger;
 import utility.UserActionHistory;
-import javafx.geometry.Point2D;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCode;
 
 import java.util.UUID;
 

@@ -48,12 +48,13 @@ public class Administrator extends User {
     }
 
     /**
-     * Contructor for loading from database.
+     * Constructor for loading from database.
      * @param username The username of the admin.
      * @param fName The first name of the admin.
      * @param mNames The middle names of the admin in a ArrayList.
      * @param lName The last name of the admin.
      * @param salt The salt of the password hash.
+     * @param records The records of the admin
      * @param password The hashed password of the admin.
      * @param modified Timestamp of the last time the admin was modified.
      * @param records The list of admin log records of the admin

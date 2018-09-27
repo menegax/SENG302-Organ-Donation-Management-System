@@ -533,4 +533,5 @@ public class MultiTouchHandler {
                 || rootPane.getTranslateY() <= screenBounds.getMinY() - rootPane.getHeight() / 2;
     }
 
+
 }

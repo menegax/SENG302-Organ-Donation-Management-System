@@ -271,7 +271,7 @@ public class Patient extends User {
      * @param height          height in meters
      * @param weight          weight in kilograms
      * @param nhi             NHI
-     * @throws DataFormatException Dataformatexception
+     * @throws DataFormatException If data poorly formatted
      */
     public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames, String preferredName,
                                  LocalDate birth, LocalDateTime death, String streetName, String streetNumber, String city, String suburb,
@@ -1238,6 +1238,15 @@ public class Patient extends User {
         return addressString;
     }
 
+    public List<String> getDonationNhis() {
+        List<String> nhis = new ArrayList<>();
+        for (String nhi : donations.values()) {
+            if (nhi != null) {
+                nhis.add(nhi);
+            }
+        }
+        return nhis;
+    }
 
     public String toString() {
         return "Patient: \n" + "NHI: " + nhiNumber + "\n" + "Created date: " + CREATED + "\n" + "Modified date: " + modified + "\n" + "First name: "

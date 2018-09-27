@@ -1,5 +1,10 @@
 package controller;
 
+import static java.lang.Math.abs;
+import static java.time.temporal.ChronoUnit.DAYS;
+import static utility.SystemLogger.systemLogger;
+import static utility.UserActionHistory.userActions;
+
 import com.google.maps.model.LatLng;
 import data_access.localDAO.PatientLocalDAO;
 import javafx.beans.property.ObjectProperty;
@@ -23,6 +28,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import model.OrganReceival;
 import model.Patient;
 import model.PatientOrgan;
 import org.apache.commons.lang3.StringUtils;
@@ -31,9 +37,6 @@ import service.APIGoogleMaps;
 import service.ClinicianDataService;
 import service.OrganWaitlist;
 import service.PatientDataService;
-import utility.CachedThreadPool;
-import utility.GlobalEnums;
-import utility.MultiTouchHandler;
 import utility.*;
 import utility.GlobalEnums.BirthGender;
 import utility.GlobalEnums.FilterOption;
@@ -51,11 +54,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
-
-import static java.lang.Math.abs;
-import static java.time.temporal.ChronoUnit.DAYS;
-import static utility.SystemLogger.systemLogger;
-import static utility.UserActionHistory.userActions;
 
 public class GUIClinicianPotentialMatches extends UndoableController implements IWindowObserver {
 
@@ -594,8 +592,7 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
                 try {
                     Patient selectedUser = patientDataService.getPatientByNhi(request.getReceiverNhi());
                     patientDataService.save(selectedUser);
-                    Parent parent = screenControl.getTouchParent(potentialMatchesPane);
-                    GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser, parent);
+                    GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser, potentialMatchesPane);
                     controller.setTarget(selectedUser);
                 }
                 catch (Exception e) {
@@ -796,7 +793,6 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
         IAction action = new MultiAction((Patient) target, after1, organReceiver, after2);
         undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.CLINICIANAVAILABLEORGANS);
         userActions.log(Level.INFO, "Assigned organ (" + targetOrgan + ") to patient " + organReceiver.getNhiNumber(), "Attempted to assign organ to patient");
-
         closeMatchWindow();
     }
 
