@@ -208,7 +208,7 @@ public class MapBridge {
      * @throws ApiException - if geocode fails
      * @throws IOException - if geocode fails
      */
-    /*public void checkOrganMatch(String patientNhi) throws InterruptedException, ApiException, IOException {
+    public void checkOrganMatch(String patientNhi) throws InterruptedException, ApiException, IOException {
         Patient patient = patientDataService.getPatientByNhi(patientNhi);
         Set<GlobalEnums.Organ> donations = patient.getDonations()
                 .keySet();
@@ -239,7 +239,7 @@ public class MapBridge {
             }
         }
 
-    }*/
+    }
 
     /**
      * Gets a patient by the nhi
