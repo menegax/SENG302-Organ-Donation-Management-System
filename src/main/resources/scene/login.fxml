@@ -13,7 +13,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-
 <GridPane fx:id="loginPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUILogin" style=" -fx-border-color:black; -fx-border-width: 1; -fx-border-style: solid;">
    <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -41,12 +40,12 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <RadioButton fx:id="patient" mnemonicParsing="false" onAction="#onRadioSelect" prefWidth="120.0" selected="true" text="Patient" GridPane.halignment="RIGHT">
+            <RadioButton fx:id="patient" mnemonicParsing="false" onAction="#onRadioSelect" prefWidth="120.0" text="Patient" GridPane.halignment="RIGHT">
                <toggleGroup>
                   <ToggleGroup fx:id="UserType" />
                </toggleGroup>
             </RadioButton>
-            <RadioButton fx:id="clinician" mnemonicParsing="false" onAction="#onRadioSelect" prefWidth="120.0" text="Clinician" toggleGroup="$UserType" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+            <RadioButton fx:id="clinician" mnemonicParsing="false" onAction="#onRadioSelect" prefWidth="120.0" selected="true" text="Clinician" toggleGroup="$UserType" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
             <RadioButton fx:id="administrator" mnemonicParsing="false" onAction="#onRadioSelect" prefWidth="120.0" text="Administrator" toggleGroup="$UserType" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
          </children>
       </GridPane>
