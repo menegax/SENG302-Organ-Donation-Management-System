@@ -30,7 +30,7 @@ public class SystemLogger {
 
             // Console handler
             Handler console = new ConsoleHandler();
-            console.setLevel(Level.FINE); // TURN ON TO 'ALL' TO LOG ALL LEVELS TO CONSOLE
+            console.setLevel(Level.OFF); // TURN ON TO 'ALL' TO LOG ALL LEVELS TO CONSOLE
             console.setFormatter(new SimpleFormatter(){
                 @Override
                 public String format(LogRecord record){

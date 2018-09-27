@@ -156,7 +156,7 @@ public class MapBridge {
      * Collects the patient list from available organs list
      */
     @SuppressWarnings("unused")
-    public List getAvailableOrgans() {
+    public void getAvailableOrgans() {
         List<PatientOrgan> masterData = new ArrayList<PatientOrgan>();
         List<Patient> deadPatients = patientDataService.getDeadDonors();
         for (Patient patient : deadPatients) {
@@ -182,7 +182,7 @@ public class MapBridge {
             uniqueSetOfPatients.add(aMasterData.getPatient());
         }
         GUIMap.setLastSetOfPatientsParsed(new ArrayList<>(uniqueSetOfPatients));
-        return new ArrayList<>(uniqueSetOfPatients);
+        GUIMap.getJSBridge().call("setPatients", new ArrayList<>(uniqueSetOfPatients));
     }
 
 
@@ -324,7 +324,7 @@ public class MapBridge {
     }
 
     public void getAssignmentsFromNhi(String patientNhi) {
-        List<Patient> patients = new ArrayList<>();
+        Set<Patient> patients = new HashSet<>();
         Patient patient = patientDataService.getPatientByNhi(patientNhi);
         Map<GlobalEnums.Organ, String> donatingOrgans = patient.getDonations();
         for (String nhi : donatingOrgans.values()) {
@@ -340,7 +340,7 @@ public class MapBridge {
                 }
             }
         }
-        GUIMap.getJSBridge().call("showAssignments", patients);
+        GUIMap.getJSBridge().call("showAssignments", new ArrayList<>(patients));
     }
 
     /**
