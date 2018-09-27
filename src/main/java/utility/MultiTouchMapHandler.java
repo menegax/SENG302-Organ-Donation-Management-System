@@ -8,6 +8,8 @@ import javafx.scene.input.TouchEvent;
 import javafx.scene.input.ZoomEvent;
 import javafx.scene.web.WebView;
 
+import java.util.logging.Level;
+
 public class MultiTouchMapHandler extends MultiTouchHandler {
 
     private WebView webViewMap1;
@@ -15,6 +17,8 @@ public class MultiTouchMapHandler extends MultiTouchHandler {
     private Double originalDistance;
     
     private double MAPZOOMFACTOR = 0.3;
+
+    private static String[] bounds;
 
     @Override
     protected void processPaneMomentum() {
@@ -99,15 +103,7 @@ public class MultiTouchMapHandler extends MultiTouchHandler {
     
     @Override
     protected void checkTouchRelease(CustomTouchEvent touchEvent, TouchEvent event) {
-    	boolean noTouches = true;
-    	for(CustomTouchEvent e : touches) {
-    		if(e != null && !e.equals(touchEvent)) {
-    			noTouches = false;
-    		}
-    	}
-    	if(noTouches) {
-    		originalDistance = null;
-    	}
+        originalDistance = null;
     }
     
     @Override
@@ -121,17 +117,43 @@ public class MultiTouchMapHandler extends MultiTouchHandler {
     	//get lat long displacement
     	//move center by displacement
 //        webViewMap1.get
+        try {
+            GUIMap.getJSBridge().call("getMapBounds");
+            Double[] NE = {Double.parseDouble(bounds[0]), Double.parseDouble(bounds[1])};
+            Double[] SW = {Double.parseDouble(bounds[2]), Double.parseDouble(bounds[3])};
+            calculateDistanceChange(NE, SW, previousEvent, currentEvent);
+        } catch (NullPointerException e) {
+            systemLogger.log(Level.FINE, "Accessed map bounds before map initialised");
+        } catch (NumberFormatException e) {
+            systemLogger.log(Level.SEVERE, "Coordinates are not numbers");
+        }
+
     }
-    
-//    @Override
-//    protected void executeZoom(double distance) {
-//        if (originalDistance == null) {
-//            originalDistance = distance;
-//            GUIMap.getJSBridge().call("setJankaOriginal");
-//        }
-////        double currentDistance = distance;
-//        GUIMap.getJSBridge().call("setJankaZoom", distance);
-//    }
+
+    private void calculateDistanceChange(Double[] ne, Double[] sw, CustomTouchEvent previous, CustomTouchEvent current) {
+        Double width = ne[1] - sw[1];
+        Double height = ne[0] - sw[0];
+        Double widthPx = webViewMap1.getWidth();
+        Double heightPx = webViewMap1.getHeight();
+//        Point2D displacement = previous.getCoordinates().subtract(current.getCoordinates());
+        Point2D displacement = new Point2D(current.getCoordinates().getX() - previous.getCoordinates().getX(),
+                current.getCoordinates().getY() - previous.getCoordinates().getY());
+        System.out.println(displacement);
+//        double displacement = MathUtilityMethods.calculateDisplacement(previous.getCoordinates(),
+//                current.getCoordinates());
+        double displacementRatioX = displacement.getX() / widthPx;
+        double displacementRatioY = displacement.getY() / heightPx;
+        Point2D newPoint = new Point2D(displacementRatioX * width / 10, displacementRatioY * height);
+        System.out.println(displacementRatioX);
+        System.out.println(displacementRatioY);
+        System.out.println(newPoint);
+        System.out.println();
+        GUIMap.getJSBridge().call("translateMap", newPoint.getX(), newPoint.getY());
+    }
+
+    public static void setBounds(String[] strings) {
+        bounds = strings;
+    }
 
 
 }

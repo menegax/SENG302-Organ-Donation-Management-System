@@ -1010,3 +1010,17 @@ function showAssignments(_patients) {
     patients = __patients;
     addMarkers(patients.size(), ++markerSetId);
 }
+
+function getMapBounds() {
+    var bounds = map.getBounds();
+    var ne = bounds.getNorthEast(); // LatLng of the north-east corner
+    var sw = bounds.getSouthWest(); // LatLng of the south-west corder
+    mapBridge.setBounds(JSON.stringify([ne, sw]));
+}
+
+function translateMap(long, lat) {
+    var centre = map.getCenter();
+    var newLat = centre.lat() + lat;
+    var newLng = centre.lng() + long;
+    map.setCenter({lat:newLat, lng:newLng});
+}

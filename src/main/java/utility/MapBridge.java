@@ -5,6 +5,7 @@ import controller.GUIHome;
 import controller.GUIMap;
 import controller.ScreenControl;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.shape.Rectangle;
 import model.OrganReceival;
 import model.Patient;
 import model.PatientOrgan;
@@ -257,4 +258,11 @@ public class MapBridge {
         }
         GUIMap.getJSBridge().call("showAssignments", patients);
     }
+
+    public void setBounds(String coords) {
+        coords = coords.replaceAll("\\{|\\}|\\[|\\]|\"lng\":|\"lat\":", "");
+        String[] strings = coords.split(",");
+        MultiTouchMapHandler.setBounds(strings);
+    }
+
 }
