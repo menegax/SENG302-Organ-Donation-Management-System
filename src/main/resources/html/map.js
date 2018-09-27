@@ -1179,3 +1179,22 @@ function translateMap(long, lat) {
     var newLng = centre.lng() + long;
     map.setCenter({lat:newLat, lng:newLng});
 }
+
+function findMarkerClicked(long, lat) {
+    var marks = markers.filter(function(marker) {
+        var leighway = 0.5;
+        return Math.abs(marker.getPosition().lat() - lat) < leighway && Math.abs(marker.getPosition().lng() - long) < leighway;
+    });
+    console.log(marks.length);
+    if(marks !== undefined && marks.length >= 1) {
+        var nhi = marks[0].nhi;
+        infoWindows.forEach(function (iw) {
+            if (iw["nhi"] === nhi) {
+                iw["iwindow"].open(map, marks[0]);
+            }
+        });
+    } else {
+        console.log("weh");
+    }
+}
+

@@ -100,6 +100,16 @@ public class MultiTouchMapHandler extends MultiTouchHandler {
     @Override
     protected void checkTouchRelease(CustomTouchEvent touchEvent, TouchEvent event) {
         originalDistance = null;
+        GUIMap.getJSBridge().call("getMapBounds");
+        Double[] ne = {Double.parseDouble(bounds[0]), Double.parseDouble(bounds[1])};
+        Double[] sw = {Double.parseDouble(bounds[2]), Double.parseDouble(bounds[3])};
+        Double width = (sw[1]) - (ne[1]);
+        Double height = ne[0] - sw[0];
+        Double widthPx = webViewMap1.getWidth();
+        Double heightPx = webViewMap1.getHeight();
+        double displacementRatioX = touchEvent.getCoordinates().getX() / widthPx * width;
+        double displacementRatioY = touchEvent.getCoordinates().getY() / heightPx * height;
+        GUIMap.getJSBridge().call("findMarkerClicked", displacementRatioX, displacementRatioY);
     }
 
     /**
@@ -136,17 +146,31 @@ public class MultiTouchMapHandler extends MultiTouchHandler {
     private void calculateDistanceChange(Double[] ne, Double[] sw, CustomTouchEvent previous, CustomTouchEvent current) {
         Double width = Math.abs(sw[1]) - Math.abs(ne[1]);
         Double height = ne[0] - sw[0];
+        Point2D newPoint = calculateLongLat(ne, sw, previous, current);
+        if(Math.round(width) >= 331 && Math.round(height) >= 10 ) {
+            newPoint = new Point2D(0,0);
+        }
+        GUIMap.getJSBridge().call("translateMap", newPoint.getX(), newPoint.getY());
+    }
+
+    /**
+     * Calculates longitude and latitude of new point moved
+     * @param ne north east corner coordinates
+     * @param sw south west corner coordinates
+     * @param previous previous touch event
+     * @param current current touch event
+     * @return Point2D new point
+     */
+    private Point2D calculateLongLat(Double[] ne, Double[] sw, CustomTouchEvent previous, CustomTouchEvent current) {
+        Double width = Math.abs(sw[1]) - Math.abs(ne[1]);
+        Double height = ne[0] - sw[0];
         Double widthPx = webViewMap1.getWidth();
         Double heightPx = webViewMap1.getHeight();
         Point2D displacement = new Point2D(current.getCoordinates().getX() - previous.getCoordinates().getX(),
                 current.getCoordinates().getY() - previous.getCoordinates().getY());
         double displacementRatioX = displacement.getX() / widthPx;
         double displacementRatioY = displacement.getY() / heightPx;
-        Point2D newPoint = new Point2D(displacementRatioX * width, displacementRatioY * height);
-        if(Math.round(width) >= 331 && Math.round(height) >= 10 ) {
-            newPoint = new Point2D(0,0);
-        }
-        GUIMap.getJSBridge().call("translateMap", newPoint.getX(), newPoint.getY());
+        return new Point2D(displacementRatioX * width, displacementRatioY * height);
     }
 
     /**
