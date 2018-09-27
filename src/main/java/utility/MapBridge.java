@@ -127,7 +127,7 @@ public class MapBridge {
      * Collects the patient list from available organs list
      */
     @SuppressWarnings("unused")
-    public List getAvailableOrgans() {
+    public void getAvailableOrgans() {
         List<PatientOrgan> masterData = new ArrayList<PatientOrgan>();
         List<Patient> deadPatients = patientDataService.getDeadDonors();
         for (Patient patient : deadPatients) {
@@ -152,7 +152,7 @@ public class MapBridge {
         for (PatientOrgan aMasterData : masterData) {
             uniqueSetOfPatients.add(aMasterData.getPatient());
         }
-        return new ArrayList<>(uniqueSetOfPatients);
+        GUIMap.getJSBridge().call("setPatients", new ArrayList<>(uniqueSetOfPatients));
     }
 
 
@@ -169,47 +169,6 @@ public class MapBridge {
             SystemLogger.systemLogger.log(Level.WARNING, "GUIMAP not instantiated", this);
         }
     }
-
-    /**
-     * Checks if the donor patient has organs that have been matched to a recipient patient, if so, triggers js method to
-     * create a line between two markers
-     * @param patientNhi - patient nhi
-     * @throws InterruptedException -  if geocode fails
-     * @throws ApiException - if geocode fails
-     * @throws IOException - if geocode fails
-     */
-    /*public void checkOrganMatch(String patientNhi) throws InterruptedException, ApiException, IOException {
-        Patient patient = patientDataService.getPatientByNhi(patientNhi);
-        Set<GlobalEnums.Organ> donations = patient.getDonations()
-                .keySet();
-
-        if (donations.size() > 0) {
-            for (GlobalEnums.Organ organ : donations) {
-                String recipientNhi = patient.getDonations()
-                        .get(organ);
-                if (recipientNhi != null) {
-                    Patient recipient = patientDataService.getPatientByNhi(recipientNhi);
-                    PatientOrgan targetPatientOrgan = new PatientOrgan(patient, organ);
-                    targetPatientOrgan.startTask();
-                    targetPatientOrgan.getProgressTask()
-                            .setProgressBar(new ProgressBar()); //dummy progress task
-                    CachedThreadPool.getCachedThreadPool()
-                            .getThreadService()
-                            .submit(targetPatientOrgan.getProgressTask());
-
-                    GUIMap.getJSBridge()
-                            .call("createMatchedOrganArrow",
-                                    patient.getCurrentLocation(),
-                                    recipient.getCurrentLocation(),
-                                    patientNhi,
-                                    recipient.getNhiNumber(),
-                                    organ.toString());
-
-                }
-            }
-        }
-
-    }*/
 
     /**
      * Gets a patient by the nhi
@@ -239,7 +198,7 @@ public class MapBridge {
     }
 
     public void getAssignmentsFromNhi(String patientNhi) {
-        List<Patient> patients = new ArrayList<>();
+        Set<Patient> patients = new HashSet<>();
         Patient patient = patientDataService.getPatientByNhi(patientNhi);
         Map<GlobalEnums.Organ, String> donatingOrgans = patient.getDonations();
         for (String nhi : donatingOrgans.values()) {
@@ -255,6 +214,6 @@ public class MapBridge {
                 }
             }
         }
-        GUIMap.getJSBridge().call("showAssignments", patients);
+        GUIMap.getJSBridge().call("showAssignments", new ArrayList<>(patients));
     }
 }
