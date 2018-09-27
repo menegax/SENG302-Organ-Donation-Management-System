@@ -15,6 +15,7 @@ import utility.SystemLogger;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 
@@ -44,7 +45,18 @@ public class GUIMap {
 
     private MultiTouchMapHandler touchMapHandler;
 
+    private static ArrayList<Patient> lastSetOfPatientsParsed;
+
+    public static ArrayList<Patient> getLastSetOfPatientsParsed() {
+        return lastSetOfPatientsParsed;
+    }
+
+    public static void setLastSetOfPatientsParsed(ArrayList<Patient> patients) {
+        lastSetOfPatientsParsed = patients;
+    }
+
     public static JSObject getJSBridge(){ return jsBridge; }
+
 
     /**
      * Loads the patients provided onto the map
@@ -56,6 +68,7 @@ public class GUIMap {
         if (jsBridge != null) {
             jsBridge.call("setPatients", patients);
         }
+        setLastSetOfPatientsParsed(new ArrayList<Patient>(patients));
     }
 
     /**

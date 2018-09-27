@@ -367,7 +367,7 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
                         ((ScreenControlTouch) screenControl).setCSS();
                     }
                 } catch (IOException e) {
-                    systemLogger.log(SEVERE, "Failed to create tab", e);
+                    systemLogger.log(SEVERE, "Failed to create tab", e.getMessage());
                 }
             });
         horizontalTabPane.getTabs().add(newTab);

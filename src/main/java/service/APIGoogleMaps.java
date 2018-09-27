@@ -5,6 +5,7 @@ import com.google.maps.GeocodingApi;
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.GeocodingResult;
 import com.google.maps.model.LatLng;
+import model.Patient;
 
 import java.io.IOException;
 
@@ -52,5 +53,4 @@ public class APIGoogleMaps {
             return null;
         }
     }
-
 }
