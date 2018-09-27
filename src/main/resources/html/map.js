@@ -159,7 +159,7 @@ function setUpFilterAreaButton() {
 function setUpViewAvailableOrgansButton() {
     // view available organs button
     google.maps.event.addListenerOnce(map, 'idle', function () {
-        // setMapDragEnd();
+        setMapDragEnd();
         document.getElementById('availableOrgansView').addEventListener('click', function () {
             mapBridge.getAvailableOrgans();
         });
