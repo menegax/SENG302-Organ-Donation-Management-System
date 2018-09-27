@@ -11,8 +11,6 @@ var potentialMatches = [];
 var donations = [];
 var currentMarker;
 var currentOrgan;
-var donorPatientNhi;
-var receiverPatientNhi;
 var NORTHBOUND = -33;
 var SOUTHBOUND = -48;
 var EASTBOUND = 180;
@@ -20,7 +18,6 @@ var WESTBOUND = 165;
 var rectangle = [];
 var donorPatientNhi;
 var receiverPatientNhi;
-var dropDownDonations = [];
 var isViewingPotentialMatches = false;
 var originalZoom;
 var defaultZoom = 6;
@@ -37,7 +34,6 @@ var icons = {
     }
 };
 
-var isViewingPotentialMatches = false;
 
 /**
  * Initialize method
@@ -68,7 +64,7 @@ function resetMap() {
  * Sets the map to default center position and zoom
  */
 function centerAndZoomMap() {
-    map.setCenter(defaultCenterPos); //defs good
+    map.setCenter(defaultCenterPos);
     map.setZoom(defaultZoom);
 }
 
@@ -168,7 +164,6 @@ function setUpViewAvailableOrgansButton() {
             successCount = 0;
             markerSetId++;
             addMarkers(patients.size(), markerSetId);
-            showGenericNotification('Populating map...');
         });
         document.getElementById('cancelAssignmentBtn').addEventListener('click', function () {
             isViewingPotentialMatches = false;
@@ -550,7 +545,7 @@ function populatePotentialMatches(patientNhi, donor) {
         makeAndAttachInfoWindow(donor, donorMarker);
     }
 
-    showGenericNotification(patients.size() - 1 + " potential match(es) found. Click on a match to assign the organ.");
+    showGenericNotification(patients.size() - 1 + " potential matches found. Click on a match to assign the organ.");
 }
 
 /**
@@ -738,7 +733,7 @@ function addMarkers(i, id) {
     addMarker(patients.get(i - 1));
     setTimeout(function () {
         addMarkers(--i, id);
-    }, 700);
+    }, 700); // google maps delay when placing markers
 }
 
 /**
