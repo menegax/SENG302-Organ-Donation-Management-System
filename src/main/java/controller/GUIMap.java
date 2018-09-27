@@ -4,11 +4,13 @@ import com.sun.javafx.webkit.WebConsoleListener;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import model.Patient;
 import netscape.javascript.JSObject;
 import utility.MapBridge;
+import utility.MultiTouchMapHandler;
 import utility.SystemLogger;
 
 import java.util.ArrayList;
@@ -21,6 +23,9 @@ import java.util.logging.Level;
  * and the javascript bridge
  */
 public class GUIMap {
+
+    @FXML
+    public GridPane mapPane;
 
     @FXML
     private WebView webViewMap1;
@@ -36,6 +41,8 @@ public class GUIMap {
     private Double originalDistance;
 
     private Collection<Patient> patients = new ArrayList<>();
+
+    private MultiTouchMapHandler touchMapHandler;
 
     public static JSObject getJSBridge(){ return jsBridge; }
 
@@ -61,6 +68,10 @@ public class GUIMap {
 
         setUpWebEngine();
         setUpJsLogging();
+        if(screenControl.isTouch()) {
+            touchMapHandler = new MultiTouchMapHandler();
+            touchMapHandler.initialiseHandler(webViewMap1);
+        }
     }
 
 
@@ -85,33 +96,6 @@ public class GUIMap {
         // What to do with console.log statements
         WebConsoleListener.setDefaultListener((webView, message, lineNumber, sourceId) -> SystemLogger.systemLogger.log(Level.FINE, message));
 
-        webViewMap1.setOnTouchReleased((event -> {
-            originalDistance = null;
-            //jsBridge.call("setJankaOriginal", null);
-        }));
-
-        webViewMap1.setOnTouchMoved((event -> {
-            double ZOOMFACTOR = 0.3;
-            if (screenControl.isTouch()) {
-                if (event.getTouchCount() == 2) {
-                    if(event.getTouchPoints().get(0).getTarget().equals(webViewMap1) &&
-                            event.getTouchPoints().get(1).getTarget().equals(webViewMap1)) {
-                        Point2D touchOne = new Point2D(event.getTouchPoints().get(0).getX(),
-                                event.getTouchPoints().get(0).getY());
-                        Point2D touchTwo = new Point2D(event.getTouchPoints().get(1).getX(),
-                                event.getTouchPoints().get(1).getY());
-                        if (originalDistance == null) {
-                            originalDistance = Math.sqrt(Math.pow(touchOne.getX() - touchTwo.getX(), 2) +
-                                    Math.pow(touchOne.getY() - touchTwo.getY(), 2));
-                            jsBridge.call("setJankaOriginal");
-                        }
-                        double currentDistance = Math.sqrt(Math.pow(touchOne.getX() - touchTwo.getX(), 2) +
-                                Math.pow(touchOne.getY() - touchTwo.getY(), 2));
-                        jsBridge.call("setJankaZoom", Math.pow(currentDistance / originalDistance, ZOOMFACTOR));
-                    }
-                }
-            }
-        }));
     }
 
 
