@@ -54,6 +54,8 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
 
     private PatientDataService patientDataService = new PatientDataService();
 
+    private SortedList<OrganWaitlist.OrganRequest> sortedData;
+
     /**
      * Initializes waiting list screen by populating table and initializing a double click action
      * to view a patient's profile.
@@ -143,7 +145,7 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
         FilteredList<OrganWaitlist.OrganRequest> filteredData = filterMasterData();
 
         // wrap the FilteredList in a SortedList.
-        SortedList<OrganWaitlist.OrganRequest> sortedData = new SortedList<>(filteredData);
+        sortedData = new SortedList<>(filteredData);
 
         // bind the SortedList comparator to the TableView comparator.
         sortedData.comparatorProperty().bind(waitingListTableView.comparatorProperty());
@@ -224,7 +226,7 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
     public void viewOnMap() {
         List<Patient> patients = new ArrayList<>();
         boolean found = false;
-        for (OrganWaitlist.OrganRequest aMasterData : masterData) {
+        for (OrganWaitlist.OrganRequest aMasterData : sortedData) {
             for (Patient patient : patients) {
                 found = false;
                 if (patient.getNhiNumber().equals(aMasterData.getReceiverNhi())) {
