@@ -154,17 +154,7 @@ function setUpViewAvailableOrgansButton() {
     google.maps.event.addListenerOnce(map, 'idle', function () {
         setMapDragEnd();
         document.getElementById('availableOrgansView').addEventListener('click', function () {
-            resetMap();
-            failedPatientArray = [];
-            markers.forEach(function (marker) {
-                marker.setMap(null);
-            });
-            markers = [];
-            patients = mapBridge.getAvailableOrgans();
-            successCount = 0;
-            markerSetId++;
-            addMarkers(patients.size(), markerSetId);
-            showGenericNotification('Populating map...');
+            mapBridge.getAvailableOrgans();
         });
     });
 }
@@ -714,7 +704,10 @@ function setPatients(newPatients) {
         return;
     }
     currentMarker = undefined;
-    patients = newPatients;
+    patients = [];
+    for (var i=0; i<newPatients.size(); i++) {
+        patients.push(newPatients.get(i));
+    }
     hideNotification();
     resetMap();
     clearMarkers();
@@ -724,7 +717,7 @@ function setPatients(newPatients) {
     infoWindows = [];
     markerSetId++;
     filterAreaSet = false;
-    addMarkers(patients.size(), markerSetId);
+    addMarkers(patients.length, markerSetId);
 }
 
 /**
@@ -734,7 +727,7 @@ function setPatients(newPatients) {
  */
 function addMarkers(i, id) {
     if (i < 1) {
-        showNotification(successCount, patients.size());
+        showNotification(successCount, patients.length);
         // markers.forEach(function (marker) {
         //     mapBridge.checkOrganMatch(marker.nhi);
         // });
@@ -743,7 +736,8 @@ function addMarkers(i, id) {
     if (id !== markerSetId) {
         return; //break task
     }
-    addMarker(patients.get(i - 1));
+    addMarker(patients[i - 1]);
+
     setTimeout(function () {
         addMarkers(--i, id);
     }, 700);
@@ -764,11 +758,9 @@ function clearMarkers() {
  * Clear circles from the map
  */
 function clearCircles() {
-    if (circles.length > 0) {
-        circles.forEach(function (circle) {
-            circle.setMap(null);
-        });
-    }
+    circles.forEach(function (circle) {
+        circle.setMap(null);
+    });
     circles = [];
 }
 
@@ -928,8 +920,7 @@ function reloadInfoWindow(patient) {
  */
 function mapInfoWindowToPatient(infoWindow, patient) {
     var hasExistingInfoWindow = false;
-    var i;
-    for (i = 0; i < infoWindows.length; i++) {
+    for (var i = 0; i < infoWindows.length; i++) {
         if (infoWindows[i]["nhi"] === patient.getNhiNumber()) {
             hasExistingInfoWindow = true;
             break;
@@ -998,17 +989,28 @@ function loadActiveDonations(patientOrgans) {
     }
 }
 
+
+/**
+ * Called by Java. adds markers for any patients that are not already loaded on the map
+ * @param _patients
+ */
 function showAssignments(_patients) {
-    var __patients = _patients;
+    var __patients = [];
     for (var i=0; i< _patients.size(); i++) {
-        if (markers.some(function(marker) {
-            return marker.nhi === _patients.get(i).getNhiNumber();
-        })) {
-            __patients.remove(_patients.get(i))
+        __patients.push(_patients.get(i));
+    }
+    console.log(__patients.length);
+    for (var i=0; i < _patients.size(); i++) {
+        for (var o=0; o< markers.length; o++) {
+            if (markers[o].nhi === _patients.get(i).getNhiNumber()) {
+                __patients = __patients.filter(function(value, index, arr) {
+                    return value.getNhiNumber() !== _patients.get(i).getNhiNumber();
+                });
+            }
         }
     }
     patients = __patients;
-    addMarkers(patients.size(), ++markerSetId);
+    addMarkers(__patients.length, ++markerSetId);
 }
 
 function getMapBounds() {
