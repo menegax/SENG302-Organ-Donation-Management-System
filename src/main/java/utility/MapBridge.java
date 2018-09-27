@@ -1,23 +1,23 @@
 package utility;
 
-import com.google.maps.errors.ApiException;
-import controller.*;
-import javafx.collections.ObservableList;
+import static utility.MathUtilityMethods.deg2rad;
+import static utility.UserActionHistory.userActions;
+
 import com.google.maps.errors.ApiException;
 import controller.GUIHome;
 import controller.GUIMap;
 import controller.ScreenControl;
+import controller.UndoRedoControl;
+import controller.UserControl;
+import javafx.collections.ObservableList;
 import javafx.scene.control.ProgressBar;
 import model.Clinician;
 import model.OrganReceival;
 import model.Patient;
 import model.PatientOrgan;
-import org.mockito.internal.matchers.Or;
-import service.APIGoogleMaps;
 import service.OrganWaitlist;
 import service.PatientDataService;
 import service.interfaces.IPatientDataService;
-import javafx.geometry.Point2D;
 import utility.undoRedo.IAction;
 import utility.undoRedo.MultiAction;
 
@@ -25,14 +25,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
-import java.io.IOException;
-import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static utility.MathUtilityMethods.deg2rad;
-import static utility.UserActionHistory.userActions;
 
 /**
  * Provides the map javascript access to the java codebase
@@ -369,4 +365,5 @@ public class MapBridge {
         UndoRedoControl.getUndoRedoControl().addAction(action, undoableScreen, userControl.getLoggedInUser());
         userActions.log(Level.INFO, "Assigned organ (" + organ + ") to patient " + receiver.getNhiNumber(), "Attempted to assign organ to patient");
     }
+
 }

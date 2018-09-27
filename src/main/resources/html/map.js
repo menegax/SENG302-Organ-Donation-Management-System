@@ -584,7 +584,14 @@ function populatePotentialMatches(patientNhi, donor) {
         infoWindows = [];
         markerSetId++;
         addMarkers(patients.size(), markerSetId);
-        showGenericNotification(patients.size() + " potential match(es) found");
+
+        if (patients.size() == 0) {
+            showGenericNotification("No potential matches found");
+        } else if (patients.size() == 1) {
+            showGenericNotification(patients.size() + " potential match found");
+        } else if (patients.size() > 1) {
+            showGenericNotification(patients.size() + " potential matches found");
+        }
         potentialMatches = [];
         donorMarker.setMap(map);
         markers.push(donorMarker);
@@ -647,6 +654,8 @@ function assignOrgan() {
     mapBridge.populateLastSetOfPatients();
     showGenericNotification("Successfully assigned " + currentOrgan + " from " + donorPatientNhi + " to " + receiverPatientNhi);
     receiverPatientNhi = undefined;
+    isViewingPotentialMatches = false;
+    showGenericNotification("Successfully assigned " + currentOrgan + " from " + donorPatientNhi + " to " + receiverPatientNhi);
 }
 
 /**
