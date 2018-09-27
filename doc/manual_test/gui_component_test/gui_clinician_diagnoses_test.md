@@ -76,5 +76,8 @@ Add an invalid disease name: Fail - message indicates a duplicated name, not an 
 
 Delete the diagnosis: Pass
 
+### 27/09/2018 - Aidan
+
+Add an invalid disease name: Pass
 
 **ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**
