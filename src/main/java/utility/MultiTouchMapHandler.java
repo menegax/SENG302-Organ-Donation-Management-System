@@ -134,12 +134,8 @@ public class MultiTouchMapHandler extends MultiTouchHandler {
      * @param current current touch event
      */
     private void calculateDistanceChange(Double[] ne, Double[] sw, CustomTouchEvent previous, CustomTouchEvent current) {
-        System.out.println(ne[0] + ", " + ne[1]);
-        System.out.println(sw[0] + ", " + sw[1]);
         Double width = Math.abs(sw[1]) - Math.abs(ne[1]);
         Double height = ne[0] - sw[0];
-        System.out.println(width);
-        System.out.println(height);
         Double widthPx = webViewMap1.getWidth();
         Double heightPx = webViewMap1.getHeight();
         Point2D displacement = new Point2D(current.getCoordinates().getX() - previous.getCoordinates().getX(),
@@ -147,7 +143,6 @@ public class MultiTouchMapHandler extends MultiTouchHandler {
         double displacementRatioX = displacement.getX() / widthPx;
         double displacementRatioY = displacement.getY() / heightPx;
         Point2D newPoint = new Point2D(displacementRatioX * width, displacementRatioY * height);
-        System.out.println();
         if(Math.round(width) >= 331 && Math.round(height) >= 10 ) {
             newPoint = new Point2D(0,0);
         }
