@@ -649,8 +649,8 @@ function getPotentialMatchesContent(patient) {
 function assignOrgan() {
     mapBridge.assignOrgan(donorPatientNhi, receiverPatientNhi, currentOrgan);
     mapBridge.populateLastSetOfPatients();
-    receiverPatientNhi = undefined;
     showGenericNotification("Successfully assigned " + currentOrgan + " from " + donorPatientNhi + " to " + receiverPatientNhi);
+    receiverPatientNhi = undefined;
 }
 
 /**
@@ -1004,7 +1004,7 @@ function reloadInfoWindow(patient) {
         });
         if (matchedMarkers.length > 0) {
             matchedMarkers[0].setOptions({
-                icon: icons.deceased
+                icon: icons.deceased.icon
             });
         }
     }
