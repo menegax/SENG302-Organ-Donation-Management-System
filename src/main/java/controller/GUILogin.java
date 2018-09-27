@@ -92,6 +92,9 @@ public class GUILogin implements IWindowObserver {
     @FXML
     public void goToRegister() {
         screenControl.show("/scene/userRegister.fxml", false, null, null, loginPane);
+        if (!screenControl.isTouch()) {
+            screenControl.closeWindow(loginPane);
+        }
     }
 
     /**
