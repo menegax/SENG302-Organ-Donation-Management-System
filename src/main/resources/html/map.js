@@ -42,11 +42,32 @@ var icons = {
  */
 function init() {
     setUpMap();
-    setUpLegend(icons);
+    setUpLegend();
     setUpViewAvailableOrgansButton();
     setUpFilterAreaButton();
     setUpFilterClearAreaButton();
     setUpResetMapButton();
+}
+
+/**
+ * Sets up the map with styling and etc.
+ */
+function setUpMap() {
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: defaultCenterPos,
+        zoom: defaultZoom,
+        minZoom: 6, //zooming out, lower, the further you can zoom out
+        maxZoom: 12,
+        disableDefaultUI: true,
+        scaleControl: true,
+        zoomControl: true,
+        heading: 90,
+        tilt: 45,
+        clickableIcons: false,
+        mapTypeId: 'roadmap',
+        gestureHandling: 'cooperative',
+        styles: getMapCustomStyle()
+    });
 }
 
 /**
@@ -75,27 +96,6 @@ function resetMap() {
 function centerAndZoomMap() {
     map.setCenter(defaultCenterPos);
     map.setZoom(defaultZoom);
-}
-
-/**
- * Sets up the map with styling and etc.
- */
-function setUpMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: defaultCenterPos,
-        zoom: defaultZoom,
-        minZoom: 6, //zooming out, lower, the further you can zoom out
-        maxZoom: 12,
-        disableDefaultUI: true,
-        scaleControl: true,
-        zoomControl: true,
-        heading: 90,
-        tilt: 45,
-        clickableIcons: false,
-        mapTypeId: 'roadmap',
-        gestureHandling: 'cooperative',
-        styles: getMapCustomStyle()
-    });
 }
 
 /**
@@ -162,7 +162,9 @@ function setUpViewAvailableOrgansButton() {
     // view available organs button
     google.maps.event.addListenerOnce(map, 'idle', function () {
         setMapDragEnd();
-        mapBridge.getAvailableOrgans();
+        document.getElementById('availableOrgansView').addEventListener('click', function () {
+            mapBridge.getAvailableOrgans();
+        });
         document.getElementById('cancelAssignmentBtn').addEventListener('click', function () {
             isViewingPotentialMatches = false;
             mapBridge.populateLastSetOfPatients();
