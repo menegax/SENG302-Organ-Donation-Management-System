@@ -2,6 +2,7 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import model.Administrator;
@@ -12,12 +13,14 @@ import service.interfaces.IClinicianDataService;
 import utility.GlobalEnums;
 import utility.undoRedo.IAction;
 import utility.undoRedo.SingleAction;
+import utility.undoRedo.StatesHistoryScreen;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIClinicianProfile extends TargetedController {
+public class GUIClinicianProfile extends UndoableController {
     @FXML
     private GridPane clinicianProfilePane;
 
@@ -66,6 +69,8 @@ public class GUIClinicianProfile extends TargetedController {
                 deleteButton.setDisable(true);
             }
         }
+        controls = new ArrayList<Control>(){{add(nameTxt);}};
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.CLINICIANPROFILE, target);
     }
 
     /**
@@ -101,7 +106,13 @@ public class GUIClinicianProfile extends TargetedController {
         if (((Clinician) target).getStaffID() != 0) {
             IAction action = new SingleAction((target), null);
             new AdministratorDataService().deleteUser(target);
-            undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS);
+            GlobalEnums.UndoableScreen undoableScreen;
+            if (userControl.getLoggedInUser() instanceof Administrator) {
+                undoableScreen = GlobalEnums.UndoableScreen.ADMINISTRATORPROFILE;
+            } else {
+                undoableScreen = GlobalEnums.UndoableScreen.CLINICIANPROFILE;
+            }
+            undoRedoControl.addAction(action, undoableScreen, userControl.getLoggedInUser());
             userActions.log(Level.INFO, "Successfully deleted clinician profile", new String[]{"Attempted to delete clinician profile", String.valueOf(((Clinician) target).getStaffID())});
             screenControl.closeWindow(clinicianProfilePane);
         }

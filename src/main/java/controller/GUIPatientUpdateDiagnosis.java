@@ -317,7 +317,7 @@ public class GUIPatientUpdateDiagnosis extends TargetedController {
             }
             patientClone.sortDiseases();
             IAction action = new SingleAction(target, patientClone);
-            undoRedoControl.addAction(action, CLINICIANDIAGNOSIS);
+            undoRedoControl.addAction(action, CLINICIANDIAGNOSIS, target);
 
             screenControl.closeWindow(diagnosisUpdatePane);
         } else {

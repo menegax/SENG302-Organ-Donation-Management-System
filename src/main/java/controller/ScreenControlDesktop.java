@@ -1,5 +1,9 @@
 package controller;
 
+import static java.util.logging.Level.SEVERE;
+import static utility.SystemLogger.systemLogger;
+import static utility.UserActionHistory.userActions;
+
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -7,17 +11,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import javafx.geometry.*;
 import model.User;
 import service.UserDataService;
 import utility.undoRedo.UndoableWrapper;
 
 import java.io.IOException;
 import java.util.logging.Level;
-
-import static java.util.logging.Level.*;
-import static utility.SystemLogger.systemLogger;
-import static utility.UserActionHistory.userActions;
 
 public class ScreenControlDesktop extends ScreenControl {
     private static ScreenControlDesktop screenControl;
@@ -77,7 +76,7 @@ public class ScreenControlDesktop extends ScreenControl {
                     setMapOpen(false);
                 });
             }
-            systemLogger.log(Level.INFO, "Showing new desktop stage");
+            systemLogger.log(Level.FINER, "Showing new desktop stage");
             return controller;
         } catch (IOException e) {
             userActions.log(Level.SEVERE, "Unable to loadController window", "Attempted to loadController fxml: " + fxml);
