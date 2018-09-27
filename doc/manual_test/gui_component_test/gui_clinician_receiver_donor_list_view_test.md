@@ -65,4 +65,7 @@ Ensure that organs highlighted if patient is donating and receiving: Pass
 
 Ensure that donating list and receiving lists are segregated: Pass
 
+###27/09/2018 - Aidan
+
+Ensure that organs are listed on the donating listview: Pass
 **ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**
