@@ -40,6 +40,7 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
      * @param name      - The name of the patient requesting an organ.
      * @param organ     - The organ requested.
      * @param date      - The date of the request.
+	 * @param address   - The address of the request
      * @param region    - The region of the organ request.
      * @param nhi       - The NHI of the patient requesting an organ.
 	 * @param address   - The address of the patientorgan
@@ -119,9 +120,7 @@ public class OrganWaitlist implements Iterable<OrganWaitlist.OrganRequest> {
 			if (getClass() != other.getClass()) return false;
 			OrganRequest otherRequest = (OrganRequest) other;
 			if (nhi.equals(otherRequest.getReceiverNhi())) {
-				if (organ.equals(otherRequest.getRequestedOrgan())) {
-					return true;
-				}
+				return organ.equals(otherRequest.getRequestedOrgan());
 			}
 			return false;
 		}

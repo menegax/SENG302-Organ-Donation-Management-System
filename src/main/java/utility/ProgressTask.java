@@ -1,5 +1,9 @@
 package utility;
 
+import static java.time.temporal.ChronoUnit.HOURS;
+import static java.time.temporal.ChronoUnit.MINUTES;
+import static java.time.temporal.ChronoUnit.SECONDS;
+
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.ProgressBar;
@@ -8,10 +12,10 @@ import model.PatientOrgan;
 
 import java.time.LocalDateTime;
 
-import static java.time.temporal.ChronoUnit.*;
-
 
 public class ProgressTask extends Task<Void> {
+
+    private String color;
 
     private ProgressBar progressBar;
 
@@ -25,7 +29,6 @@ public class ProgressTask extends Task<Void> {
 
     private boolean interrupted;
 
-    private String color;
 
     /**
      * Constructor for the ProgressTask
