@@ -265,7 +265,6 @@ public class MapBridge {
                 patients.add(request.getReceiver());
             }
         }
-        System.out.println(patients.size());
         if (patients.size() > 0) {
             GUIMap.getJSBridge().setMember("patients", patients);
             GUIMap.getJSBridge().setMember("potentialMatches", patients);
