@@ -44,14 +44,22 @@ public class MapBridge {
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private UserControl userControl = UserControl.getUserControl();
+
     private int LENGTHOFNZ = 1500000;
 
     private Logger systemLogger = SystemLogger.systemLogger;
 
+
+    /**
+     * Gets the last set of patients from the map and sets it again on the map
+     */
+    @SuppressWarnings("unused")
     public void populateLastSetOfPatients() {
         List lastSetOfPatients = GUIMap.getLastSetOfPatientsParsed();
-        GUIMap.getJSBridge().call("setPatients", lastSetOfPatients);
+        GUIMap.getJSBridge()
+                .call("setPatients", lastSetOfPatients);
     }
+
 
     /**
      * Opens the patient profile in a new window
@@ -64,6 +72,7 @@ public class MapBridge {
         GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, null, patient, null);
         controller.setTarget(patient);
     }
+
 
     /**
      * Calculates marker radii
@@ -79,12 +88,18 @@ public class MapBridge {
 
         PatientOrgan targetPatientOrgan = new PatientOrgan(patient, organ);
         targetPatientOrgan.startTask();
-        targetPatientOrgan.getProgressTask().setProgressBar(new ProgressBar()); //dummy progress task
+        targetPatientOrgan.getProgressTask()
+                .setProgressBar(new ProgressBar()); //dummy progress task
         radiiTask = targetPatientOrgan.getProgressTask();
-        CachedThreadPool.getCachedThreadPool().getThreadService().submit(radiiTask);
+        CachedThreadPool.getCachedThreadPool()
+                .getThreadService()
+                .submit(radiiTask);
         String remainingTime = radiiTask.getMessage();
         double remaining = 0;
-        String organStr = organ.toString().substring(0,1).toUpperCase() + organ.toString().substring(1);
+        String organStr = organ.toString()
+                .substring(0, 1)
+                .toUpperCase() + organ.toString()
+                .substring(1);
         if (!(remainingTime.equals("Cannot calculate")) && !remainingTime.equals("")) {
             String[] times = remainingTime.split(":");
             remaining += Integer.parseInt(times[0]) * 3600;
@@ -97,44 +112,55 @@ public class MapBridge {
             }
             radius = remaining * heloTravelSpeedMps;
             rad = radius;
-            GUIMap.getJSBridge().call("createMarkerRadii", radius, radiiTask.getColor(), organStr);
-        } else {
-            GUIMap.getJSBridge().call("createMarkerRadii", radius, "#008000", organStr);
+            GUIMap.getJSBridge()
+                    .call("createMarkerRadii", radius, radiiTask.getColor(), organStr);
         }
-        radiiTask.messageProperty().addListener((observable, oldValue, newValue) -> {
-            if (!oldValue.equals("")) { // first circle always gives green
-                double rem = 0;
-                String[] time = newValue.split(":");
-                rem += Integer.parseInt(time[0]) * 3600;
-                rem += Integer.parseInt(time[1]) * 60;
-                rem += Integer.parseInt(time[2]);
-                rem = rem - organLoadTime - organUnloadtime;
-                if (rem < 0) {
-                    rem = 0;
-                }
-                rad = rem * heloTravelSpeedMps;
+        else {
+            GUIMap.getJSBridge()
+                    .call("createMarkerRadii", radius, "#008000", organStr);
+        }
+        radiiTask.messageProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    if (!oldValue.equals("")) { // first circle always gives green
+                        double rem = 0;
+                        String[] time = newValue.split(":");
+                        rem += Integer.parseInt(time[0]) * 3600;
+                        rem += Integer.parseInt(time[1]) * 60;
+                        rem += Integer.parseInt(time[2]);
+                        rem = rem - organLoadTime - organUnloadtime;
+                        if (rem < 0) {
+                            rem = 0;
+                        }
+                        rad = rem * heloTravelSpeedMps;
 
-                if (rad > LENGTHOFNZ) {
-                    rad = LENGTHOFNZ;
-                }
-                String color = targetPatientOrgan.getProgressTask().getColor();
-                GUIMap.getJSBridge().call("updateMarkerRadii", rad, color, organStr);
-            }
-        });
+                        if (rad > LENGTHOFNZ) {
+                            rad = LENGTHOFNZ;
+                        }
+                        String color = targetPatientOrgan.getProgressTask()
+                                .getColor();
+                        GUIMap.getJSBridge()
+                                .call("updateMarkerRadii", rad, color, organStr);
+                    }
+                });
     }
 
 
     /**
      * Retrieves the active donations of the given patient and adds it to the master data
+     *
      * @param nhi the NHI of the patient
      */
+    @SuppressWarnings("unused")
     public void getPatientActiveDonations(String nhi) {
         List<PatientOrgan> masterData = new ArrayList<>();
         List<Patient> deadPatients = patientDataService.getDeadDonors();
         for (Patient patient : deadPatients) {
-            if (patient.getDeathDate() != null && patient.getNhiNumber().equals(nhi)) {
-                for (GlobalEnums.Organ organ : patient.getDonations().keySet()) {
-                    if (patient.getDonations().get(organ) == null) {
+            if (patient.getDeathDate() != null && patient.getNhiNumber()
+                    .equals(nhi)) {
+                for (GlobalEnums.Organ organ : patient.getDonations()
+                        .keySet()) {
+                    if (patient.getDonations()
+                            .get(organ) == null) {
                         PatientOrgan patientOrgan = new PatientOrgan(patient, organ);
                         if (!masterData.contains(patientOrgan)) {
                             if (patientOrgan.timeRemaining() < 0) {
@@ -145,8 +171,10 @@ public class MapBridge {
                 }
             }
         }
-        GUIMap.getJSBridge().call("loadActiveDonations", masterData);
+        GUIMap.getJSBridge()
+                .call("loadActiveDonations", masterData);
     }
+
 
     /**
      * Collects the patient list from available organs list
@@ -178,12 +206,14 @@ public class MapBridge {
             uniqueSetOfPatients.add(aMasterData.getPatient());
         }
         GUIMap.setLastSetOfPatientsParsed(new ArrayList<>(uniqueSetOfPatients));
-        GUIMap.getJSBridge().call("setPatients", new ArrayList<>(uniqueSetOfPatients));
+        GUIMap.getJSBridge()
+                .call("setPatients", new ArrayList<>(uniqueSetOfPatients));
     }
 
 
     /**
      * Refreshes the patient's info window
+     *
      * @param patient the patient to refresh
      */
     public void updateInfoWindow(Patient patient) {
@@ -196,14 +226,17 @@ public class MapBridge {
         }
     }
 
+
     /**
      * Checks if the donor patient has organs that have been matched to a recipient patient, if so, triggers js method to
      * create a line between two markers
+     *
      * @param patientNhi - patient nhi
-     * @throws InterruptedException -  if geocode fails
-     * @throws ApiException - if geocode fails
-     * @throws IOException - if geocode fails
+     * @exception InterruptedException -  if geocode fails
+     * @exception ApiException         - if geocode fails
+     * @exception IOException          - if geocode fails
      */
+    @SuppressWarnings("unused")
     public void checkOrganMatch(String patientNhi) throws InterruptedException, ApiException, IOException {
         Patient patient = patientDataService.getPatientByNhi(patientNhi);
         Set<GlobalEnums.Organ> donations = patient.getDonations()
@@ -237,8 +270,10 @@ public class MapBridge {
 
     }
 
+
     /**
      * Gets a patient by the nhi
+     *
      * @param nhi the nhi to get
      * @return the patient
      */
@@ -246,12 +281,15 @@ public class MapBridge {
         return patientDataService.getPatientByNhi(nhi);
     }
 
+
     /**
      * Uses the donor nhi number to find potential matches to the organ parsed through in the parameter to trigger either
      * a populatePotentialMatches method or noPotentialMatchesFound method for assigning organs via map
+     *
      * @param patientNhi - string format of donor nhi to get the donor Patient object
-     * @param organStr - String format of the organ to potentially match
+     * @param organStr   - String format of the organ to potentially match
      */
+    @SuppressWarnings("unused")
     public void getPotentialMatches(String patientNhi, String organStr) {
         GlobalEnums.Organ organ = GlobalEnums.Organ.getEnumFromString(organStr);
         PotentialMatchFinder potentialMatchFinder = new PotentialMatchFinder();
@@ -260,25 +298,34 @@ public class MapBridge {
         ObservableList<OrganWaitlist.OrganRequest> allRequests = potentialMatchFinder.matchOrgan(patientOrgan);
         List<OrganWaitlist.OrganRequest> requests = new ArrayList<OrganWaitlist.OrganRequest>(allRequests);
         List<Patient> patients = new ArrayList<>();
-        for(OrganWaitlist.OrganRequest request : requests) {
+        for (OrganWaitlist.OrganRequest request : requests) {
             if (patientWithinCircle(patient, request.getReceiver())) {
                 patients.add(request.getReceiver());
             }
         }
         if (patients.size() > 0) {
-            GUIMap.getJSBridge().setMember("patients", patients);
-            GUIMap.getJSBridge().setMember("potentialMatches", patients);
-            GUIMap.getJSBridge().setMember("potentialMatchesCopy", patients);
-            GUIMap.getJSBridge().setMember("donorPatientNhi", patient.getNhiNumber());
-            GUIMap.getJSBridge().call("populatePotentialMatches", patientNhi, patient);
-        } else {
-            GUIMap.getJSBridge().call("noPotentialMatchesFound");
+            GUIMap.getJSBridge()
+                    .setMember("patients", patients);
+            GUIMap.getJSBridge()
+                    .setMember("potentialMatches", patients);
+            GUIMap.getJSBridge()
+                    .setMember("potentialMatchesCopy", patients);
+            GUIMap.getJSBridge()
+                    .setMember("donorPatientNhi", patient.getNhiNumber());
+            GUIMap.getJSBridge()
+                    .call("populatePotentialMatches", patientNhi, patient);
+        }
+        else {
+            GUIMap.getJSBridge()
+                    .call("noPotentialMatchesFound");
         }
     }
 
+
     /**
      * Gets whether the current receiver is within the circle radius currently displayed on the map
-     * @param donor the donor at the center of the circle
+     *
+     * @param donor    the donor at the center of the circle
      * @param receiver the receiver to calculate the distance to
      * @return whether the receiver is within the circle or not
      */
@@ -287,24 +334,26 @@ public class MapBridge {
             double R = 6371; // Radius of the earth in km
             double distanceLat = deg2rad(donor.getCurrentLocation().lat - receiver.getCurrentLocation().lat);
             double distanceLon = deg2rad(donor.getCurrentLocation().lng - receiver.getCurrentLocation().lng);
-            double a = Math.sin(distanceLat / 2) * Math.sin(distanceLat / 2) +
-                            Math.cos(deg2rad(donor.getCurrentLocation().lat)) * Math.cos(deg2rad(receiver.getCurrentLocation().lat)) *
-                                    Math.sin(distanceLon / 2) * Math.sin(distanceLon / 2);
+            double a = Math.sin(distanceLat / 2) * Math.sin(distanceLat / 2) + Math.cos(deg2rad(donor.getCurrentLocation().lat)) * Math.cos(deg2rad(
+                    receiver.getCurrentLocation().lat)) * Math.sin(distanceLon / 2) * Math.sin(distanceLon / 2);
             double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
             double d = R * c * 1000; // Distance in m
 
             return (d <= rad);
-        } catch (InterruptedException | ApiException | IOException e) {
+        }
+        catch (InterruptedException | ApiException | IOException e) {
             systemLogger.log(Level.WARNING, "Unable to geolocate patient", "Attempted to geolocate patient while calculating distances");
             return false;
         }
     }
 
+
     /**
      * Interrupts thread and stops the task if there is one already created
      * Triggers method to updateMarker's radius to create/update the circle on the map
+     *
      * @param patientNhi the nhi of the currently selected patient on the map
-     * @param organStr the string representation of the selected organ
+     * @param organStr   the string representation of the selected organ
      */
     @SuppressWarnings("unused")
     public void loadCircle(String patientNhi, String organStr) {
@@ -313,11 +362,18 @@ public class MapBridge {
         }
         Patient patient = patientDataService.getPatientByNhi(patientNhi);
         GlobalEnums.Organ organ = GlobalEnums.Organ.getEnumFromString(organStr);
-        if (patient.getDonations().containsKey(organ)) {
+        if (patient.getDonations()
+                .containsKey(organ)) {
             updateMarkerRadii(patient, organ);
         }
     }
 
+
+    /**
+     * Gets the assignments a given patient has
+     * @param patientNhi the nhi of the patient
+     */
+    @SuppressWarnings("unused")
     public void getAssignmentsFromNhi(String patientNhi) {
         Set<Patient> patients = new HashSet<>();
         Patient patient = patientDataService.getPatientByNhi(patientNhi);
@@ -335,14 +391,17 @@ public class MapBridge {
                 }
             }
         }
-        GUIMap.getJSBridge().call("showAssignments", new ArrayList<>(patients));
+        GUIMap.getJSBridge()
+                .call("showAssignments", new ArrayList<>(patients));
     }
+
 
     /**
      * Method to assign an organ to a receiver from a donor. To match the donor/receiver pair via the organ
-     * @param donorNhiStr - string format of the donor nhi
+     *
+     * @param donorNhiStr    - string format of the donor nhi
      * @param receiverNhiStr - string format of the receiver nhi
-     * @param organStr - string format of the organ
+     * @param organStr       - string format of the organ
      */
     @SuppressWarnings("unused")
     public void assignOrgan(String donorNhiStr, String receiverNhiStr, String organStr) {
@@ -352,16 +411,21 @@ public class MapBridge {
 
         Patient after1 = (Patient) donor.deepClone();
         Patient after2 = (Patient) receiver.deepClone();
-        after1.getDonations().put(organ, after2.getNhiNumber());
-        after2.getRequiredOrgans().get(organ).setDonorNhi(after1.getNhiNumber());
+        after1.getDonations()
+                .put(organ, after2.getNhiNumber());
+        after2.getRequiredOrgans()
+                .get(organ)
+                .setDonorNhi(after1.getNhiNumber());
         IAction action = new MultiAction(donor, after1, receiver, after2);
         GlobalEnums.UndoableScreen undoableScreen;
         if (userControl.getLoggedInUser() instanceof Clinician) {
             undoableScreen = GlobalEnums.UndoableScreen.CLINICIANPROFILE;
-        } else {
+        }
+        else {
             undoableScreen = GlobalEnums.UndoableScreen.ADMINISTRATORPROFILE;
         }
-        UndoRedoControl.getUndoRedoControl().addAction(action, undoableScreen, userControl.getLoggedInUser());
+        UndoRedoControl.getUndoRedoControl()
+                .addAction(action, undoableScreen, userControl.getLoggedInUser());
         userActions.log(Level.INFO, "Assigned organ (" + organ + ") to patient " + receiver.getNhiNumber(), "Attempted to assign organ to patient");
     }
 
