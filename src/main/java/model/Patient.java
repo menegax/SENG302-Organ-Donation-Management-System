@@ -1,8 +1,5 @@
 package model;
 
-import static java.util.logging.Level.INFO;
-import static utility.UserActionHistory.userActions;
-
 import com.google.maps.errors.ApiException;
 import com.google.maps.model.LatLng;
 import com.univocity.parsers.annotations.Convert;
@@ -11,19 +8,8 @@ import com.univocity.parsers.annotations.Parsed;
 import com.univocity.parsers.annotations.Validate;
 import org.apache.commons.lang3.StringUtils;
 import service.APIGoogleMaps;
-import utility.GlobalEnums;
-import utility.GlobalEnums.BirthGender;
-import utility.GlobalEnums.BloodGroup;
-import utility.GlobalEnums.DiseaseState;
-import utility.GlobalEnums.MedicationStatus;
-import utility.GlobalEnums.Organ;
-import utility.GlobalEnums.PreferredGender;
-import utility.GlobalEnums.Region;
-import utility.GlobalEnums.Status;
-import utility.MapBridge;
-import utility.PatientActionRecord;
-import utility.Searcher;
-import utility.SystemLogger;
+import utility.*;
+import utility.GlobalEnums.*;
 import utility.parsing.DateConverterCSV;
 import utility.parsing.DateTimeConverterCSV;
 import utility.parsing.EnumConverterCSV;
@@ -35,15 +21,14 @@ import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.zip.DataFormatException;
+
+import static java.util.logging.Level.INFO;
+import static utility.UserActionHistory.userActions;
 
 public class Patient extends User {
 
@@ -286,7 +271,7 @@ public class Patient extends User {
      * @param height          height in meters
      * @param weight          weight in kilograms
      * @param nhi             NHI
-     * @throws DataFormatException Dataformatexception
+     * @throws DataFormatException If data poorly formatted
      */
     public void updateAttributes(String firstName, String lastName, ArrayList<String> middleNames, String preferredName,
                                  LocalDate birth, LocalDateTime death, String streetName, String streetNumber, String city, String suburb,
@@ -1253,6 +1238,15 @@ public class Patient extends User {
         return addressString;
     }
 
+    public List<String> getDonationNhis() {
+        List<String> nhis = new ArrayList<>();
+        for (String nhi : donations.values()) {
+            if (nhi != null) {
+                nhis.add(nhi);
+            }
+        }
+        return nhis;
+    }
 
     public String toString() {
         return "Patient: \n" + "NHI: " + nhiNumber + "\n" + "Created date: " + CREATED + "\n" + "Modified date: " + modified + "\n" + "First name: "

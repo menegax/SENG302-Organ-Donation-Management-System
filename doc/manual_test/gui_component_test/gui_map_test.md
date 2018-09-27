@@ -87,14 +87,39 @@
 1. Log in as an admin
 2. Go to search patients
 3. In the search box enter 'lanny'
-3. Select 'View on map' button
-4. Select 'OK' on the popup that opens up
-5. Select 'View on map' button once again
-6. Select 'OK' on the popup that opens up
-6. Expected: The map should be populated with the patients in the table. These include patients with the following Nhi's: ANM8474, CTH2080, DMR2101, EQV5740, FUZ3183, KJD8772
+4. Select 'View on map' button
+5. Select 'OK' on the popup that opens up
+6. Select 'View on map' button once again
+7. Select 'OK' on the popup that opens up
+8. Expected: The map should be populated with the patients in the table. These include patients with the following Nhi's: ANM8474, CTH2080, DMR2101, EQV5740, FUZ3183, KJD8772
 
+### Finding a donor and recipient pair of patients
 
-### Test 12 - Clicking on Dead patients marker -> profile
+1. Log in as a clinician.
+2. Select `Search Patients`.
+3. Find a donating and receiving pair of patients.
+4. Ensure that the donor has a valid death location.
+5. Ensure that the donor's organs have not expired.
+6. Ensure that the recipient has a valid current location.
+
+### Test 12 - Line between a matched donor and recipient shows
+
+1. Follow `Finding a donor and recipient pair of patients`. 
+2. Select 'View on Map'.
+3. Select 'OK' on the popup alert.
+4. Make sure the map is in focus.
+5. EXPECTED: Once all patient's have loaded and you click on the donor or receiver marker, a line between your two patients should appear. If a matching patient did not already have a marker on the map, one should now load.
+
+### Test 13 - Line if donor(or recipient) is on map but recipient(or donor if recipient is on map) is not on map
+
+1. Follow `Finding a donor and recipient pair of patients`.
+2. Ensure only one of either the donor or recipient is on the current table.
+3. Select 'View on Map'.
+4. Select 'OK' on the popup alert.
+5. Make sure the map is in focus.
+6. EXPECTED: A line is displayed when clicking on the donor or receiver marker and the patient that was not on the map now has a marker on the map.
+
+### Test 14 - Clicking on Dead patients marker -> profile
 
 1. Log in as Clinician
 2. Go to available organs
@@ -103,7 +128,7 @@
 5. Click the header containing the patients NHI
 6. Expected : Correct Patient Profile to be shown
 
-### Test 13 - Clicking on Dead patients marker - info
+### Test 15 - Clicking on Dead patients marker - info
 
 1. Log in as Clinician
 2. Go to available organs
@@ -114,7 +139,7 @@
 7. Expected : Fields to be aligned on top of each other
 8. Expected : Assign button align on the bottom left
 
-### Test 14 - Clicking on Dead patients marker - assign organs dropdown
+### Test 16 - Clicking on Dead patients marker - assign organs dropdown
 
 1. Log in as Clinician
 2. Go to available organs
@@ -124,7 +149,7 @@
 6. Expected : Correct organs to be shown (validate against patient profile)
 
 
-### Test 15 - Displaying correct information in information modal
+### Test 17 - Displaying correct information in information modal
 1. Log in as Clinician
 2. Go to available organs
 3. Edit 2 patients so that their death addresses are garbage. (if no organs in available organs add some)
@@ -132,7 +157,7 @@
 5. Wait for info popup and click view patients
 6. Expected : at least 2 patients that had their addresses changed to garbage 
 
-### Test 16 - Displaying correct success count in popup message
+### Test 18 - Displaying correct success count in popup message
 1. Log in as Clinician
 2. Go to available organs
 3. Count the number of organs in this table (with valid death addresses).
@@ -141,7 +166,7 @@
 6. Expected : The success count of valid organs to be the same as noted in available organs, sum of all patients in available organs
 7: Expected : To be able to click "view failed patients"
 
-### Test 17 - Displaying correct popup message
+### Test 19 - Displaying correct popup message
 1. Log in as Clinician
 2. Go to available organs
 3. Ensure that all patients have valid death addresses.
@@ -149,13 +174,13 @@
 5. Expected : The success count of valid organs to be the same as noted in available organs
 6: Expected : Should not be any clickable button "view failed patients"
 
-### Test 18 - Marker Colors for Alive/Dead Patients
+### Test 20 - Marker Colors for Alive/Dead Patients
 1. Log in as a clinician
 2. (Given that there are patients in the database) Go to Search Patient and click view on map
 3. Expected: markers are colored differently depending on if the patient is alive or dead
 
 
-### Test 19 - Circles are created to deceased patients with organs that are not expired yet.
+### Test 21 - Circles are created to deceased patients with organs that are not expired yet.
 
 1. Log in as Clinician
 2. Select `Available organs` tab
@@ -163,7 +188,7 @@
 4. Select a patient marker.
 5. EXPECTED: If the organ is still alive (most likely), a circle should appear.
 
-### Test 20 - Circles are colored in the correct color according to the proportion of time the organ has remaining before expiry.
+### Test 22 - Circles are colored in the correct color according to the proportion of time the organ has remaining before expiry.
 
 1. Log in as Clinician
 2. Select `Available organs` tab
@@ -171,7 +196,7 @@
 4. Select a patient marker.
 5. EXPECTED: Organ circle is colored green if it has a lot of time remaining, orange if it has moderate time remaining and red if it has very little time remaining.
 
-### Test 21 - Circles are shrinking in size (as long as the distance has not maxed out).
+### Test 23 - Circles are shrinking in size (as long as the distance has not maxed out).
 
 1. Log in as Clinician.
 2. Select `Available organs` tab.
@@ -181,7 +206,7 @@
 6. Ensure that the organ is still alive.
 7. EXPECTED: If you zoom in very close to the perimeter of the circle, you can see the circle shrinking every second
 
-### Test 22 - Circles are maxed out at the length of NZ
+### Test 24 - Circles are maxed out at the length of NZ
 
 1. Log in as Clinician.
 2. Select `Available organs` tab.
@@ -190,7 +215,7 @@
 5. Select the `Bone` button.
 6. EXPECTED: The green circle will cover the whole of NZ and no more at the opposite edge.
 
-### Test 23 - Assign organ
+### Test 25 - Assign organ
 1. View available organs on map
 2. Select a donor that has potential matches shown in the potential matches screen
 3. Select the appropriate organ from the dropdown
@@ -204,7 +229,7 @@
 11. EXPECTED: The assignment should be visible in both patient's profiles
 12. EXPECTED: The map should reload with the most recently viewed set of patients (available organs)
 
-### Test 24 - Cancel assignment of organ 
+### Test 26 - Cancel assignment of organ 
 1. View available organs on map
 2. Select a donor that has potential matches shown in the potential matches screen
 3. Select the appropriate organ from the dropdown
@@ -212,13 +237,21 @@
 5. Click on the cancel assignment button
 6. EXPECTED: The map should reload with the most recently viewed set of patients (available organs)
 
-### Test 25 - Attempt to assign organ with no matches
+### Test 27 - Attempt to assign organ with no matches
 1. View available organs on map
 2. Select a donor that has no potential matches shown in the potential matches screen
 3. Select the appropriate organ from the dropdown
 4. Select view potential matches 
 5. EXPECTED: A pop-up dialog should be displayed that no potential matches were found
 6. EXPECTED: The map should show just the donor
+
+### Test 28 - Line between a matched donor and multiple recipients shows
+
+1. Follow `Finding a donor and recipient pair of patients` and ensure there is at least two matches. 
+2. Select 'View on Map'.
+3. Select 'OK' on the popup alert.
+4. Make sure the map is in focus.
+5. EXPECTED: Once all patient's have loaded and you click on the donor or receiver marker, a line between the donor and all receivers should appear. If a matching patient did not already have a marker on the map, one should now load.
 
 ## Test History
 
@@ -231,6 +264,14 @@ Test 20: PASS
 Test 21: PASS
 
 Test 22: PASS
+
+### 22/09/2018
+
+Test 12: PASS
+
+Test 13: PASS
+
+Test 14: PASS
 
 ### 09/09/18 - Joshua
 
@@ -339,6 +380,11 @@ Test 19: Pass
 Test 20: Pass  
 Test 21: Pass  
 Test 22: Pass  
+
+### 26/09/18 - Kyle
+
+Test 12: Pass
+Test 13: Pass
 
 ### 27/09/18 - Aidan Smith
 

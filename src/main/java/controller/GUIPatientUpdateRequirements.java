@@ -191,7 +191,6 @@ public class GUIPatientUpdateRequirements extends UndoableController implements 
         }
     }
 
-
     /**
      * Checks if organ is promised or not to a patient already
      * @param patient the patient object
