@@ -11,7 +11,7 @@ last update 24/07/2018
 # Starting the Application
 
 ### Requirements
-* JDK 1.8
+* JDK 1.8.0_161
 * Internet connection
 * Windows 10 or above
 * Sufficiently powerful CPU and GPU

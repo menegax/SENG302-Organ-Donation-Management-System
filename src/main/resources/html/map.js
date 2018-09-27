@@ -4,6 +4,7 @@ var markers = [];
 var infoWindows = [];
 var failedPatientArray = [];
 var markerSetId = 0;
+var matchedOrganLines = [];
 var filterByAreaListener, filterStart, filterEnd;
 var filterAreaSet = false;
 var donations = [];
@@ -45,14 +46,18 @@ function init() {
  * Resets the map
  */
 function resetMap() {
-
+    currentMarker = undefined;
     centerAndZoomMap();
     clearFilterArea();
     clearMarkers();
     clearCircles();
     clearRectangle();
     hideGenericNotification();
-    hideNotification()
+    hideNotification();
+    matchedOrganLines.forEach(function(line) {
+        line.setMap(null);
+    });
+    matchedOrganLines = [];
 }
 
 /**
@@ -398,10 +403,25 @@ function setMapDragEnd() {
  * @param patient
  */
 function addMarker(patient) {
+    var address;
+    if (patient.isDead()) {
+        address = patient.getDeathLocationConcat();
+    } else {
+        address = patient.getFormattedAddress();
+    }
+    var name = patient.getNameConcatenated();
+    console.log("Adding marker to map for patient " + patient.getNhiNumber());
     var latLong = patient.getCurrentLocation();
     if (latLong !== null) {
         successCount++;
         var marker = makeMarker(patient, latLong); //set up markers
+        if (currentMarker !== undefined) {
+            if ($.inArray(marker.nhi, currentMarker.donations) > -1) {
+                drawLine(currentMarker, marker);
+            } else if ($.inArray(currentMarker.nhi, marker.donations) > -1) {
+                drawLine(marker, currentMarker);
+            }
+        }
         if (filterAreaSet && !isPatientInArea(marker, {start: filterStart, end: filterEnd})) {
             marker.setMap(null);
         }
@@ -429,26 +449,28 @@ function addMarker(patient) {
 function makeMarker(patient, location) {
     var name = patient.getNameConcatenated();
 
-    var randx = Math.random() * 0.02 - 0.01;
-    var randy = Math.random() * 0.02 - 0.01;
-    var finalLoc = new google.maps.LatLng(location.lat + randx, location.lng + randy); //todo can remove randomizer? replace `finalLoc` with `results`?
+    var finalLoc = new google.maps.LatLng(location.lat, location.lng);
+    var javaDonations = patient.getDonationNhis();
+    var donationsNhis = [];
+    for (var i=0; i< javaDonations.size(); i++) {
+        donationsNhis.push(javaDonations.get(i));
+    }
 
     if (patient.isDead() && !patient.getDonations().isEmpty()) {
         return new google.maps.Marker({
-            map: map, position: finalLoc, title: name, animation: google.maps.Animation.DROP, nhi: patient.getNhiNumber(), icon: icons.deadDonor.icon
+            map: map, position: finalLoc, title: name, animation: google.maps.Animation.DROP, nhi: patient.getNhiNumber(), icon: icons.deadDonor.icon, donations: donationsNhis
         });
     }
     else if (patient.isDead()) {
         return new google.maps.Marker({
-            map: map, position: finalLoc, title: name, animation: google.maps.Animation.DROP, nhi: patient.getNhiNumber(), icon: icons.deceased.icon
+            map: map, position: finalLoc, title: name, animation: google.maps.Animation.DROP, nhi: patient.getNhiNumber(), icon: icons.deceased.icon, donations: []
         });
     }
     else if (!patient.isDead()) {
         return new google.maps.Marker({
-            map: map, position: finalLoc, title: name, animation: google.maps.Animation.DROP, nhi: patient.getNhiNumber(), icon: icons.alive.icon
+            map: map, position: finalLoc, title: name, animation: google.maps.Animation.DROP, nhi: patient.getNhiNumber(), icon: icons.alive.icon, donations: []
         });
     }
-
 }
 
 /**
@@ -481,6 +503,21 @@ function makeAndAttachInfoWindow(patient, marker) {
                 iw["iwindow"].open(map, marker);
             }
         });
+        matchedOrganLines.forEach(function(line) {
+            line.setMap(null);
+        });
+        matchedOrganLines = [];
+        markers.forEach(function(_marker) {
+            if (_marker.nhi === currentMarker.nhi) {
+                return;
+            }
+            if ($.inArray(currentMarker.nhi, _marker.donations) > -1) {
+                drawLine(_marker, currentMarker);
+            } else if ($.inArray(_marker.nhi, currentMarker.donations) > -1) {
+                drawLine(currentMarker, _marker);
+            }
+        });
+        mapBridge.getAssignmentsFromNhi(marker.nhi);
     });
 }
 
@@ -565,6 +602,64 @@ function updateMarkerRadii(radius, color, organ) {
     });
 }
 
+function drawLine(source, destination) {
+    var line = new google.maps.Polyline({
+        map: map,
+        icons: [{
+            icon: {
+                path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
+            },
+            offset: '100%'
+        }],
+        path: [{
+            lat: source.getPosition().lat(), lng: source.getPosition().lng()
+        },{
+            lat: destination.getPosition().lat(), lng: destination.getPosition().lng()
+        }],
+        geodesic: true,
+        strokeColor: '#0000FF',
+        strokeOpacity: 1.0,
+        strokeWeight: 2
+    });
+    matchedOrganLines.push(line);
+}
+
+/**
+ * Triggered via java if there is a match to create a line
+ */
+function createMatchedOrganArrow(donorLoc, recipientLoc, donorNhi, recipientNhi, organ) {
+    if (!markers.some(function(marker) {
+        return marker.nhi === recipientNhi;
+    })) {
+        return;
+    }
+
+    var matchedOrganPath = [{
+        lat: donorLoc.lat, lng: donorLoc.lng
+    },{
+        lat: recipientLoc.lat, lng: recipientLoc.lng
+    }];
+
+    var matchedOrgan = new google.maps.Polyline({
+        map: null,
+        icons: [{
+            icon: {
+                path: google.maps.SymbolPath.FORWARD_CLOSED_ARROW
+            },
+            offset: '100%'
+        }],
+        path: matchedOrganPath,
+        geodesic: true,
+        strokeColor: '#0000FF',
+        strokeOpacity: 1.0,
+        strokeWeight: 2,
+        recipientNhi: recipientNhi,
+        donorNhi: donorNhi,
+        organ: organ
+    });
+    matchedOrganLines.push(matchedOrgan);
+}
+
 /**
  * Opens patient profile when the button from the infoWindow is clicked on
  */
@@ -615,8 +710,16 @@ function getOrganOptions(patient) {
  * @param newPatients
  */
 function setPatients(newPatients) {
+    if (newPatients.size() === 0) {
+        return;
+    }
+    currentMarker = undefined;
     patients = newPatients;
+    hideNotification();
     resetMap();
+    clearMarkers();
+    clearCircles();
+    clearLines();
     successCount = 0;
     infoWindows = [];
     markerSetId++;
@@ -632,6 +735,9 @@ function setPatients(newPatients) {
 function addMarkers(i, id) {
     if (i < 1) {
         showNotification(successCount, patients.size());
+        // markers.forEach(function (marker) {
+        //     mapBridge.checkOrganMatch(marker.nhi);
+        // });
         return;
     }
     if (id !== markerSetId) {
@@ -667,6 +773,16 @@ function clearCircles() {
 }
 
 /**
+ * Clear the lines from the map
+ */
+function clearLines() {
+    matchedOrganLines.forEach(function (line) {
+        line.setMap(null);
+    });
+    matchedOrganLines = [];
+}
+
+/**
  * clear the rectangle filter area on map
  */
 function clearRectangle() {
@@ -681,7 +797,7 @@ function clearRectangle() {
 /**
  * Hides the marker notification
  */
-function hideNotification() {//todo rename to hideMarkerNotification
+function hideNotification() {
     $('#marker-notification').hide();
 }
 
@@ -690,7 +806,7 @@ function hideNotification() {//todo rename to hideMarkerNotification
  * @param numSuccess successfully loaded patients
  * @param numTotal total patients to load
  */
-function showNotification(numSuccess, numTotal) { //todo rename to showMarkerNotification
+function showNotification(numSuccess, numTotal) {
     var modalContent = "";
     failedPatientArray.forEach(function (patient) {
 
@@ -800,6 +916,9 @@ function reloadInfoWindow(patient) {
     }
     clearCircles();
     mapBridge.loadCircle(patient.getNhiNumber(), currentOrgan);
+    markers.forEach(function (marker) {
+        mapBridge.checkOrganMatch(marker.position, marker.nhi);
+    });
 }
 
 /**
@@ -877,4 +996,17 @@ function loadActiveDonations(patientOrgans) {
     if (currentOrgan !== undefined) {
         $('#dropdown').val(currentOrgan);
     }
+}
+
+function showAssignments(_patients) {
+    var __patients = _patients;
+    for (var i=0; i< _patients.size(); i++) {
+        if (markers.some(function(marker) {
+            return marker.nhi === _patients.get(i).getNhiNumber();
+        })) {
+            __patients.remove(_patients.get(i))
+        }
+    }
+    patients = __patients;
+    addMarkers(patients.size(), ++markerSetId);
 }

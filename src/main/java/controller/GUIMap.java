@@ -37,8 +37,9 @@ public class GUIMap {
 
     private Collection<Patient> patients = new ArrayList<>();
 
-    public static JSObject getJSBridge(){ return jsBridge; }
-
+public static JSObject getJSBridge() {
+        return jsBridge;
+    }
 
     /**
      * Loads the patients provided onto the map
