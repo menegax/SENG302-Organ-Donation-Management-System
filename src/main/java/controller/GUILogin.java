@@ -91,8 +91,7 @@ public class GUILogin implements IWindowObserver {
      */
     @FXML
     public void goToRegister() {
-        Parent parent = screenControl.getTouchParent(loginPane);
-        screenControl.show("/scene/userRegister.fxml", false, null, null, parent);
+        screenControl.show("/scene/userRegister.fxml", false, null, null, loginPane);
     }
 
     /**
