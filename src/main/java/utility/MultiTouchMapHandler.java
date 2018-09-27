@@ -10,6 +10,8 @@ import javafx.scene.web.WebView;
 
 public class MultiTouchMapHandler extends MultiTouchHandler {
 
+    private WebView webViewMap1;
+
     private Double originalDistance;
     
     private double MAPZOOMFACTOR = 0.3;
@@ -21,6 +23,7 @@ public class MultiTouchMapHandler extends MultiTouchHandler {
 
     public void initialiseHandler(WebView webViewMap1) {
 //        ZOOMFACTOR = 0.3;
+        this.webViewMap1 = webViewMap1;
         webViewMap1.addEventFilter(TouchEvent.ANY, this::handleTouch);
         webViewMap1.addEventFilter(ZoomEvent.ANY, Event::consume);
         webViewMap1.addEventFilter(RotateEvent.ANY, Event::consume);
@@ -54,6 +57,30 @@ public class MultiTouchMapHandler extends MultiTouchHandler {
     @Override
     protected void setPaneFocused() {
         //do nothing
+    }
+
+    /**
+     * Checks what type of movement the touch events represent
+     * and performs the appropriate actions
+     *
+     * @param previousEvent the previous touch event before movement
+     * @param currentEvent  the current touch event after movement
+     */
+    @Override
+    protected void processEventMovement(CustomTouchEvent previousEvent, CustomTouchEvent currentEvent) {
+        int numberOfTouches = 0;
+        for (CustomTouchEvent touchEvent : touches) {
+            if (touchEvent != null) {
+                numberOfTouches += 1;
+            }
+        }
+        if (numberOfTouches == 1) {
+            processOneTouchMovement(previousEvent, currentEvent);
+        }
+        else if (numberOfTouches == 2) {
+            processTwoTouchMovement(touches[0], touches[1]);
+        }
+        touches[findIndexOfTouchEvent(previousEvent.getId())] = currentEvent;
     }
 
     @Override
@@ -93,17 +120,18 @@ public class MultiTouchMapHandler extends MultiTouchHandler {
     	//calc new lat long of point
     	//get lat long displacement
     	//move center by displacement
+//        webViewMap1.get
     }
     
-    @Override
-    protected void executeZoom(double distance) {
-        if (originalDistance == null) {
-            originalDistance = distance;
-            GUIMap.getJSBridge().call("setJankaOriginal");
-        }
-//        double currentDistance = distance;
-        GUIMap.getJSBridge().call("setJankaZoom", distance);
-    }
+//    @Override
+//    protected void executeZoom(double distance) {
+//        if (originalDistance == null) {
+//            originalDistance = distance;
+//            GUIMap.getJSBridge().call("setJankaOriginal");
+//        }
+////        double currentDistance = distance;
+//        GUIMap.getJSBridge().call("setJankaZoom", distance);
+//    }
 
 
 }
