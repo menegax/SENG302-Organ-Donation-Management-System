@@ -989,20 +989,27 @@ function loadActiveDonations(patientOrgans) {
     }
 }
 
+
+/**
+ * Called by Java. adds markers for any patients that are not already loaded on the map
+ * @param _patients
+ */
 function showAssignments(_patients) {
-    var __patients = _patients;
+    var __patients = [];
+    for (var i=0; i< _patients.size(); i++) {
+        __patients.push(_patients.get(i));
+    }
+    console.log(__patients.length);
     for (var i=0; i < _patients.size(); i++) {
         for (var o=0; o< markers.length; o++) {
             if (markers[o].nhi === _patients.get(i).getNhiNumber()) {
-                __patients.remove(_patients.get(i));
+                __patients = __patients.filter(function(value, index, arr) {
+                    return value.getNhiNumber() !== _patients.get(i).getNhiNumber();
+                });
             }
         }
     }
-
-    patients = [];
-    for (var i=0; i< __patients.size(); i++) {
-        patients.push(__patients.get(i));
-    }
-    addMarkers(patients.length, ++markerSetId);
+    patients = __patients;
+    addMarkers(__patients.length, ++markerSetId);
 }
 
