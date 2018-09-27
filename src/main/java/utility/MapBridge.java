@@ -267,11 +267,10 @@ public class MapBridge {
         }
         System.out.println(patients.size());
         if (patients.size() > 0) {
-            GUIMap.getJSBridge().setMember("patients", patients);
             GUIMap.getJSBridge().setMember("potentialMatches", patients);
             GUIMap.getJSBridge().setMember("potentialMatchesCopy", patients);
             GUIMap.getJSBridge().setMember("donorPatientNhi", patient.getNhiNumber());
-            GUIMap.getJSBridge().call("populatePotentialMatches", patientNhi, patient);
+            GUIMap.getJSBridge().call("populatePotentialMatches", patientNhi, patient, patients);
         } else {
             GUIMap.getJSBridge().call("noPotentialMatchesFound");
         }

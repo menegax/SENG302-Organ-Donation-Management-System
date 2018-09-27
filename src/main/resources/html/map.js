@@ -508,9 +508,7 @@ function makeAndAttachInfoWindow(patient, marker) {
             line.setMap(null);
         });
         matchedOrganLines = [];
-        console.log(isViewingPotentialMatches);
         if (!isViewingPotentialMatches) {
-            console.log("drawing line");
             markers.forEach(function (_marker) {
                 if (_marker.nhi === currentMarker.nhi) {
                     return;
@@ -563,10 +561,14 @@ function viewPotentialMatches(patientNhi) {
 /**
  * Populates map with potential matches
  */
-function populatePotentialMatches(patientNhi, donor) {
+function populatePotentialMatches(patientNhi, donor, patientList) {
     $('#cancelAssignmentBtn').show();
     isViewingPotentialMatches = true;
     var donorMarker;
+    patients = [];
+    for (var i = 0; i < patientList.size(); i++) {
+        patients.push(patientList.get(i));
+    }
     clearLines();
     markers.forEach(function (marker) {
         if (marker.nhi === patientNhi) {
@@ -585,14 +587,15 @@ function populatePotentialMatches(patientNhi, donor) {
         successCount = 0;
         infoWindows = [];
         markerSetId++;
-        addMarkers(patients.size(), markerSetId);
+        console.log(patients);
+        addMarkers(patients.length, markerSetId);
 
-        if (patients.size() == 0) {
+        if (patients.length == 0) {
             showGenericNotification("No potential matches found");
-        } else if (patients.size() == 1) {
-            showGenericNotification(patients.size() + " potential match found");
-        } else if (patients.size() > 1) {
-            showGenericNotification(patients.size() + " potential matches found");
+        } else if (patients.length == 1) {
+            showGenericNotification(patients.length + " potential match found");
+        } else if (patients.length > 1) {
+            showGenericNotification(patients.length + " potential matches found");
         }
         potentialMatches = [];
         donorMarker.setMap(map);
@@ -657,7 +660,6 @@ function assignOrgan() {
     showGenericNotification("Successfully assigned " + currentOrgan + " from " + donorPatientNhi + " to " + receiverPatientNhi);
     receiverPatientNhi = undefined;
     isViewingPotentialMatches = false;
-    showGenericNotification("Successfully assigned " + currentOrgan + " from " + donorPatientNhi + " to " + receiverPatientNhi);
 }
 
 /**
