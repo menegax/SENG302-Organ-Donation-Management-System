@@ -323,17 +323,17 @@ public class GUIPatientUpdateDiagnosis extends TargetedController {
         } else {
             String errorString = "Diseases must not have the same disease name and diagnosis date as another disease\n\n";
             if(diseaseNameTextField.getStyleClass().contains("invalid")) {
-                errorString += "Disease names must be between 3 and 50 characters. " +
+                errorString = "Disease names must be between 3 and 50 characters. " +
                         "Names must be comprised of lowercase letters, uppercase letters, digits or full stops, and be unique in current diseases.\n\n";
             }
 
             if(diagnosisDate.getStyleClass().contains("invalid")) {
-                errorString += "Diagnosis date must be a valid date not set in the future or before the " +
+                errorString = "Diagnosis date must be a valid date not set in the future or before the " +
                         "patient was born.\n\n";
             }
 
             if(tagsDD.getStyleClass().contains("invalid")) {
-                errorString += "A chronic disease can not be cured. Please remove the chronic tag and save the diagnosis" +
+                errorString = "A chronic disease can not be cured. Please remove the chronic tag and save the diagnosis" +
                         " before marking this disease as cured.\n\n";
             }
             userActions.log(Level.WARNING, errorString, new String[]{"Attempted to update diagnosis with invalid fields", ((Patient) target).getNhiNumber()});
