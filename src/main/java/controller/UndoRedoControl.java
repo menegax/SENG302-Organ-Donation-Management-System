@@ -1,14 +1,14 @@
 package controller;
 
 import javafx.scene.control.*;
+import model.User;
 import utility.GlobalEnums;
 import utility.undoRedo.IAction;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.UndoableWrapper;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Includes methods to assist with undo and redo functionality across the whole application
@@ -102,14 +102,20 @@ public class UndoRedoControl {
      * Adds an action to the stateHistoryScreen of the undoableScreen provided
      * @param action the action to have
      * @param undoableScreen the undoable screen of the statesHistoryScreen to add it to
+     * @param target the target profile to add the action to
      */
-    public void addAction(IAction action, GlobalEnums.UndoableScreen undoableScreen) {
+    public void addAction(IAction action, GlobalEnums.UndoableScreen undoableScreen, User target) {
+        Map<UndoableWrapper, StatesHistoryScreen> matchingWrappers = new HashMap<>();
         for (UndoableWrapper undoableWrapper : screenControl.getUndoableWrappers()) {
             for (StatesHistoryScreen statesHistoryScreen : undoableWrapper.getStatesHistoryScreens()) {
-                if (statesHistoryScreen.getUndoableScreen().equals(undoableScreen)) {
-                    statesHistoryScreen.addAction(action);
+                if (statesHistoryScreen.getUndoableScreen().equals(undoableScreen) && statesHistoryScreen.getTarget() == target) {
+                    matchingWrappers.put(undoableWrapper, statesHistoryScreen);
                 }
             }
+        }
+        for (UndoableWrapper undoableWrapper : matchingWrappers.keySet()) {
+            matchingWrappers.get(undoableWrapper).addAction(action);
+            undoableWrapper.bringToTop(matchingWrappers.get(undoableWrapper));
         }
     }
 

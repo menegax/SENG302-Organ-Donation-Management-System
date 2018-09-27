@@ -13,6 +13,7 @@ import utility.SystemLogger;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
 
@@ -37,9 +38,18 @@ public class GUIMap {
 
     private Collection<Patient> patients = new ArrayList<>();
 
-public static JSObject getJSBridge() {
-        return jsBridge;
+    private static ArrayList<Patient> lastSetOfPatientsParsed;
+
+    public static ArrayList<Patient> getLastSetOfPatientsParsed() {
+        return lastSetOfPatientsParsed;
     }
+
+    public static void setLastSetOfPatientsParsed(ArrayList<Patient> patients) {
+        lastSetOfPatientsParsed = patients;
+    }
+
+    public static JSObject getJSBridge(){ return jsBridge; }
+
 
     /**
      * Loads the patients provided onto the map
@@ -51,6 +61,7 @@ public static JSObject getJSBridge() {
         if (jsBridge != null) {
             jsBridge.call("setPatients", patients);
         }
+        setLastSetOfPatientsParsed(new ArrayList<Patient>(patients));
     }
 
     /**

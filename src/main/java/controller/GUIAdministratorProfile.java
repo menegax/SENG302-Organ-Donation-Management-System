@@ -2,6 +2,7 @@ package controller;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import model.Administrator;
@@ -12,11 +13,12 @@ import utility.undoRedo.IAction;
 import utility.undoRedo.StatesHistoryScreen;
 import utility.undoRedo.UndoableWrapper;
 
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 import static utility.UserActionHistory.userActions;
 
-public class GUIAdministratorProfile extends TargetedController{
+public class GUIAdministratorProfile extends UndoableController{
     @FXML
     private GridPane adminProfilePane;
 
@@ -36,6 +38,8 @@ public class GUIAdministratorProfile extends TargetedController{
 
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
+    private UndoRedoControl undoRedoControl = UndoRedoControl.getUndoRedoControl();
+
     private AdministratorDataService administratorDataService = new AdministratorDataService();
 
     /**
@@ -51,6 +55,8 @@ public class GUIAdministratorProfile extends TargetedController{
         }
         Administrator adminToLoad = administratorDataService.getAdministratorByUsername(((Administrator) target).getUsername());
         loadProfile(adminToLoad);
+        controls = new ArrayList<Control>(){{add(nameTxt);}};
+        statesHistoryScreen = new StatesHistoryScreen(controls, GlobalEnums.UndoableScreen.ADMINISTRATORPROFILE, target);
     }
 
     /**
@@ -71,13 +77,7 @@ public class GUIAdministratorProfile extends TargetedController{
         if (!((Administrator) target).getUsername().toLowerCase().equals("admin")) {
             IAction action = new SingleAction(target, null);
             new AdministratorDataService().deleteUser(target);
-            for (UndoableWrapper undoableWrapper : screenControl.getUndoableWrappers()) {
-                for (StatesHistoryScreen statesHistoryScreen : undoableWrapper.getStatesHistoryScreens()) {
-                    if (statesHistoryScreen.getUndoableScreen().equals(GlobalEnums.UndoableScreen.ADMINISTRATORSEARCHUSERS)) {
-                        statesHistoryScreen.addAction(action);
-                    }
-                }
-            }
+            undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.ADMINISTRATORPROFILE, userControl.getLoggedInUser());
             userActions.log(Level.INFO, "Successfully deleted admin profile", new String[]{"Attempted to delete admin profile", ((Administrator) target).getUsername()});
             if (!((Administrator) target).getUsername().equals(((Administrator) userControl.getLoggedInUser()).getUsername())) {
                 screenControl.closeWindow(adminProfilePane);

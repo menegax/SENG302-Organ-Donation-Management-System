@@ -157,7 +157,7 @@ public class GUIPatientProcedureForm extends TargetedController {
             this.procedureClone.setAffectedDonations(affectedDonations);
             this.procedureClone.setDate(dateInput.getValue());
             IAction action = new SingleAction(target, patientClone);
-            undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.PATIENTPROCEDURES);
+            undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.PATIENTPROCEDURES, target);
             userActions.log(Level.INFO, "Updated procedure " + this.procedure.getSummary(), new String[]{"Attempted to update procedure", ((Patient) target).getNhiNumber()});
             goBackToProcedures();
         } else {
@@ -181,7 +181,7 @@ public class GUIPatientProcedureForm extends TargetedController {
                     dateInput.getValue(), affectedDonations );
             patientClone.addProcedure( procedureClone );
             IAction action = new SingleAction(target, patientClone);
-            undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.PATIENTPROCEDURES);
+            undoRedoControl.addAction(action, GlobalEnums.UndoableScreen.PATIENTPROCEDURES, target);
             userActions.log(Level.INFO, "Added procedure " + procedureClone.getSummary(), new String[]{"Attempted to add a procedure", patientClone.getNhiNumber()});
             goBackToProcedures();
         } else {

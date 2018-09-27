@@ -24,8 +24,9 @@ Exercise common sense when running the GUI application and any usage questions w
 
 ### Touch Usage
 
-The application is designed for a large, multi-touch table in full screen. Many touch gestures can be used. 
-Users can drag multiple windows around the application.
+The application is designed for a large, multi-touch table. It is not necessarily designed for small computers with touch screens. 
+
+Many touch gestures can be used. Users can drag multiple windows around the application simultaneously. 
 
 #### General controls
 Zoom - Two-finger pinch
