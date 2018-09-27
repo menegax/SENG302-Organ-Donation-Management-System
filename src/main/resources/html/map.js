@@ -11,8 +11,6 @@ var potentialMatches = [];
 var donations = [];
 var currentMarker;
 var currentOrgan;
-var donorPatientNhi;
-var receiverPatientNhi;
 var NORTHBOUND = -33;
 var SOUTHBOUND = -48;
 var EASTBOUND = 180;
@@ -20,7 +18,6 @@ var WESTBOUND = 165;
 var rectangle = [];
 var donorPatientNhi;
 var receiverPatientNhi;
-var dropDownDonations = [];
 var isViewingPotentialMatches = false;
 var originalZoom;
 var defaultZoom = 6;
@@ -37,7 +34,6 @@ var icons = {
     }
 };
 
-var isViewingPotentialMatches = false;
 
 /**
  * Initialize method
@@ -69,7 +65,7 @@ function resetMap() {
  * Sets the map to default center position and zoom
  */
 function centerAndZoomMap() {
-    map.setCenter(defaultCenterPos); //defs good
+    map.setCenter(defaultCenterPos);
     map.setZoom(defaultZoom);
 }
 
@@ -169,7 +165,6 @@ function setUpViewAvailableOrgansButton() {
             successCount = 0;
             markerSetId++;
             addMarkers(patients.size(), markerSetId);
-            showGenericNotification('Populating map...');
         });
         document.getElementById('cancelAssignmentBtn').addEventListener('click', function () {
             isViewingPotentialMatches = false;
@@ -515,7 +510,11 @@ function getDeadPatientInfoContent(patient) {
  * Triggers Java method to find potential matches
  */
 function viewPotentialMatches(patientNhi) {
-    mapBridge.getPotentialMatches(patientNhi, currentOrgan);
+    if (currentOrgan !== undefined) {
+        mapBridge.getPotentialMatches(patientNhi, currentOrgan);
+    } else {
+        showGenericNotification("Please select an organ to view potential matches for.")
+    }
 }
 
 /**
@@ -565,10 +564,11 @@ function noPotentialMatchesFound(){
  */
 function getAlivePatientInfoContent(patient) {
     var organOptions = getOrganOptions(patient);
-    return '<h5>' + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</h5><span style="font-size: 14px">'
-            + patient.getAddressString() + '<br><br>' + organOptions.donating + '<br><br>' + organOptions.receiving
-            + '</span><br><input type="button" onclick="openPatientProfile(\'' + patient.getNhiNumber()
-            + '\')" class="btn btn-sm btn-primary mt-3" style="margin: auto" value="Open Profile"/>';
+    var nhi = patient.getNhiNumber()
+    return '<button onclick="openPatientProfile(\'' + nhi + '\')" type="button" class="btn btn-link" style="font-size: 24px; margin-left: -10px">'
+                        + patient.getNhiNumber() + ' - ' + patient.getNameConcatenated() + '</button>' + '<br>' + '<span class="info-window-address">'
+            + patient.getAddressString() + '</span><br><br>' + organOptions.donating + '<br><br>' + organOptions.receiving
+            + '</span>';
 }
 
 /**
@@ -733,7 +733,7 @@ function addMarkers(i, id) {
     addMarker(patients.get(i - 1));
     setTimeout(function () {
         addMarkers(--i, id);
-    }, 700);
+    }, 700); // google maps delay when placing markers
 }
 
 /**
