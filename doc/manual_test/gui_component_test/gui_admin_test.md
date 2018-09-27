@@ -246,4 +246,15 @@ Test 9: Pass
 
 Test 10: Pass
 
+### 27/09/2018 - Aidan
+
+Test 5: Pass
+
+Test 6: Pass
+
+Test 7: Pass
+
+Test 8: Pass
+
+Test 9: Pass
 **ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**
