@@ -32,6 +32,11 @@ class CustomTouchEvent {
     private long eventTime;
 
     /**
+     * True if the event of this id has moved
+     */
+    private boolean hasMoved = false;
+
+    /**
      * Creates a new CustomTouchEvent with the root pane given
      */
     public CustomTouchEvent(int id, EventTarget target) {
@@ -62,6 +67,14 @@ class CustomTouchEvent {
 
     public void setEventTime(long eventTime) {
         this.eventTime = eventTime;
+    }
+
+    public void setHasMoved(boolean hasMoved) {
+        this.hasMoved = hasMoved;
+    }
+
+    public boolean isHasMoved() {
+        return hasMoved;
     }
 
     @Override

@@ -46,6 +46,7 @@ import utility.StatusObservable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.logging.Level;
@@ -92,7 +93,7 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
     private Stage homeStage;
     private MultiTouchHandler touchHandler;
 
-    private  enum TabName {
+    public enum TabName {
         PROFILE("Profile"), UPDATE("Update"), DONATIONS("Donations"), CONTACTDETAILS("Contact Details"),
         DISEASEHISTORY("View Disease History"), HISTORY("History"), PROCEDURES("Procedures"),
         TRANSPLANTWAITINGLIST("Transplant Waiting List"), SEARCHPATIENTS("Search Patients"),
@@ -107,6 +108,15 @@ public class GUIHome extends TargetedController implements Observer, IWindowObse
 
         public String toString() {
             return this.value;
+        }
+
+        public static TabName getEnumFromString(String value) {
+            try {
+                return TabName.valueOf(value.toUpperCase());
+            }
+            catch (IllegalArgumentException e) {
+                return null;
+            }
         }
 
     }
