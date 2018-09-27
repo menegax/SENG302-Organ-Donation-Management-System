@@ -17,7 +17,6 @@ import static utility.UserActionHistory.userActions;
 /**
  * Junit test class for the StateHistoryComboBox
  */
-@Ignore
 public class StateHistoryComboBoxTest {
 
     private static ComboBox comboBox;

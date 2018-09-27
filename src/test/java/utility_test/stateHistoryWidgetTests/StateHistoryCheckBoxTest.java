@@ -17,7 +17,6 @@ import static utility.UserActionHistory.userActions;
 /**
  * Junit test class for the StateHistoryCheckBox
  */
-@Ignore
 public class StateHistoryCheckBoxTest {
 
     private static CheckBox checkBox;
