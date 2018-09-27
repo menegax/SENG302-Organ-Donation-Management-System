@@ -2,9 +2,7 @@ package utility;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.IOException;
 import java.util.logging.ConsoleHandler;
-import java.util.logging.FileHandler;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -32,7 +30,7 @@ public class SystemLogger {
 
             // Console handler
             Handler console = new ConsoleHandler();
-            console.setLevel(Level.ALL); // TURN ON TO 'ALL' TO LOG ALL LEVELS TO CONSOLE
+            console.setLevel(Level.FINE); // TURN ON TO 'ALL' TO LOG ALL LEVELS TO CONSOLE
             console.setFormatter(new SimpleFormatter(){
                 @Override
                 public String format(LogRecord record){

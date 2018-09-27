@@ -81,6 +81,7 @@ public class MapBridge {
         CachedThreadPool.getCachedThreadPool().getThreadService().submit(radiiTask);
         String remainingTime = radiiTask.getMessage();
         double remaining = 0;
+        String organStr = organ.toString().substring(0,1).toUpperCase() + organ.toString().substring(1);
         if (!(remainingTime.equals("Cannot calculate")) && !remainingTime.equals("")) {
             String[] times = remainingTime.split(":");
             remaining += Integer.parseInt(times[0]) * 3600;
@@ -92,9 +93,10 @@ public class MapBridge {
                 remaining = 0;
             }
             radius = remaining * heloTravelSpeedMps;
-            GUIMap.getJSBridge().call("createMarkerRadii", radius, radiiTask.getColor(), organ.toString());
+            rad = radius;
+            GUIMap.getJSBridge().call("createMarkerRadii", radius, radiiTask.getColor(), organStr);
         } else {
-            GUIMap.getJSBridge().call("createMarkerRadii", radius, "#008000", organ.toString());
+            GUIMap.getJSBridge().call("createMarkerRadii", radius, "#008000", organStr);
         }
         radiiTask.messageProperty().addListener((observable, oldValue, newValue) -> {
             if (!oldValue.equals("")) { // first circle always gives green
@@ -113,7 +115,7 @@ public class MapBridge {
                     rad = LENGTHOFNZ;
                 }
                 String color = targetPatientOrgan.getProgressTask().getColor();
-                GUIMap.getJSBridge().call("updateMarkerRadii", rad, color, organ.toString());
+                GUIMap.getJSBridge().call("updateMarkerRadii", rad, color, organStr);
             }
         });
     }
@@ -212,10 +214,13 @@ public class MapBridge {
         List<OrganWaitlist.OrganRequest> requests = new ArrayList<OrganWaitlist.OrganRequest>(allRequests);
         List<Patient> patients = new ArrayList<>();
         for(OrganWaitlist.OrganRequest request : requests) {
+            System.out.println("patient...");
             if (patientWithinCircle(patient, request.getReceiver())) {
+                System.out.println("found potential match");
                 patients.add(request.getReceiver());
             }
         }
+        System.out.println(patients.size());
         if (patients.size() > 0) {
             GUIMap.getJSBridge().setMember("patients", patients);
             GUIMap.getJSBridge().setMember("potentialMatches", patients);

@@ -11,8 +11,6 @@ var potentialMatches = [];
 var donations = [];
 var currentMarker;
 var currentOrgan;
-var donorPatientNhi;
-var receiverPatientNhi;
 var NORTHBOUND = -33;
 var SOUTHBOUND = -48;
 var EASTBOUND = 180;
@@ -20,7 +18,6 @@ var WESTBOUND = 165;
 var rectangle = [];
 var donorPatientNhi;
 var receiverPatientNhi;
-var dropDownDonations = [];
 var isViewingPotentialMatches = false;
 var originalZoom;
 var defaultZoom = 6;
@@ -37,7 +34,6 @@ var icons = {
     }
 };
 
-var isViewingPotentialMatches = false;
 
 /**
  * Initialize method
@@ -62,13 +58,14 @@ function resetMap() {
     clearRectangle();
     hideGenericNotification();
     hideNotification()
+    $('#cancelAssignmentBtn').hide();
 }
 
 /**
  * Sets the map to default center position and zoom
  */
 function centerAndZoomMap() {
-    map.setCenter(defaultCenterPos); //defs good
+    map.setCenter(defaultCenterPos);
     map.setZoom(defaultZoom);
 }
 
@@ -168,7 +165,6 @@ function setUpViewAvailableOrgansButton() {
             successCount = 0;
             markerSetId++;
             addMarkers(patients.size(), markerSetId);
-            showGenericNotification('Populating map...');
         });
         document.getElementById('cancelAssignmentBtn').addEventListener('click', function () {
             isViewingPotentialMatches = false;
@@ -545,24 +541,22 @@ function populatePotentialMatches(patientNhi, donor) {
         infoWindows = [];
         markerSetId++;
         addMarkers(patients.size(), markerSetId);
+        showGenericNotification(patients.size() + " potential match(es) found");
         potentialMatches = [];
         donorMarker.setMap(map);
         markers.push(donorMarker);
         patients.add(donor);
         makeAndAttachInfoWindow(donor, donorMarker);
     }
-
-    showGenericNotification(patients.size() - 1 + " potential match(es) found. Click on a match to assign the organ.");
 }
 
 /**
  * no potential matches found
  */
 function noPotentialMatchesFound(){
-    mapBridge.populateLastSetOfPatients();
     isViewingPotentialMatches = false;
     $('#cancelAssignmentBtn').hide();
-    showGenericNotification(0 + " potential matches found.");
+    showGenericNotification(0 + " potential matches found");
 }
 
 /**
@@ -609,6 +603,7 @@ function assignOrgan() {
     mapBridge.assignOrgan(donorPatientNhi, receiverPatientNhi, currentOrgan);
     mapBridge.populateLastSetOfPatients();
     receiverPatientNhi = undefined;
+    showGenericNotification("Successfully assigned " + currentOrgan + " from " + donorPatientNhi + " to " + receiverPatientNhi);
 }
 
 /**
@@ -624,7 +619,7 @@ function createMarkerRadii(radius, color, organ) {
         strokeOpacity: 0.8,
         strokeWeight: 2,
         fillColor: color,
-        fillOpacity: 0.6,
+        fillOpacity: 0.3,
         center: currentMarker.position,
         radius: radius,
         organ: organ
@@ -740,7 +735,7 @@ function addMarkers(i, id) {
     addMarker(patients.get(i - 1));
     setTimeout(function () {
         addMarkers(--i, id);
-    }, 700);
+    }, 700); // google maps delay when placing markers
 }
 
 /**
@@ -958,11 +953,12 @@ function setJankaOriginal() {
 function loadActiveDonations(patientOrgans) {
     var donations = [];
     for (var i = 0; i < patientOrgans.size(); i++) {
-        donations.push(patientOrgans.get(i).getOrgan());
+        donations.push(patientOrgans.get(i).getOrgan().toString());
     }
     for (var i = 0; i < donations.length; i++) {
         $('#dropdown').append($('<option>', {
-            value: donations[i], text: donations[i]
+            value: donations[i].substring(0,1).toUpperCase() + donations[i].substring(1),
+            text: donations[i].substring(0,1).toUpperCase() + donations[i].substring(1)
         }));
     }
     $('#dropdown').change(function () {

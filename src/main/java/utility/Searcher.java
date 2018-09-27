@@ -60,7 +60,7 @@ public class Searcher {
         try {
             indexWriter = initializeWriter();
             database = LocalDB.getInstance();
-            systemLogger.log(Level.INFO, "Successfully initialized index writer.");
+            systemLogger.log(Level.FINEST, "Successfully initialized index writer.");
         } catch (IOException e) {
             systemLogger.log(Level.SEVERE, "Failed to initialize index writer.");
         }
