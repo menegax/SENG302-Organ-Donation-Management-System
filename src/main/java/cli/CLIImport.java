@@ -1,5 +1,7 @@
 package cli;
 
+import static utility.UserActionHistory.userActions;
+
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import utility.parsing.ParseCSV;
@@ -8,8 +10,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.Reader;
 import java.util.logging.Level;
-
-import static utility.UserActionHistory.userActions;
 
 @SuppressWarnings("unused")
 @Command(name = "import", description = "Reads and loads patient data into the application")

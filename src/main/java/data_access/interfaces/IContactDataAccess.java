@@ -2,8 +2,6 @@ package data_access.interfaces;
 
 import model.Patient;
 
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 
 public interface IContactDataAccess {

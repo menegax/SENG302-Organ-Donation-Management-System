@@ -1,41 +1,50 @@
 package controller;
 
-import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
 import static utility.SystemLogger.systemLogger;
 import static utility.UserActionHistory.userActions;
-
-import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.zip.DataFormatException;
-
-import javafx.scene.Parent;
-import javafx.scene.layout.Pane;
-
-import javafx.event.ActionEvent;
-import javafx.scene.control.*;
-import org.apache.commons.lang3.StringUtils;
-import org.controlsfx.control.RangeSlider;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.geometry.Point2D;
+import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import model.Patient;
+import org.apache.commons.lang3.StringUtils;
+import org.controlsfx.control.RangeSlider;
 import service.ClinicianDataService;
 import service.PatientDataService;
 import service.TextWatcher;
-import service.UserDataService;
 import utility.CachedThreadPool;
 import utility.GlobalEnums;
 import utility.GlobalEnums.BirthGender;
@@ -46,11 +55,21 @@ import utility.GlobalEnums.UndoableScreen;
 import utility.TouchComboBoxSkin;
 import utility.undoRedo.StatesHistoryScreen;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.logging.Level;
+
 public class GUIClinicianSearchPatients extends UndoableController implements IWindowObserver {
 
 	@FXML
 	private GridPane pane;
-	
+
     @FXML
     private TableView<Patient> patientDataTable;
 
@@ -223,12 +242,14 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
                 .getAge())));
         columnStatus.setCellValueFactory(d -> {
             Patient patient = d.getValue();
-            if (patient.getDonations().keySet()
+            if (patient.getDonations()
+                    .keySet()
                     .size() > 0) {
                 return new SimpleStringProperty(patient.getRequiredOrgans()
                         .size() > 0 ? "Donating & Receiving" : "Donating");
             }
-            else if (patient.getRequiredOrgans().keySet()
+            else if (patient.getRequiredOrgans()
+                    .keySet()
                     .size() > 0 && patient.getDeathDate() == null) {
                 return new SimpleStringProperty("Receiving");
             }
@@ -256,6 +277,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
         // add sorted (and filtered) data to the table.
         patientDataTable.setItems(sortedData);
     }
+
 
     @SuppressWarnings("WeakerAccess")
     public void search() {
@@ -358,7 +380,8 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
                 }
                 else {
                     StringBuilder tooltipText = new StringBuilder(patient.getNameConcatenated() + ". Donations: ");
-                    for (Organ organ : patient.getDonations().keySet()) {
+                    for (Organ organ : patient.getDonations()
+                            .keySet()) {
                         tooltipText.append(organ)
                                 .append(", ");
                     }
@@ -522,6 +545,7 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
         });
     }
 
+
     /**
      * View patients from table on the map
      * Sets the patients list in the JavaScript to custom set
@@ -535,22 +559,30 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?", ButtonType.OK, ButtonType.NO);
             alert.show();
 
-            alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> {
-                populateMap(patients);
-            });
-        } else {
-            statesHistoryScreen.getUndoableWrapper().getGuiHome().openMap();
+            alert.getDialogPane()
+                    .lookupButton(ButtonType.OK)
+                    .addEventFilter(ActionEvent.ACTION, event -> {
+                        populateMap(patients);
+                    });
+        }
+        else {
+            statesHistoryScreen.getUndoableWrapper()
+                    .getGuiHome()
+                    .openMap();
             populateMap(patients);
         }
     }
 
+
     /**
      * Populates the map with the provided collection of patients
+     *
      * @param patients the patients to populate the map with
      */
     private void populateMap(Collection<Patient> patients) {
         screenControl.setIsCustomSetMap(true);
-        screenControl.getMapController().setPatients(patients);
+        screenControl.getMapController()
+                .setPatients(patients);
         screenControl.setMapOpen(true);
     }
 }

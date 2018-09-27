@@ -46,7 +46,6 @@ public class GUIMap {
 
     public static JSObject getJSBridge(){ return jsBridge; }
 
-
     /**
      * Loads the patients provided onto the map
      * @param patients a collection of patients to show on the map
