@@ -257,6 +257,9 @@ public class GUIUserRegister {
 
     private void returnToPreviousPage() {
         screenControl.setUpNewLogin();
+        if (!screenControl.isTouch()) {
+            screenControl.closeWindow(userRegisterPane);
+        }
     }
 
     /**

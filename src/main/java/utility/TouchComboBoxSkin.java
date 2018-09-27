@@ -20,9 +20,12 @@ public class TouchComboBoxSkin extends MTComboBoxListViewSkin implements ITouchS
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private Boolean doHide = false;
+    
+    private static Map<ComboBox, TouchComboBoxSkin> comboBoxSkins = new HashMap<>();
 
     public TouchComboBoxSkin(ComboBox comboBox, Pane pane) {
         super(comboBox);
+        comboBoxSkins.put(comboBox, this);
         ((MTComboBoxListViewSkin) comboBox.getSkin()).getPopupContent().setVisible(false);
         if (screenControl.isTouch()) {
             getPopup().setAutoHide(false);
@@ -40,6 +43,10 @@ public class TouchComboBoxSkin extends MTComboBoxListViewSkin implements ITouchS
         }
     }
 
+    public static TouchComboBoxSkin getSkin(ComboBox comboBox) {
+    	return comboBoxSkins.get(comboBox);
+    }
+    
     /**
      * Only hides if we specifically want it to hide through doHide
      */

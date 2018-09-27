@@ -86,4 +86,8 @@ Filter patients by age, birth gender, donating organ and donating checkbox: Pass
 
 Filter patients by age, birth gender, receiving organ and receiving checkbox: Pass
 
+### 27/09/2018 - Aidan
+
+GUI clinician search donors test: Pass
+
 **ADD MOST RECENT RESULTS TO GITLAB TEST SUITE SUMMARY**
