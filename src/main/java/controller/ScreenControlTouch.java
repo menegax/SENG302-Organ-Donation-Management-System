@@ -17,6 +17,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
@@ -46,6 +48,8 @@ public class ScreenControlTouch extends ScreenControl {
     private Region rootPane;
 
     private Pane touchPane = null;
+    
+    private Parent scene;
     
     private final double INITIALPANESIZE = 0.55;
 
@@ -125,12 +129,13 @@ public class ScreenControlTouch extends ScreenControl {
             Region root = new FXMLLoader(getClass().getResource("/scene/touchScene.fxml")).load();
             touchPane = new Pane(root);
             touchPane.getChildren().addAll(panes);
-            Scene newScene = new Scene(touchPane);
-            touchStage.setScene(newScene);
+            //Scene newScene = new Scene(touchPane);
+            //touchStage.setScene(newScene);
+            scene.getChildren().addAll(touchPane);
             if (fullScreen) {
             	ensureFullScreen();
             }
-            addCanvas(newScene);
+            //addCanvas(newScene);
             pane.visibleProperty().addListener((observable, oldValue, newValue) -> {
                 if (!newValue && parentController != null) {
                     parentController.windowClosed();
@@ -370,6 +375,13 @@ public class ScreenControlTouch extends ScreenControl {
     
     public void setFullScreen(boolean fullScreen) {
     	this.fullScreen = fullScreen;
+        if (fullScreen) {
+	        touchStage.setFullScreen(true);
+	        touchStage.setFullScreenExitKeyCombination(new KeyCodeCombination(KeyCode.F, KeyCodeCombination.CONTROL_DOWN));
+	        touchStage.setFullScreenExitHint("Press CTRL + F to exit full screen.");
+        }
+        scene = new Pane(); 
+        touchStage.setScene(new Scene(scene));
     }
 
     /**

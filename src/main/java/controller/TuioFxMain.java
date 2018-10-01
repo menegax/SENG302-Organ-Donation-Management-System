@@ -36,11 +36,6 @@ public class TuioFxMain extends Application {
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
         
         stage.setMaximized(true);
-        if (fullScreen) {
-	        stage.setFullScreen(true);
-	        stage.setFullScreenExitKeyCombination(new KeyCodeCombination(KeyCode.F, KeyCodeCombination.CONTROL_DOWN));
-	        stage.setFullScreenExitHint("Press CTRL + F to exit full screen.");
-        }
         stage.setX(primaryScreenBounds.getMinX());
         stage.setY(primaryScreenBounds.getMinY());
         stage.setWidth(primaryScreenBounds.getWidth());
