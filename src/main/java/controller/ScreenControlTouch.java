@@ -49,7 +49,7 @@ public class ScreenControlTouch extends ScreenControl {
 
     private Pane touchPane = null;
     
-    private Parent scene;
+    private Pane scene;
     
     private final double INITIALPANESIZE = 0.55;
 
@@ -176,9 +176,13 @@ public class ScreenControlTouch extends ScreenControl {
      */
     private void setMapPanePosition(Region pane) {
     	pane.setMaxWidth(screenBounds.getWidth());
-    	pane.setMaxHeight(screenBounds.getHeight() - 25);
+    	pane.setMaxHeight(screenBounds.getHeight());
         pane.setMinWidth(screenBounds.getWidth());
-        pane.setMinHeight(screenBounds.getHeight() - 25);
+        pane.setMinHeight(screenBounds.getHeight());
+        if (!fullScreen) {
+        	pane.setMaxHeight(pane.getMaxHeight() - 25);
+        	pane.setMinHeight(pane.getMinHeight() - 25);
+        }
     	pane.setTranslateX(0);
     	pane.setTranslateY(0);
         pane.setLayoutX(0);
@@ -230,13 +234,15 @@ public class ScreenControlTouch extends ScreenControl {
             Region root = FXMLLoader.load(getClass().getResource("/scene/login.fxml"));
             rootPane = null;
             touchPane = new Pane();
-            touchPane.getChildren().addAll(new Pane(root));           
-            Scene newScene = new Scene(touchPane);        
-            addCanvas(newScene);
-            touchStage.setScene(newScene);
-            if (fullScreen) {
-            	ensureFullScreen();
-            }
+            touchPane.getChildren().addAll(new Pane(root)); 
+            scene.getChildren().clear();
+            scene.getChildren().addAll(touchPane);
+//            Scene newScene = new Scene(touchPane);        
+//            addCanvas(newScene);
+//            touchStage.setScene(newScene);
+//            if (fullScreen) {
+//            	ensureFullScreen();
+//            }
             setLoginShowing(true);
             setCSS();
             setInitialPaneSize(root);
