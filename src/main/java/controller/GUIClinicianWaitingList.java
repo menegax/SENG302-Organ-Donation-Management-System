@@ -22,9 +22,11 @@ import org.apache.commons.lang3.StringUtils;
 import service.ClinicianDataService;
 import service.OrganWaitlist;
 import service.PatientDataService;
+import sun.java2d.pipe.SpanShapeRenderer;
 import utility.GlobalEnums;
 import utility.GlobalEnums.Organ;
 import utility.GlobalEnums.Region;
+import utility.SystemLogger;
 import utility.TouchComboBoxSkin;
 
 import java.util.ArrayList;
@@ -83,15 +85,16 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
 
 
     private void loadMasterData(OrganWaitlist organRequests) {
+        SystemLogger.systemLogger.log(Level.FINEST, "Loading waitlist: \n");
         for (OrganWaitlist.OrganRequest request : organRequests) {
 
-            // make sure receiver isn't dead, or organ isn't already assigned
-            if (request.getReceiver().getDeathDate() == null ) {
-                masterData.add(request);
+            // make sure receiver isn't dead
+            if (request.getReceiver().getDeathDate() == null) {
+//                if (patientDataService.getPatientByNhi(request.getReceiverNhi()).getRequiredOrgans().get(request.getRequestedOrgan()).getDonorNhi() == null) {
+                    masterData.add(request);
+//                }
             }
         }
-
-        // todo && patientDataService.getPatientByNhi(request.getReceiverNhi()).getRequiredOrgans().get(request.getRequestedOrgan()).getDonorNhi() == null
     }
 
 
@@ -160,9 +163,21 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
         dateCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
                 .getRequestDate()
                 .toString()));
-        organCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
-                .getRequestedOrgan()
-                .toString()));
+        organCol.setCellValueFactory(r -> {
+
+            String organString = StringUtils.capitalize(r.getValue().getRequestedOrgan().toString());
+            String donorNhi = patientDataService.getPatientByNhi(r.getValue().getReceiverNhi()).getRequiredOrgans().get(r.getValue().getRequestedOrgan()).getDonorNhi();
+
+            if (donorNhi != null) {
+                organString += " (Assigned: " + donorNhi + ")";
+            }
+
+            return new SimpleStringProperty(organString);
+
+        });
+
+
+
         regionCol.setCellValueFactory(r -> {
             if (r.getValue()
                     .getRequestRegion() != null) {

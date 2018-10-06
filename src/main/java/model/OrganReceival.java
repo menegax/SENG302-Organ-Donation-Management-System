@@ -26,11 +26,6 @@ public class OrganReceival implements Serializable {
     }
 
 
-    public void setRegisteredOn(LocalDate registeredOn) {
-        this.registeredOn = registeredOn;
-    }
-
-
     public String getDonorNhi() {
         return donorNhi;
     }
@@ -38,5 +33,9 @@ public class OrganReceival implements Serializable {
 
     public void setDonorNhi(String donorNhi) {
         this.donorNhi = donorNhi;
+    }
+
+    public String toString() {
+        return "Organ receival: \n" + "Donor NHI: " + donorNhi + "\n" + "Registered date: " + registeredOn + "\n";
     }
 }
