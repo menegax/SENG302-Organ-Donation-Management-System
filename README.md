@@ -34,6 +34,11 @@ last update 27/09/2018
  1. Deploy the .jar file(s) using Maven
  2. Run the terminal command `java -jar <pathtojar> touch` to begin the touch application
  
+# Default Credentials
+
+* Patient with username `abc1238`
+* Clinician with ID `0`
+* Admin with username `admin` and password `password` 
  
 # Dependencies
  
