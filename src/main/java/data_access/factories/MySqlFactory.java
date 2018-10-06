@@ -17,9 +17,13 @@ import java.util.logging.Level;
 import static utility.SystemLogger.systemLogger;
 
 public class MySqlFactory extends DAOFactory {
+
     private HikariConfig config;
+
     private HikariDataSource ds;
+
     private static MySqlFactory mySqlFactory = null;
+
 
     /**
      * Sets up the MySql factory that provides MySql data access objects
@@ -31,14 +35,17 @@ public class MySqlFactory extends DAOFactory {
         if (connection_type != null) {
             if (connection_type.equals(GlobalEnums.DbType.PRODUCTION.getValue())) {
                 config = new HikariConfig("/sql/HikariConfigProd.properties");
-            } else {
+            }
+            else {
                 config = new HikariConfig("/sql/HikariConfigTest.properties");
             }
-        } else {
+        }
+        else {
             config = new HikariConfig("/sql/HikariConfigTest.properties");
         }
         ds = new HikariDataSource(config);
     }
+
 
     /**
      * Returns the singleton factory. If it is not initialised, a new factory is created
@@ -52,6 +59,7 @@ public class MySqlFactory extends DAOFactory {
         return mySqlFactory;
     }
 
+
     /**
      * Returns the connection instance to the database
      *
@@ -63,10 +71,13 @@ public class MySqlFactory extends DAOFactory {
         try {
             connection = ds.getConnection();
             systemLogger.log(Level.FINEST, "Successfully retrieved connection from pool.", MySqlFactory.class);
-        } catch (SQLException e) {
-            systemLogger.log(Level.SEVERE, "Could not get connection", this);        }
+        }
+        catch (SQLException e) {
+            systemLogger.log(Level.SEVERE, "Could not get connection", this);
+        }
         return connection;
     }
+
 
     /**
      * Returns a new MySql Medication data access object
@@ -77,6 +88,7 @@ public class MySqlFactory extends DAOFactory {
         return new MedicationDAO();
     }
 
+
     /**
      * Returns a new MySql Disease data access object
      *
@@ -86,12 +98,15 @@ public class MySqlFactory extends DAOFactory {
         return new DiseaseDAO();
     }
 
+
     /**
      * Returns a new MySql Required Organs data access object
      *
      * @return The Required Organs DAO
      */
-    public IRequiredOrganDataAccess getRequiredOrgansDataAccess() { return new RequiredOrgansDAO(); }
+    public IRequiredOrganDataAccess getRequiredOrgansDataAccess() {
+        return new RequiredOrgansDAO();
+    }
 
 
     /**
@@ -99,7 +114,10 @@ public class MySqlFactory extends DAOFactory {
      *
      * @return The donating organs dao
      */
-    public IDonationsDataAccess getDonationsOrgansDataAccess() { return new DonatingOrgansDAO(); }
+    public IDonationsDataAccess getDonationsOrgansDataAccess() {
+        return new DonatingOrgansDAO();
+    }
+
 
     /**
      * Returns a new MySql Patient data access object
@@ -110,6 +128,7 @@ public class MySqlFactory extends DAOFactory {
         return new PatientDAO();
     }
 
+
     /**
      * Returns a new MySql Contact data access object
      *
@@ -118,6 +137,7 @@ public class MySqlFactory extends DAOFactory {
     public IContactDataAccess getContactDataAccess() {
         return new ContactDAO();
     }
+
 
     /**
      * Returns a new MySql Administrator data access object
@@ -128,6 +148,7 @@ public class MySqlFactory extends DAOFactory {
         return new AdministratorDAO();
     }
 
+
     /**
      * Returns a new MySql AdministratorLog data access object
      *
@@ -136,6 +157,7 @@ public class MySqlFactory extends DAOFactory {
     public ILogDataAccess getAdministratorLogDataAccess() {
         return new AdministratorLogDAO();
     }
+
 
     /**
      * Returns a new MySql PatientLog data access object
@@ -146,6 +168,7 @@ public class MySqlFactory extends DAOFactory {
         return new PatientILogDAO();
     }
 
+
     /**
      * Returns a new MySql ClinicianLog data access object
      *
@@ -154,6 +177,7 @@ public class MySqlFactory extends DAOFactory {
     public ILogDataAccess<ClinicianActionRecord> getClinicianLogDataAccess() {
         return new ClinicianILogDAO();
     }
+
 
     /**
      * Returns a new MySql Procedure data access object
@@ -164,6 +188,7 @@ public class MySqlFactory extends DAOFactory {
         return new ProcedureDAO();
     }
 
+
     /**
      * Returns a new MySql Clinician data access object
      *
@@ -173,6 +198,7 @@ public class MySqlFactory extends DAOFactory {
         return new ClinicianDAO();
     }
 
+
     /**
      * Returns a new User data access object
      *
@@ -181,6 +207,7 @@ public class MySqlFactory extends DAOFactory {
     public IUserDataAccess getUserDataAccess() {
         throw new NotImplementedException();
     }
+
 
     /**
      * Returns a new TransplantWaitingList data access object
