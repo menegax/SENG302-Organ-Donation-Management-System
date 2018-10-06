@@ -35,13 +35,18 @@ import java.util.logging.Level;
 /**
  * Controller class to manage organ waiting list for patients who require an organ.
  */
-public class GUIClinicianWaitingList extends TargetedController implements IWindowObserver{
+public class GUIClinicianWaitingList extends TargetedController implements IWindowObserver {
 
     public GridPane clinicianWaitingList;
+
     public TableView<OrganWaitlist.OrganRequest> waitingListTableView;
+
     public TableColumn<OrganWaitlist.OrganRequest, String> dateCol;
+
     public TableColumn<OrganWaitlist.OrganRequest, String> nameCol;
+
     public TableColumn<OrganWaitlist.OrganRequest, String> organCol;
+
     public TableColumn<OrganWaitlist.OrganRequest, String> regionCol;
 
     private ObservableList<OrganWaitlist.OrganRequest> masterData = FXCollections.observableArrayList();
@@ -56,6 +61,7 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
 
     private SortedList<OrganWaitlist.OrganRequest> sortedData;
 
+
     /**
      * Initializes waiting list screen by populating table and initializing a double click action
      * to view a patient's profile.
@@ -63,14 +69,12 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
     public void loadController() {
         ClinicianDataService clinicianDataService = new ClinicianDataService();
         OrganWaitlist organRequests = clinicianDataService.getOrganWaitList();
-        for (OrganWaitlist.OrganRequest request: organRequests) {
-            if (request.getReceiver().getDeathDate() == null) {
-                masterData.add(request);
-            }
-    	}
+
+        loadMasterData(organRequests);
         populateTable();
         setupDoubleClickToPatientEdit();
         populateFilterChoiceBoxes();
+
         if (screenControl.isTouch()) {
             new TouchComboBoxSkin(organSelection, (Pane) screenControl.getTouchParent(clinicianWaitingList));
             new TouchComboBoxSkin(regionSelection, (Pane) screenControl.getTouchParent(clinicianWaitingList));
@@ -78,19 +82,37 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
     }
 
 
+    private void loadMasterData(OrganWaitlist organRequests) {
+        for (OrganWaitlist.OrganRequest request : organRequests) {
+
+            // make sure receiver isn't dead, or organ isn't already assigned
+            if (request.getReceiver().getDeathDate() == null ) {
+                masterData.add(request);
+            }
+        }
+
+        // todo && patientDataService.getPatientByNhi(request.getReceiverNhi()).getRequiredOrgans().get(request.getRequestedOrgan()).getDonorNhi() == null
+    }
+
+
     /**
      * Populates the choice boxes for filter
      */
     private void populateFilterChoiceBoxes() {
-        regionSelection.getItems().add(GlobalEnums.NONE_ID); //for empty selection
+        regionSelection.getItems()
+                .add(GlobalEnums.NONE_ID); //for empty selection
         for (Region region : Region.values()) { //add values to region choice box
-            regionSelection.getItems().add(StringUtils.capitalize(region.getValue()));
+            regionSelection.getItems()
+                    .add(StringUtils.capitalize(region.getValue()));
         }
-        organSelection.getItems().add(GlobalEnums.NONE_ID);
+        organSelection.getItems()
+                .add(GlobalEnums.NONE_ID);
         for (Organ organ : Organ.values()) {
-            organSelection.getItems().add(StringUtils.capitalize(organ.getValue()));
+            organSelection.getItems()
+                    .add(StringUtils.capitalize(organ.getValue()));
         }
     }
+
 
     /**
      * Sets up double-click functionality for each row to open a patient profile update, ensures no duplicate profiles
@@ -101,19 +123,24 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
         waitingListTableView.setOnMouseClicked(click -> {
             if (click.getClickCount() == 2 && waitingListTableView.getSelectionModel()
                     .getSelectedItem() != null) {
-                    OrganWaitlist.OrganRequest request = waitingListTableView.getSelectionModel().getSelectedItem();
-                    try {
-                        Patient selectedUser = patientDataService.getPatientByNhi(request.getReceiverNhi());
-                        patientDataService.save(selectedUser);
-                        Parent parent = screenControl.getTouchParent(clinicianWaitingList);
-                        GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser, parent);
-                        controller.setTarget(selectedUser);
-                    } catch (Exception e) {
-                        userActions.log(Level.SEVERE, "Failed to retrieve selected patient from database", new String[]{"Attempted to retrieve selected patient from database", request.getReceiverNhi()});
-                    }
+                OrganWaitlist.OrganRequest request = waitingListTableView.getSelectionModel()
+                        .getSelectedItem();
+                try {
+                    Patient selectedUser = patientDataService.getPatientByNhi(request.getReceiverNhi());
+                    patientDataService.save(selectedUser);
+                    Parent parent = screenControl.getTouchParent(clinicianWaitingList);
+                    GUIHome controller = (GUIHome) screenControl.show("/scene/home.fxml", true, this, selectedUser, parent);
+                    controller.setTarget(selectedUser);
+                }
+                catch (Exception e) {
+                    userActions.log(Level.SEVERE,
+                            "Failed to retrieve selected patient from database",
+                            new String[] { "Attempted to retrieve selected patient from database", request.getReceiverNhi() });
+                }
             }
         });
     }
+
 
     /**
      * Called when a profile window created by this controller is closed
@@ -121,6 +148,7 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
     public void windowClosed() {
         tableRefresh();
     }
+
 
     /**
      * Populates waiting list table with all patients waiting to receive an organ
@@ -130,13 +158,17 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
         nameCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
                 .getReceiverName()));
         dateCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
-                .getRequestDate().toString()));
+                .getRequestDate()
+                .toString()));
         organCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
-                .getRequestedOrgan().toString()));
+                .getRequestedOrgan()
+                .toString()));
         regionCol.setCellValueFactory(r -> {
-            if (r.getValue().getRequestRegion() != null) {
+            if (r.getValue()
+                    .getRequestRegion() != null) {
                 return new SimpleStringProperty(r.getValue()
-                        .getRequestRegion().toString());
+                        .getRequestRegion()
+                        .toString());
             }
             return null;
         });
@@ -148,12 +180,14 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
         sortedData = new SortedList<>(filteredData);
 
         // bind the SortedList comparator to the TableView comparator.
-        sortedData.comparatorProperty().bind(waitingListTableView.comparatorProperty());
+        sortedData.comparatorProperty()
+                .bind(waitingListTableView.comparatorProperty());
 
         // add sorted (and filtered) data to the table.
         waitingListTableView.setItems(sortedData);
 
     }
+
 
     /**
      * Create and add predicates to filterList to filter master data
@@ -164,47 +198,72 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
         FilteredList<OrganWaitlist.OrganRequest> filteredData = new FilteredList<>(masterData, d -> true);
 
         //add listener to organ choice box and add predicate
-        organSelection.valueProperty().addListener((organ, value, newValue) -> filteredData.setPredicate(OrganRequest -> {
+        organSelection.valueProperty()
+                .addListener((organ, value, newValue) -> filteredData.setPredicate(OrganRequest -> {
 
-            if (newValue.equals(GlobalEnums.NONE_ID)) {
-                if (regionSelection.getValue() == null || regionSelection.getValue().equals(GlobalEnums.NONE_ID)) { //check if region selection is null or ""
-                    return true;
-                } else if (OrganRequest.getRequestRegion() == null) { //if region is not given in donor
+                    if (newValue.equals(GlobalEnums.NONE_ID)) {
+                        if (regionSelection.getValue() == null || regionSelection.getValue()
+                                .equals(GlobalEnums.NONE_ID)) { //check if region selection is null or ""
+                            return true;
+                        }
+                        else if (OrganRequest.getRequestRegion() == null) { //if region is not given in donor
+                            return false;
+                        }
+                        else if (OrganRequest.getRequestRegion()
+                                .getValue()
+                                .equals(regionSelection.getValue())) {
+                            return true;
+                        }
+                    }
+                    if (OrganRequest.getRequestedOrgan()
+                            .getValue()
+                            .toLowerCase()
+                            .equals(newValue.toLowerCase())) {
+                        if (regionSelection.getValue() == null || regionSelection.getValue()
+                                .equals(GlobalEnums.NONE_ID)) {
+                            return true;
+                        }
+                        else if (OrganRequest.getRequestRegion() != null) {
+                            return OrganRequest.getRequestRegion()
+                                    .getValue()
+                                    .toLowerCase()
+                                    .equals(regionSelection.getValue()
+                                            .toLowerCase());
+                        }
+                    }
                     return false;
-                } else if (OrganRequest.getRequestRegion().getValue().equals(regionSelection.getValue())) {
-                    return true;
-                }
-            }
-            if (OrganRequest.getRequestedOrgan().getValue().toLowerCase().equals(newValue.toLowerCase())) {
-                if (regionSelection.getValue() == null || regionSelection.getValue().equals(GlobalEnums.NONE_ID)) {
-                    return true;
-                } else if (OrganRequest.getRequestRegion() != null) {
-                    return OrganRequest.getRequestRegion().getValue().toLowerCase().equals(regionSelection.getValue().toLowerCase());
-                }
-            }
-            return false;
-        }));
+                }));
 
         //add listener to organ choice box and add predicate
-        regionSelection.valueProperty().addListener((organ, value, newValue) -> filteredData.setPredicate(OrganRequest -> {
-            if (newValue.equals(GlobalEnums.NONE_ID)) {
-                if (organSelection.getValue() == null ||
-                        OrganRequest.getRequestedOrgan().getValue().toLowerCase().equals(organSelection.getValue().toLowerCase()) ||
-                        organSelection.getValue().equals(GlobalEnums.NONE_ID)) {
-                    return true;
-                }
-            }
-            Region requestedRegion = OrganRequest.getRequestRegion();
-            if (requestedRegion != null) {
-                return requestedRegion.getValue().toLowerCase().equals(newValue.toLowerCase()) &&
-                        (organSelection.getValue() == null || organSelection.getValue().equals(GlobalEnums.NONE_ID) ||
-                                OrganRequest.getRequestedOrgan().getValue().toLowerCase().equals(organSelection.getValue().toLowerCase()));
-            }
-            return false;
-        }));
+        regionSelection.valueProperty()
+                .addListener((organ, value, newValue) -> filteredData.setPredicate(OrganRequest -> {
+                    if (newValue.equals(GlobalEnums.NONE_ID)) {
+                        if (organSelection.getValue() == null || OrganRequest.getRequestedOrgan()
+                                .getValue()
+                                .toLowerCase()
+                                .equals(organSelection.getValue()
+                                        .toLowerCase()) || organSelection.getValue()
+                                .equals(GlobalEnums.NONE_ID)) {
+                            return true;
+                        }
+                    }
+                    Region requestedRegion = OrganRequest.getRequestRegion();
+                    if (requestedRegion != null) {
+                        return requestedRegion.getValue()
+                                .toLowerCase()
+                                .equals(newValue.toLowerCase()) && (organSelection.getValue() == null || organSelection.getValue()
+                                .equals(GlobalEnums.NONE_ID) || OrganRequest.getRequestedOrgan()
+                                .getValue()
+                                .toLowerCase()
+                                .equals(organSelection.getValue()
+                                        .toLowerCase()));
+                    }
+                    return false;
+                }));
 
         return filteredData;
     }
+
 
     /**
      * Refreshes the table data
@@ -213,9 +272,11 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
         waitingListTableView.refresh();
     }
 
+
     private ScreenControl screenControl = ScreenControl.getScreenControl();
 
     private UserControl userControl = UserControl.getUserControl();
+
 
     /**
      * View patients from table on the map
@@ -229,7 +290,8 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
         for (OrganWaitlist.OrganRequest aMasterData : sortedData) {
             for (Patient patient : patients) {
                 found = false;
-                if (patient.getNhiNumber().equals(aMasterData.getReceiverNhi())) {
+                if (patient.getNhiNumber()
+                        .equals(aMasterData.getReceiverNhi())) {
                     found = true;
                     break;
                 }
@@ -243,24 +305,31 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
         if (screenControl.getMapOpen()) {
             alert = new Alert(Alert.AlertType.CONFIRMATION, "Are you sure you would like to repopulate the map?", ButtonType.OK, ButtonType.NO);
             alert.show();
-            alert.getDialogPane().lookupButton(ButtonType.OK).addEventFilter(ActionEvent.ACTION, event -> {
-                populateMap(patients);
-            });
-        } else {
+            alert.getDialogPane()
+                    .lookupButton(ButtonType.OK)
+                    .addEventFilter(ActionEvent.ACTION, event -> {
+                        populateMap(patients);
+                    });
+        }
+        else {
             screenControl.show("/scene/map.fxml", true, this, userControl.getLoggedInUser(), null);
             populateMap(patients);
         }
     }
 
+
     /**
      * Populates the map with the provided collection of patients
+     *
      * @param patients the patients to populate the map with
      */
     private void populateMap(Collection<Patient> patients) {
         screenControl.setIsCustomSetMap(true);
-        screenControl.getMapController().setPatients(patients);
+        screenControl.getMapController()
+                .setPatients(patients);
         screenControl.setMapOpen(true);
     }
+
 
     /**
      * Displays the matching criteria in an info window for the user to read
@@ -269,12 +338,7 @@ public class GUIClinicianWaitingList extends TargetedController implements IWind
     public void openInfoWindow() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText("Information");
-
-        StringBuilder infoText = new StringBuilder();
-        infoText.append("Patients must have requested an organ in their profile to appear in this list.\n");
-
-        alert.setContentText(infoText.toString());
-
+        alert.setContentText("Patients must have requested an organ in their profile to appear in this list.\n");
         alert.show();
 
     }
