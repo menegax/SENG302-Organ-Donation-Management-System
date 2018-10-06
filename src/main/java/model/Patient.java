@@ -451,18 +451,6 @@ public class Patient extends User {
     }
 
 
-    //    /**
-    //     * Checks the uniqueness of the nhi number
-    //     *
-    //     * @throws IllegalArgumentException when the nhi number given is already in use
-    //     */
-    //    public void ensureUniqueNhi() throws IllegalArgumentException {
-    //        for (Patient p : database.getPatients()) {
-    //            if (p.nhiNumber.equals(nhiNumber.toUpperCase())) {
-    //                throw new IllegalArgumentException("NHI number " + nhiNumber.toUpperCase() + " is not unique");
-    //            }
-    //        }
-    //    }
     /**
      * Returns the name of the patient as a formatted concatenated string
      *
@@ -866,6 +854,22 @@ public class Patient extends User {
 
     public void clearRequiredOrgans() {
         requiredOrgans.clear();
+    }
+
+
+    /**
+     * Returns true if there exists at least one required organ that does not have an assignee
+     * @return whether it exists or not
+     */
+    public boolean hasUnassignedRequiredOrgans() {
+
+        for (OrganReceival receival : this.requiredOrgans.values()) {
+            if (receival.getDonorNhi() == null || receival.getDonorNhi().isEmpty()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
