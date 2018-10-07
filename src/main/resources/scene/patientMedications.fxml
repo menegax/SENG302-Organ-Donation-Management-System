@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane fx:id="medicationPane" prefHeight="342.0" prefWidth="731.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientMedications">
+<GridPane fx:id="medicationPane" prefHeight="342.0" prefWidth="731.0" xmlns="http://javafx.com/javafx/8.0.161" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIPatientMedications">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="32.19997367858887" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="90.0" />
