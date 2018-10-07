@@ -30,7 +30,9 @@ import utility.undoRedo.MultiAction;
 import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -242,7 +244,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
      * @param patient the patient object whose attributes are used to loadController into the form
      */
     private void populateForm(Patient patient) {
-        lastModifiedLbl.setText("Last Modified: " + patient.getModified());
+        lastModifiedLbl.setText("Last Modified: " + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(patient.getModified()));
         nhiTxt.setText(patient.getNhiNumber());
         firstnameTxt.setText(patient.getFirstName());
         lastnameTxt.setText(patient.getLastName());
@@ -349,6 +351,7 @@ public class GUIPatientUpdateProfile extends UndoableController {
         if (valid) {
             warnIfNoLocation();
             setPatientAttributes();
+            lastModifiedLbl.setText("Last Modified: " + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(target.getModified()));
             MapBridge mp = new MapBridge();
             mp.updateInfoWindow((Patient) target);
             userActions.log(INFO, "Successfully updated patient profile", new String[]{"Attempted to update patient profile", after.getNhiNumber()});

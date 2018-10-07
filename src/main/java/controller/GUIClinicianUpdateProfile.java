@@ -17,6 +17,7 @@ import utility.undoRedo.IAction;
 import utility.undoRedo.SingleAction;
 import utility.undoRedo.StatesHistoryScreen;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -134,8 +135,7 @@ public class GUIClinicianUpdateProfile extends UndoableController {
     private void populateForm(Clinician clinician) {
         //adds last modified date only if clinician has been edited before
         if (target.getModified() != null) {
-            lastModifiedLbl.setText("Last Updated: " + clinician.getModified()
-                    .toString());
+            lastModifiedLbl.setText("Last Modified: " + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(clinician.getModified()));
         }
         else {
             lastModifiedLbl.setText("Last Updated: n/a");
