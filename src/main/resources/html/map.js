@@ -198,7 +198,7 @@ function setUpLegend() {
         var name = type.name;
         var icon = type.icon;
         var div = document.createElement('div');
-        div.innerHTML = name + '<img src="' + icon + '" style="float: right; margin-top: 3px">';
+        div.innerHTML = '<img src="' + icon + '"/>' + '<span style="float: right">' + name + '</span>';
         legend.appendChild(div);
     }
 }
