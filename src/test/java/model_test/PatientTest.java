@@ -106,6 +106,17 @@ public class PatientTest implements Serializable {
         assertEquals(expected, testPatient1.getRequiredOrgans().keySet());
     }
 
+    @Test
+    public void testHasUnassignedRequiredOrgans() {
+        testPatient1.addRequired(Organ.LIVER);
+        testPatient1.addRequired(Organ.CORNEA);
+        assertTrue(testPatient1.hasUnassignedRequiredOrgans());
+
+        testPatient1.getRequiredOrgans().get(Organ.LIVER).setDonorNhi("ZZZ9999");
+        testPatient1.getRequiredOrgans().get(Organ.CORNEA).setDonorNhi("ZZZ9999");
+        assertFalse(testPatient1.hasUnassignedRequiredOrgans());
+    }
+
     /**
      * Add a list of valid organs,
      * expect all items passed to be added to donations

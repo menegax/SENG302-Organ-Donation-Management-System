@@ -165,7 +165,6 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
     }
 
     private void submitToTextWatcher(String oldValue, String newValue, TextWatcher watcher, String methodName) {
-        System.out.println(newValue);
         if (!newValue.equals(oldValue)) {
             watcher.onTextChange();
         }
