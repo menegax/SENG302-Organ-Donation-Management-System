@@ -539,6 +539,7 @@ public class PatientDAO implements IPatientDataAccess {
                     .equals("M") ? PreferredGender.MAN : PreferredGender.NONBINARY);
         }
         Patient patient = new Patient(nhi, fName, mNames, lName, birth, created, modified, death, gender, preferredGender, prefName);
+
         patient.setDeathStreet(deathLocation);
         patient.setDeathCity(deathCity);
         patient.setDeathRegion(deathRegion);
@@ -627,6 +628,7 @@ public class PatientDAO implements IPatientDataAccess {
                 patient.setRegion(contacts.get(0) != null ? Region.getEnumFromString(contacts.get(0)) : null);
             }
         }
+        patient.setModified(modified);
         return patient;
     }
 

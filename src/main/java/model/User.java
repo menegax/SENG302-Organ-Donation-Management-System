@@ -4,7 +4,6 @@ import com.univocity.parsers.annotations.Convert;
 import com.univocity.parsers.annotations.Parsed;
 import utility.Searcher;
 import utility.parsing.AsciiConverterCSV;
-import utility.parsing.DateConverterCSV;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -16,9 +15,6 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.regex.Pattern;
 
-import static java.util.logging.Level.FINE;
-import static java.util.logging.Level.FINER;
-import static java.util.logging.Level.FINEST;
 import static utility.SystemLogger.systemLogger;
 
 public abstract class User implements Serializable, Comparable<User> {
@@ -181,5 +177,14 @@ public abstract class User implements Serializable, Comparable<User> {
     @Override
     public int compareTo(User o) {
         return this.getNameConcatenated().compareTo(o.getNameConcatenated());
+    }
+
+
+    /**
+     * Sets modified on the user - hot fix for patient obj constructions
+     * @param modified - modified timestamp
+     */
+    public void setModified(Timestamp modified) {
+        this.modified = modified;
     }
 }
