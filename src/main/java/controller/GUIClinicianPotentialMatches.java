@@ -857,8 +857,10 @@ public class GUIClinicianPotentialMatches extends UndoableController implements 
         infoText.append("* The donor and receiver must be within 15 years apart in age.\n");
         infoText.append("* If under 12, both the receiver and donor must be under 12 years old.\n");
         infoText.append("* The donating organ must not have expired.\n");
+        infoText.append("* The organ must not expire in the time it takes to travel to the receiver via helicopter.\n");
+        infoText.append("* Helicopter travel time is calculated at 260km/h with fuel capacity of 460km and 30 minutes for loading, unloading and refuelling.\n");
         infoText.append("* Those waiting the longest have the highest priority.\n");
-        infoText.append("* After comparing wait times, recipients with the closest location to the donor are prioritized.");
+        infoText.append("* After comparing wait times, recipients with the closest location to the donor are prioritized.\n\n");
 
         alert.setContentText(infoText.toString());
 
