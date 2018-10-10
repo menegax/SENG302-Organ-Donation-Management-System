@@ -103,7 +103,11 @@ public class GUIRequiredOrganDeregistrationReason extends TargetedController{
             touchHandler.initialiseHandler(deregistrationReasonPane);
             new TouchComboBoxSkin(deathRegion, deregistrationReasonPane);
         }
-        dateOfDeath.setSkin(new TouchDatePickerSkin(dateOfDeath, deregistrationReasonPane));
+        try {
+            dateOfDeath.setSkin(new TouchDatePickerSkin(dateOfDeath, deregistrationReasonPane));
+        } catch (IllegalArgumentException e) {
+            SystemLogger.systemLogger.log(Level.SEVERE, "Could not initialise custom skin");
+        }
     }
 
 
