@@ -47,7 +47,7 @@ public class ScreenControlTouch extends ScreenControl {
 
     private Pane touchPane = null;
     
-    private final double INITIALPANESIZE = 0.55;
+    private final double INITIALPANESIZE = 0.40;
 
     private static ScreenControlTouch screenControlTouch;
 
