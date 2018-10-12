@@ -8,13 +8,14 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
-<GridPane fx:id="pane" prefHeight="581.0" prefWidth="769.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIAdministratorSearchUsers">
+
+<GridPane fx:id="pane" prefHeight="581.0" prefWidth="769.0" styleClass="form" stylesheets="@../css/guiStyle.css" xmlns="http://javafx.com/javafx/8.0.141" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIAdministratorSearchUsers">
    <children>
       <TextField fx:id="searchEntry" prefHeight="27.0" prefWidth="46.0" promptText="Search by name" GridPane.columnSpan="2">
          <GridPane.margin>
             <Insets bottom="10.0" left="60.0" right="60.0" top="10.0" />
          </GridPane.margin></TextField>
-      <TableView fx:id="userDataTable" GridPane.columnSpan="2" GridPane.rowIndex="1">
+      <TableView fx:id="userDataTable" prefHeight="444.0" prefWidth="647.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
          <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
          </columnResizePolicy>
@@ -26,7 +27,7 @@
             <Insets left="60.0" right="60.0" />
          </GridPane.margin>
       </TableView>
-      <Button mnemonicParsing="false" onAction="#viewOnMap" prefHeight="30.0" prefWidth="118.0" text="View Patients on Map" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+      <Button mnemonicParsing="false" onAction="#viewOnMap" prefHeight="30.0" prefWidth="189.0" text="View Patients on Map" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
          <GridPane.margin>
             <Insets right="60.0" />
          </GridPane.margin>
@@ -38,7 +39,7 @@
    </columnConstraints>
    <rowConstraints>
       <RowConstraints minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="522.0" minHeight="10.0" prefHeight="484.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="522.0" minHeight="10.0" prefHeight="434.0" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="265.5" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
    </rowConstraints>
 </GridPane>

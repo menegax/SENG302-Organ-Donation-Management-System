@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane fx:id="clinicianProfilePane" prefHeight="370.0" prefWidth="747.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianProfile">
+<GridPane fx:id="clinicianProfilePane" prefHeight="370.0" prefWidth="747.0" xmlns="http://javafx.com/javafx/8.0.161" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.GUIClinicianProfile">
   <columnConstraints>
       <ColumnConstraints hgrow="ALWAYS" minWidth="10.0" prefWidth="220.33334350585938" />
       <ColumnConstraints hgrow="ALWAYS" minWidth="252.79998779296875" prefWidth="256.0" />

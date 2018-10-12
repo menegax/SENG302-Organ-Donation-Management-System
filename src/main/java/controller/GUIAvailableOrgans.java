@@ -32,6 +32,7 @@ import utility.ProgressBarCustomTableCell;
 import utility.ProgressTask;
 import utility.undoRedo.StatesHistoryScreen;
 
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -193,8 +194,7 @@ public class GUIAvailableOrgans extends UndoableController implements IWindowObs
                 .getDeathLocationConcat()));
         deathCol.setCellValueFactory(r -> new SimpleStringProperty(r.getValue()
                 .getPatient()
-                .getDeathDate()
-                .toString()));
+                .getDeathDate().format(DateTimeFormatter.ofPattern("HH:MM:SS dd-MM-yyyy"))));
 
         //expiry
         expiryCol.setCellValueFactory(r -> {

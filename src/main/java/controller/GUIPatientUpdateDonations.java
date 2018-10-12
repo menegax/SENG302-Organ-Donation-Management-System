@@ -189,7 +189,7 @@ public class GUIPatientUpdateDonations extends UndoableController {
             String alertMessage = "";
             for (int i = 0; i < promised.size(); i++) {
                 if (i == promised.size() - 1) {
-                    alertMessage += promised.get(i).getValue() + ".";
+                    alertMessage += promised.get(i).getValue() + ". ";
                 } else {
                     alertMessage += promised.get(i).getValue() + ", ";
                 }

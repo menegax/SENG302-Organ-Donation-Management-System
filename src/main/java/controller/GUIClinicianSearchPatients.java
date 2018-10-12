@@ -148,19 +148,12 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
         setupFilterOptions();
         setupTableColumnsAndData();
         TextWatcher watcher = new TextWatcher();
-        searchEntry.textProperty()
-                .addListener((observable, oldValue, newValue) -> {
-                    if (!newValue.equals(oldValue)) {
-                        watcher.onTextChange(); //reset
-                    }
-                    try {
-                        watcher.afterTextChange(GUIClinicianSearchPatients.class.getMethod("search"), this); //start timer
-
-                    }
-                    catch (NoSuchMethodException e) {
-                        userActions.log(SEVERE, "No method exists for search", "Attempted to search");
-                    }
-                });
+        searchEntry.textProperty().addListener((observable, oldValue, newValue) -> {
+            submitToTextWatcher(oldValue, newValue, watcher, "search");
+        });
+        valueX.textProperty().addListener((observable, oldValue, newValue) -> {
+            submitToTextWatcher(oldValue, newValue, watcher, "updateSearch");
+        });
         setupDoubleClickToPatientEdit();
         setupRowHoverOverText();
 
@@ -168,6 +161,18 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
         updateProfileCount();
         if (screenControl.isTouch()) {
             setupComboBoxSkins();
+        }
+    }
+
+    private void submitToTextWatcher(String oldValue, String newValue, TextWatcher watcher, String methodName) {
+        if (!newValue.equals(oldValue)) {
+            watcher.onTextChange();
+        }
+        try {
+            watcher.afterTextChange(GUIClinicianSearchPatients.class.getMethod(methodName), this);
+
+        } catch (NoSuchMethodException e) {
+            userActions.log(SEVERE, "No method exists for search", "Attempted to search");
         }
     }
 
@@ -309,8 +314,9 @@ public class GUIClinicianSearchPatients extends UndoableController implements IW
     }
 
 
+    @SuppressWarnings("weakeraccess")
     @FXML
-    private void updateSearch() {
+    public void updateSearch() {
         masterData.clear();
         String search = searchEntry.getText();
         String numResultsString = valueX.getText();
